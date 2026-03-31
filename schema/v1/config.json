@@ -1,0 +1,1638 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vibewarden.dev/schema/v1/config.json",
+  "title": "VibeWarden Configuration Schema v1",
+  "description": "Schema for the vibewarden.yaml configuration file. All VibeWarden configuration lives in vibewarden.yaml at the root of your project. Every field can also be set via an environment variable — the variable name is the YAML key path uppercased and prefixed with VIBEWARDEN_, with dots replaced by underscores.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "profile": {
+      "type": "string",
+      "description": "Selects the deployment profile. Affects TLS settings, credential validation strictness, and which generated files are produced.",
+      "enum": ["dev", "tls", "prod"],
+      "default": "dev"
+    },
+    "server": {
+      "type": "object",
+      "description": "Settings for the VibeWarden HTTP listener.",
+      "additionalProperties": false,
+      "properties": {
+        "host": {
+          "type": "string",
+          "description": "Host/IP to bind to.",
+          "default": "127.0.0.1",
+          "examples": ["0.0.0.0", "127.0.0.1"]
+        },
+        "port": {
+          "type": "integer",
+          "description": "Port to listen on.",
+          "default": 8443,
+          "minimum": 1,
+          "maximum": 65535
+        }
+      }
+    },
+    "upstream": {
+      "type": "object",
+      "description": "Settings for the upstream application being protected.",
+      "additionalProperties": false,
+      "properties": {
+        "host": {
+          "type": "string",
+          "description": "Upstream host.",
+          "default": "127.0.0.1"
+        },
+        "port": {
+          "type": "integer",
+          "description": "Upstream port.",
+          "default": 3000,
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "health": {
+          "type": "object",
+          "description": "Active upstream health checking configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable active upstream health checking.",
+              "default": false
+            },
+            "path": {
+              "type": "string",
+              "description": "HTTP path to probe.",
+              "default": "/health"
+            },
+            "interval": {
+              "type": "string",
+              "description": "Time between probes (duration string, e.g. '10s').",
+              "default": "10s"
+            },
+            "timeout": {
+              "type": "string",
+              "description": "Per-probe timeout (duration string, e.g. '5s').",
+              "default": "5s"
+            },
+            "unhealthy_threshold": {
+              "type": "integer",
+              "description": "Consecutive failures to mark unhealthy.",
+              "default": 3,
+              "minimum": 1
+            },
+            "healthy_threshold": {
+              "type": "integer",
+              "description": "Consecutive successes to mark healthy.",
+              "default": 2,
+              "minimum": 1
+            }
+          }
+        }
+      }
+    },
+    "app": {
+      "type": "object",
+      "description": "Controls how your application is included in the generated Docker Compose file. When neither build nor image is set, no app service is rendered and VibeWarden falls back to host.docker.internal.",
+      "additionalProperties": false,
+      "properties": {
+        "build": {
+          "type": "string",
+          "description": "Docker build context path (e.g. '.') -- used in dev/tls profiles.",
+          "default": "",
+          "examples": ["."]
+        },
+        "image": {
+          "type": "string",
+          "description": "Docker image reference (e.g. 'ghcr.io/org/myapp:latest') -- used in prod profile.",
+          "default": "",
+          "examples": ["ghcr.io/org/myapp:latest"]
+        }
+      }
+    },
+    "tls": {
+      "type": "object",
+      "description": "TLS configuration for the VibeWarden listener.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable TLS.",
+          "default": true
+        },
+        "domain": {
+          "type": "string",
+          "description": "Domain for the TLS certificate. Required when provider is 'letsencrypt'.",
+          "default": ""
+        },
+        "provider": {
+          "type": "string",
+          "description": "Certificate provider.",
+          "enum": ["letsencrypt", "self-signed", "external"],
+          "default": ""
+        },
+        "cert_path": {
+          "type": "string",
+          "description": "Path to PEM certificate. Required when provider is 'external'.",
+          "default": ""
+        },
+        "key_path": {
+          "type": "string",
+          "description": "Path to PEM private key. Required when provider is 'external'.",
+          "default": ""
+        },
+        "storage_path": {
+          "type": "string",
+          "description": "Directory for ACME certificate storage. Applies to 'letsencrypt' only.",
+          "default": ""
+        }
+      }
+    },
+    "auth": {
+      "type": "object",
+      "description": "Authentication middleware configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable the authentication middleware.",
+          "default": false
+        },
+        "mode": {
+          "type": "string",
+          "description": "Auth strategy.",
+          "enum": ["none", "kratos", "jwt", "api-key"],
+          "default": "none"
+        },
+        "public_paths": {
+          "type": "array",
+          "description": "Glob patterns that bypass auth. /_vibewarden/* is always public.",
+          "items": { "type": "string" },
+          "default": [],
+          "examples": [["/health", "/static/*"]]
+        },
+        "session_cookie_name": {
+          "type": "string",
+          "description": "Kratos session cookie name.",
+          "default": "ory_kratos_session"
+        },
+        "login_url": {
+          "type": "string",
+          "description": "Redirect for unauthenticated users.",
+          "default": "/self-service/login/browser"
+        },
+        "on_kratos_unavailable": {
+          "type": "string",
+          "description": "Behavior when Kratos is unreachable.",
+          "enum": ["503", "allow_public"],
+          "default": "503"
+        },
+        "identity_schema": {
+          "type": "string",
+          "description": "Identity schema: 'email_password', 'email_only', 'username_password', 'social', or a file path.",
+          "default": "email_password"
+        },
+        "jwt": {
+          "type": "object",
+          "description": "JWT authentication settings. Used when auth.mode is 'jwt'.",
+          "additionalProperties": false,
+          "properties": {
+            "jwks_url": {
+              "type": "string",
+              "description": "Direct JWKS endpoint URL. Takes precedence over issuer_url.",
+              "default": ""
+            },
+            "issuer_url": {
+              "type": "string",
+              "description": "OIDC issuer base URL for auto-discovery.",
+              "default": ""
+            },
+            "issuer": {
+              "type": "string",
+              "description": "Expected 'iss' claim value. Required.",
+              "default": ""
+            },
+            "audience": {
+              "type": "string",
+              "description": "Expected 'aud' claim value. Required.",
+              "default": ""
+            },
+            "claims_to_headers": {
+              "type": "object",
+              "description": "JWT claims injected as upstream request headers. Keys are claim names, values are header names.",
+              "additionalProperties": { "type": "string" },
+              "default": {
+                "sub": "X-User-Id",
+                "email": "X-User-Email",
+                "email_verified": "X-User-Verified"
+              }
+            },
+            "allowed_algorithms": {
+              "type": "array",
+              "description": "Accepted signing algorithms. Never include 'none' or 'HS256' in production.",
+              "items": { "type": "string" },
+              "default": ["RS256", "ES256"]
+            },
+            "cache_ttl": {
+              "type": "string",
+              "description": "How long the JWKS is cached locally (duration string, e.g. '1h').",
+              "default": "1h"
+            }
+          }
+        },
+        "api_key": {
+          "type": "object",
+          "description": "API key authentication settings. Used when auth.mode is 'api-key'.",
+          "additionalProperties": false,
+          "properties": {
+            "header": {
+              "type": "string",
+              "description": "Request header carrying the API key.",
+              "default": "X-API-Key"
+            },
+            "keys": {
+              "type": "array",
+              "description": "Static key entries.",
+              "default": [],
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["name", "hash"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Human-readable label."
+                  },
+                  "hash": {
+                    "type": "string",
+                    "description": "Hex-encoded SHA-256 of the plaintext key."
+                  },
+                  "scopes": {
+                    "type": "array",
+                    "description": "Permission scopes granted to this key.",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            },
+            "openbao_path": {
+              "type": "string",
+              "description": "KV path in OpenBao where key hashes are stored.",
+              "default": ""
+            },
+            "cache_ttl": {
+              "type": "string",
+              "description": "TTL for keys fetched from OpenBao (duration string, e.g. '5m').",
+              "default": "5m"
+            },
+            "scope_rules": {
+              "type": "array",
+              "description": "Ordered path+method authorization rules.",
+              "default": [],
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["path"],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Glob pattern matched against the request path."
+                  },
+                  "methods": {
+                    "type": "array",
+                    "description": "HTTP methods this rule applies to (empty = all methods).",
+                    "items": { "type": "string" }
+                  },
+                  "required_scopes": {
+                    "type": "array",
+                    "description": "Scopes the key must possess.",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "social_providers": {
+          "type": "array",
+          "description": "List of OAuth2/OIDC social login providers (used with auth.mode: kratos).",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["provider", "client_id", "client_secret"],
+            "properties": {
+              "provider": {
+                "type": "string",
+                "description": "Provider name.",
+                "enum": ["google", "github", "apple", "facebook", "microsoft", "gitlab", "discord", "slack", "spotify", "oidc"]
+              },
+              "client_id": {
+                "type": "string",
+                "description": "OAuth2 client ID."
+              },
+              "client_secret": {
+                "type": "string",
+                "description": "OAuth2 client secret."
+              },
+              "scopes": {
+                "type": "array",
+                "description": "OAuth2 scopes to request (optional; provider defaults apply).",
+                "items": { "type": "string" }
+              },
+              "label": {
+                "type": "string",
+                "description": "Custom login button label (optional)."
+              },
+              "team_id": {
+                "type": "string",
+                "description": "Apple Developer Team ID (Apple only)."
+              },
+              "key_id": {
+                "type": "string",
+                "description": "Apple private key ID (Apple only)."
+              },
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for OIDC entries."
+              },
+              "issuer_url": {
+                "type": "string",
+                "description": "OIDC issuer URL (OIDC provider only)."
+              }
+            }
+          }
+        },
+        "ui": {
+          "type": "object",
+          "description": "Authentication UI configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "mode": {
+              "type": "string",
+              "description": "UI mode.",
+              "enum": ["built-in", "custom"],
+              "default": "built-in"
+            },
+            "app_name": {
+              "type": "string",
+              "description": "Application name on built-in login pages.",
+              "default": ""
+            },
+            "logo_url": {
+              "type": "string",
+              "description": "Logo URL for built-in pages.",
+              "default": ""
+            },
+            "primary_color": {
+              "type": "string",
+              "description": "Accent color for built-in pages.",
+              "default": "#7C3AED"
+            },
+            "background_color": {
+              "type": "string",
+              "description": "Background color for built-in pages.",
+              "default": "#1a1a2e"
+            },
+            "login_url": {
+              "type": "string",
+              "description": "Custom login page URL (when mode: custom).",
+              "default": ""
+            },
+            "registration_url": {
+              "type": "string",
+              "description": "Custom registration page URL.",
+              "default": ""
+            },
+            "settings_url": {
+              "type": "string",
+              "description": "Custom account settings page URL.",
+              "default": ""
+            },
+            "recovery_url": {
+              "type": "string",
+              "description": "Custom account recovery page URL.",
+              "default": ""
+            }
+          }
+        }
+      }
+    },
+    "kratos": {
+      "type": "object",
+      "description": "Ory Kratos configuration. Used when auth.mode is 'kratos'.",
+      "additionalProperties": false,
+      "properties": {
+        "public_url": {
+          "type": "string",
+          "description": "Kratos public API URL.",
+          "default": "http://127.0.0.1:4433"
+        },
+        "admin_url": {
+          "type": "string",
+          "description": "Kratos admin API URL.",
+          "default": "http://127.0.0.1:4434"
+        },
+        "dsn": {
+          "type": "string",
+          "description": "Kratos database DSN (postgres URL).",
+          "default": ""
+        },
+        "external": {
+          "type": "boolean",
+          "description": "Connect to a user-managed Kratos instance instead of starting one.",
+          "default": false
+        },
+        "smtp": {
+          "type": "object",
+          "description": "SMTP configuration for Kratos emails.",
+          "additionalProperties": false,
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "SMTP server host.",
+              "default": "localhost"
+            },
+            "port": {
+              "type": "integer",
+              "description": "SMTP server port.",
+              "default": 1025,
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "from": {
+              "type": "string",
+              "description": "Sender address for Kratos emails.",
+              "default": "no-reply@vibewarden.local"
+            }
+          }
+        }
+      }
+    },
+    "rate_limit": {
+      "type": "object",
+      "description": "Rate limiting configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable rate limiting.",
+          "default": true
+        },
+        "store": {
+          "type": "string",
+          "description": "Backing store for rate limit counters.",
+          "enum": ["memory", "redis"],
+          "default": "memory"
+        },
+        "trust_proxy_headers": {
+          "type": "boolean",
+          "description": "Read X-Forwarded-For for client IP. Enable only behind a trusted proxy.",
+          "default": false
+        },
+        "exempt_paths": {
+          "type": "array",
+          "description": "Glob patterns that bypass rate limiting. /_vibewarden/* is always exempt.",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "per_ip": {
+          "type": "object",
+          "description": "Per-IP rate limit bucket configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "requests_per_second": {
+              "type": "number",
+              "description": "Sustained token refill rate.",
+              "default": 10
+            },
+            "burst": {
+              "type": "integer",
+              "description": "Maximum tokens that can accumulate.",
+              "default": 20,
+              "minimum": 1
+            }
+          }
+        },
+        "per_user": {
+          "type": "object",
+          "description": "Per-user rate limit bucket configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "requests_per_second": {
+              "type": "number",
+              "description": "Sustained token refill rate.",
+              "default": 100
+            },
+            "burst": {
+              "type": "integer",
+              "description": "Maximum tokens that can accumulate.",
+              "default": 200,
+              "minimum": 1
+            }
+          }
+        },
+        "redis": {
+          "type": "object",
+          "description": "Redis backing store configuration. Only read when store is 'redis'.",
+          "additionalProperties": false,
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "Redis URL (redis:// or rediss://). Takes precedence over all other fields.",
+              "default": ""
+            },
+            "address": {
+              "type": "string",
+              "description": "Redis address in host:port form.",
+              "default": "localhost:6379"
+            },
+            "password": {
+              "type": "string",
+              "description": "Redis AUTH password.",
+              "default": ""
+            },
+            "db": {
+              "type": "integer",
+              "description": "Logical database index.",
+              "default": 0,
+              "minimum": 0
+            },
+            "pool_size": {
+              "type": "integer",
+              "description": "Connection pool size. 0 means auto based on CPU count.",
+              "default": 0,
+              "minimum": 0
+            },
+            "key_prefix": {
+              "type": "string",
+              "description": "Key namespace prefix.",
+              "default": "vibewarden"
+            },
+            "fallback": {
+              "type": "boolean",
+              "description": "Fail-open on Redis failure (true) or fail-closed (false).",
+              "default": true
+            },
+            "health_check_interval": {
+              "type": "string",
+              "description": "How often to probe Redis for recovery (duration string, e.g. '30s').",
+              "default": "30s"
+            }
+          }
+        }
+      }
+    },
+    "security_headers": {
+      "type": "object",
+      "description": "Security headers middleware configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable security headers middleware.",
+          "default": true
+        },
+        "hsts_max_age": {
+          "type": "integer",
+          "description": "HSTS max-age in seconds (1 year default).",
+          "default": 31536000,
+          "minimum": 0
+        },
+        "hsts_include_subdomains": {
+          "type": "boolean",
+          "description": "Add includeSubDomains to HSTS.",
+          "default": true
+        },
+        "hsts_preload": {
+          "type": "boolean",
+          "description": "Add preload to HSTS.",
+          "default": false
+        },
+        "content_type_nosniff": {
+          "type": "boolean",
+          "description": "Set X-Content-Type-Options: nosniff.",
+          "default": true
+        },
+        "frame_option": {
+          "type": "string",
+          "description": "X-Frame-Options value. Set to empty string to disable.",
+          "enum": ["DENY", "SAMEORIGIN", ""],
+          "default": "DENY"
+        },
+        "content_security_policy": {
+          "type": "string",
+          "description": "Content-Security-Policy value. Empty by default; set explicitly to opt in.",
+          "default": ""
+        },
+        "referrer_policy": {
+          "type": "string",
+          "description": "Referrer-Policy value.",
+          "default": "strict-origin-when-cross-origin"
+        },
+        "permissions_policy": {
+          "type": "string",
+          "description": "Permissions-Policy value.",
+          "default": ""
+        },
+        "cross_origin_opener_policy": {
+          "type": "string",
+          "description": "Cross-Origin-Opener-Policy value.",
+          "default": "same-origin"
+        },
+        "cross_origin_resource_policy": {
+          "type": "string",
+          "description": "Cross-Origin-Resource-Policy value.",
+          "default": "same-origin"
+        },
+        "permitted_cross_domain_policies": {
+          "type": "string",
+          "description": "X-Permitted-Cross-Domain-Policies value.",
+          "default": "none"
+        },
+        "suppress_via_header": {
+          "type": "boolean",
+          "description": "Remove Via header from proxied responses.",
+          "default": true
+        }
+      }
+    },
+    "cors": {
+      "type": "object",
+      "description": "CORS (Cross-Origin Resource Sharing) configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable CORS plugin.",
+          "default": false
+        },
+        "allowed_origins": {
+          "type": "array",
+          "description": "Permitted origins. Use [\"*\"] for development only.",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "allowed_methods": {
+          "type": "array",
+          "description": "Permitted HTTP methods.",
+          "items": { "type": "string" },
+          "default": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+        },
+        "allowed_headers": {
+          "type": "array",
+          "description": "Permitted request headers.",
+          "items": { "type": "string" },
+          "default": ["Content-Type", "Authorization"]
+        },
+        "exposed_headers": {
+          "type": "array",
+          "description": "Response headers exposed via Access-Control-Expose-Headers.",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "allow_credentials": {
+          "type": "boolean",
+          "description": "Set Access-Control-Allow-Credentials: true. Must not be combined with allowed_origins: [\"*\"].",
+          "default": false
+        },
+        "max_age": {
+          "type": "integer",
+          "description": "Preflight cache duration in seconds. 0 omits the header.",
+          "default": 0,
+          "minimum": 0
+        }
+      }
+    },
+    "waf": {
+      "type": "object",
+      "description": "Built-in Web Application Firewall. Inspects every inbound request for common attack patterns in-process, with no external dependencies.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable the WAF middleware.",
+          "default": false
+        },
+        "mode": {
+          "type": "string",
+          "description": "Detection mode: 'block' rejects with 400, 'detect' passes through and logs.",
+          "enum": ["block", "detect"],
+          "default": "block"
+        },
+        "rules": {
+          "type": "object",
+          "description": "Per-rule toggles. All rules are enabled by default when waf.enabled is true.",
+          "additionalProperties": false,
+          "properties": {
+            "sqli": {
+              "type": "boolean",
+              "description": "Detect SQL injection patterns in query strings and request bodies.",
+              "default": true
+            },
+            "xss": {
+              "type": "boolean",
+              "description": "Detect cross-site scripting payloads.",
+              "default": true
+            },
+            "path_traversal": {
+              "type": "boolean",
+              "description": "Detect directory traversal sequences (e.g. ../../etc/passwd).",
+              "default": true
+            },
+            "command_injection": {
+              "type": "boolean",
+              "description": "Detect shell command-injection metacharacters.",
+              "default": true
+            }
+          }
+        },
+        "content_type_validation": {
+          "type": "object",
+          "description": "Content-Type validation on body-bearing requests.",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable Content-Type validation on body-bearing requests.",
+              "default": false
+            },
+            "allowed": {
+              "type": "array",
+              "description": "Permitted media types. Requests with other types receive 415 Unsupported Media Type.",
+              "items": { "type": "string" },
+              "default": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"]
+            }
+          }
+        }
+      }
+    },
+    "body_size": {
+      "type": "object",
+      "description": "Request body size limits.",
+      "additionalProperties": false,
+      "properties": {
+        "max": {
+          "type": "string",
+          "description": "Global maximum body size (e.g. '1MB', '512KB'). Empty means no limit.",
+          "default": ""
+        },
+        "overrides": {
+          "type": "array",
+          "description": "Per-path body size overrides.",
+          "default": [],
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "max"],
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "URL path prefix to match."
+              },
+              "max": {
+                "type": "string",
+                "description": "Maximum body size for this path."
+              }
+            }
+          }
+        }
+      }
+    },
+    "ip_filter": {
+      "type": "object",
+      "description": "IP-based access filtering.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable IP filter plugin.",
+          "default": false
+        },
+        "mode": {
+          "type": "string",
+          "description": "Filter mode.",
+          "enum": ["allowlist", "blocklist"],
+          "default": "blocklist"
+        },
+        "addresses": {
+          "type": "array",
+          "description": "IP addresses or CIDR ranges.",
+          "items": { "type": "string" },
+          "default": [],
+          "examples": [["10.0.0.0/8", "192.168.1.100"]]
+        },
+        "trust_proxy_headers": {
+          "type": "boolean",
+          "description": "Read X-Forwarded-For for client IP.",
+          "default": false
+        }
+      }
+    },
+    "resilience": {
+      "type": "object",
+      "description": "Resilience settings for upstream communication.",
+      "additionalProperties": false,
+      "properties": {
+        "timeout": {
+          "type": "string",
+          "description": "Upstream response timeout. '0' disables the timeout (duration string, e.g. '30s').",
+          "default": "30s"
+        },
+        "circuit_breaker": {
+          "type": "object",
+          "description": "Circuit breaker configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable circuit breaker.",
+              "default": false
+            },
+            "threshold": {
+              "type": "integer",
+              "description": "Consecutive failures to trip the circuit.",
+              "default": 5,
+              "minimum": 1
+            },
+            "timeout": {
+              "type": "string",
+              "description": "How long the circuit stays open before probing (duration string, e.g. '60s').",
+              "default": "60s"
+            }
+          }
+        },
+        "retry": {
+          "type": "object",
+          "description": "Retry with exponential backoff configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable retry with exponential backoff.",
+              "default": false
+            },
+            "max_attempts": {
+              "type": "integer",
+              "description": "Total attempts including the initial request.",
+              "default": 3,
+              "minimum": 1
+            },
+            "backoff": {
+              "type": "string",
+              "description": "Wait before the first retry (duration string, e.g. '100ms').",
+              "default": "100ms"
+            },
+            "max_backoff": {
+              "type": "string",
+              "description": "Upper bound on computed backoff (duration string, e.g. '10s').",
+              "default": "10s"
+            },
+            "retry_on": {
+              "type": "array",
+              "description": "HTTP status codes that trigger a retry.",
+              "items": { "type": "integer" },
+              "default": [502, 503, 504]
+            }
+          }
+        }
+      }
+    },
+    "telemetry": {
+      "type": "object",
+      "description": "Telemetry and metrics configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Master switch for all telemetry.",
+          "default": true
+        },
+        "path_patterns": {
+          "type": "array",
+          "description": "URL path normalization patterns using :param syntax.",
+          "items": { "type": "string" },
+          "default": [],
+          "examples": [["/api/v1/users/:id", "/api/v1/orders/:order_id"]]
+        },
+        "prometheus": {
+          "type": "object",
+          "description": "Prometheus pull-based exporter configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable Prometheus pull-based exporter at /_vibewarden/metrics.",
+              "default": true
+            }
+          }
+        },
+        "otlp": {
+          "type": "object",
+          "description": "OTLP push-based exporter configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable OTLP push-based exporter.",
+              "default": false
+            },
+            "endpoint": {
+              "type": "string",
+              "description": "OTLP HTTP endpoint URL. Required when otlp.enabled is true.",
+              "default": ""
+            },
+            "headers": {
+              "type": "object",
+              "description": "HTTP headers for OTLP authentication.",
+              "additionalProperties": { "type": "string" },
+              "default": {}
+            },
+            "interval": {
+              "type": "string",
+              "description": "Export interval (duration string, e.g. '30s').",
+              "default": "30s"
+            },
+            "protocol": {
+              "type": "string",
+              "description": "Transport protocol. Only 'http' is supported.",
+              "enum": ["http"],
+              "default": "http"
+            }
+          }
+        },
+        "logs": {
+          "type": "object",
+          "description": "Log export configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "otlp": {
+              "type": "boolean",
+              "description": "Export structured events via OTLP. Requires otlp.endpoint.",
+              "default": false
+            }
+          }
+        },
+        "traces": {
+          "type": "object",
+          "description": "Distributed tracing configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable distributed tracing. Requires otlp.enabled.",
+              "default": false
+            }
+          }
+        }
+      }
+    },
+    "observability": {
+      "type": "object",
+      "description": "Controls generation of the optional local observability stack (Grafana, Prometheus, Loki, Promtail).",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Generate the observability stack.",
+          "default": false
+        },
+        "grafana_port": {
+          "type": "integer",
+          "description": "Host port for Grafana.",
+          "default": 3001,
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "prometheus_port": {
+          "type": "integer",
+          "description": "Host port for Prometheus.",
+          "default": 9090,
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "loki_port": {
+          "type": "integer",
+          "description": "Host port for Loki.",
+          "default": 3100,
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "retention_days": {
+          "type": "integer",
+          "description": "Log retention period in Loki.",
+          "default": 7,
+          "minimum": 1
+        }
+      }
+    },
+    "database": {
+      "type": "object",
+      "description": "Database connection configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "external_url": {
+          "type": "string",
+          "description": "Full postgres:// connection URL. When set, the local Postgres container is omitted from the generated Compose file.",
+          "default": ""
+        },
+        "tls_mode": {
+          "type": "string",
+          "description": "PostgreSQL SSL mode.",
+          "enum": ["disable", "require", "verify-ca", "verify-full"],
+          "default": "require"
+        },
+        "pool": {
+          "type": "object",
+          "description": "Connection pool settings.",
+          "additionalProperties": false,
+          "properties": {
+            "max_conns": {
+              "type": "integer",
+              "description": "Maximum open connections.",
+              "default": 10,
+              "minimum": 1
+            },
+            "min_conns": {
+              "type": "integer",
+              "description": "Minimum idle connections.",
+              "default": 2,
+              "minimum": 0
+            }
+          }
+        },
+        "connect_timeout": {
+          "type": "string",
+          "description": "Connection establishment timeout (duration string, e.g. '10s').",
+          "default": "10s"
+        }
+      }
+    },
+    "egress": {
+      "type": "object",
+      "description": "Egress proxy plugin configuration. Controls outbound HTTP requests from your application.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable the egress proxy plugin.",
+          "default": false
+        },
+        "listen": {
+          "type": "string",
+          "description": "TCP address the egress proxy binds to.",
+          "default": "127.0.0.1:8081"
+        },
+        "default_policy": {
+          "type": "string",
+          "description": "Disposition for requests that match no route.",
+          "enum": ["deny", "allow"],
+          "default": "deny"
+        },
+        "allow_insecure": {
+          "type": "boolean",
+          "description": "Permit plain HTTP egress requests globally. Per-route allow_insecure overrides this.",
+          "default": false
+        },
+        "default_timeout": {
+          "type": "string",
+          "description": "Request timeout applied when a route does not specify its own (duration string, e.g. '30s').",
+          "default": "30s"
+        },
+        "default_body_size_limit": {
+          "type": "string",
+          "description": "Global maximum request body size (e.g. '10MB'). Empty means no limit.",
+          "default": ""
+        },
+        "default_response_size_limit": {
+          "type": "string",
+          "description": "Global maximum response body size (e.g. '50MB'). Empty means no limit.",
+          "default": ""
+        },
+        "dns": {
+          "type": "object",
+          "description": "DNS-level SSRF protection settings.",
+          "additionalProperties": false,
+          "properties": {
+            "block_private": {
+              "type": "boolean",
+              "description": "Block requests to RFC 1918 private, loopback, and reserved IP ranges.",
+              "default": true
+            },
+            "allowed_private": {
+              "type": "array",
+              "description": "CIDR ranges exempt from block_private.",
+              "items": { "type": "string" },
+              "default": [],
+              "examples": [["10.0.0.0/8"]]
+            }
+          }
+        },
+        "routes": {
+          "type": "array",
+          "description": "Ordered list of egress route definitions. Routes are evaluated in declaration order; the first matching route wins.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "pattern"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Unique human-readable identifier for this route."
+              },
+              "pattern": {
+                "type": "string",
+                "description": "URL glob matched against outbound request URLs (must start with http:// or https://)."
+              },
+              "methods": {
+                "type": "array",
+                "description": "HTTP methods this route applies to. Empty means all methods.",
+                "items": { "type": "string" },
+                "default": []
+              },
+              "timeout": {
+                "type": "string",
+                "description": "Per-route request timeout. Empty uses egress.default_timeout.",
+                "default": ""
+              },
+              "secret": {
+                "type": "string",
+                "description": "OpenBao KV path of the secret to fetch and inject.",
+                "default": ""
+              },
+              "secret_header": {
+                "type": "string",
+                "description": "Request header to inject the secret value into (e.g. 'Authorization').",
+                "default": ""
+              },
+              "secret_format": {
+                "type": "string",
+                "description": "Value template -- {value} is replaced with the resolved secret (e.g. 'Bearer {value}').",
+                "default": ""
+              },
+              "rate_limit": {
+                "type": "string",
+                "description": "Rate limit expression (e.g. '100/s', '500/m'). Empty means no per-route limit.",
+                "default": ""
+              },
+              "body_size_limit": {
+                "type": "string",
+                "description": "Maximum request body size. Empty uses egress.default_body_size_limit.",
+                "default": ""
+              },
+              "response_size_limit": {
+                "type": "string",
+                "description": "Maximum response body size. Empty uses egress.default_response_size_limit.",
+                "default": ""
+              },
+              "allow_insecure": {
+                "type": "boolean",
+                "description": "Permit plain HTTP for this route, overriding the global setting.",
+                "default": false
+              },
+              "circuit_breaker": {
+                "type": "object",
+                "description": "Per-route circuit breaker configuration.",
+                "additionalProperties": false,
+                "properties": {
+                  "threshold": {
+                    "type": "integer",
+                    "description": "Consecutive failures to trip the circuit. Must be > 0.",
+                    "minimum": 1
+                  },
+                  "reset_after": {
+                    "type": "string",
+                    "description": "How long the circuit stays open before allowing a probe request."
+                  }
+                }
+              },
+              "retries": {
+                "type": "object",
+                "description": "Per-route retry configuration.",
+                "additionalProperties": false,
+                "properties": {
+                  "max": {
+                    "type": "integer",
+                    "description": "Maximum retry attempts (not counting the initial request). Must be >= 1.",
+                    "minimum": 1
+                  },
+                  "methods": {
+                    "type": "array",
+                    "description": "HTTP methods eligible for retry. Empty uses the default idempotent set.",
+                    "items": { "type": "string" },
+                    "default": ["GET", "HEAD", "PUT", "DELETE"]
+                  },
+                  "backoff": {
+                    "type": "string",
+                    "description": "Backoff strategy.",
+                    "enum": ["exponential", "fixed"],
+                    "default": "exponential"
+                  }
+                }
+              },
+              "mtls": {
+                "type": "object",
+                "description": "Mutual TLS configuration for this route.",
+                "additionalProperties": false,
+                "properties": {
+                  "cert_path": {
+                    "type": "string",
+                    "description": "Filesystem path to the PEM-encoded client certificate."
+                  },
+                  "key_path": {
+                    "type": "string",
+                    "description": "Filesystem path to the PEM-encoded private key."
+                  },
+                  "ca_path": {
+                    "type": "string",
+                    "description": "Filesystem path to a PEM-encoded CA bundle used to verify the server's certificate (optional; uses system roots when empty)."
+                  }
+                }
+              },
+              "validate_response": {
+                "type": "object",
+                "description": "Response validation rules.",
+                "additionalProperties": false,
+                "properties": {
+                  "status_codes": {
+                    "type": "array",
+                    "description": "Allowed HTTP status code expressions (e.g. ['2xx', '301']). Empty means no validation.",
+                    "items": { "type": "string" }
+                  },
+                  "content_types": {
+                    "type": "array",
+                    "description": "Allowed MIME type prefixes (e.g. ['application/json']). Empty means no validation.",
+                    "items": { "type": "string" }
+                  }
+                }
+              },
+              "cache": {
+                "type": "object",
+                "description": "In-memory response caching for this route.",
+                "additionalProperties": false,
+                "properties": {
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "Activate in-memory response caching for this route."
+                  },
+                  "ttl": {
+                    "type": "string",
+                    "description": "Cache entry lifetime. Zero means never expire (not recommended)."
+                  },
+                  "max_size": {
+                    "type": "integer",
+                    "description": "Maximum cached response body size in bytes. Zero means no per-entry limit.",
+                    "minimum": 0
+                  }
+                }
+              },
+              "sanitize": {
+                "type": "object",
+                "description": "Request sanitization rules.",
+                "additionalProperties": false,
+                "properties": {
+                  "headers": {
+                    "type": "array",
+                    "description": "Header names whose values are replaced with [REDACTED] in log events (forwarded request is unchanged).",
+                    "items": { "type": "string" }
+                  },
+                  "query_params": {
+                    "type": "array",
+                    "description": "Query parameter names stripped from the URL before forwarding.",
+                    "items": { "type": "string" }
+                  },
+                  "body_fields": {
+                    "type": "array",
+                    "description": "JSON field names replaced with [REDACTED] in the request body before forwarding. Only applied when Content-Type is application/json.",
+                    "items": { "type": "string" }
+                  }
+                }
+              },
+              "headers": {
+                "type": "object",
+                "description": "Header manipulation rules for this route.",
+                "additionalProperties": false,
+                "properties": {
+                  "inject": {
+                    "type": "object",
+                    "description": "Static headers added to (or overwriting) the outbound request.",
+                    "additionalProperties": { "type": "string" }
+                  },
+                  "strip_request": {
+                    "type": "array",
+                    "description": "Request header names removed before forwarding upstream.",
+                    "items": { "type": "string" }
+                  },
+                  "strip_response": {
+                    "type": "array",
+                    "description": "Response header names removed from the upstream response before returning to the app. Server and X-Powered-By are always stripped.",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "secrets": {
+      "type": "object",
+      "description": "Secrets management plugin configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable secrets management plugin.",
+          "default": false
+        },
+        "provider": {
+          "type": "string",
+          "description": "Secret store backend.",
+          "default": "openbao"
+        },
+        "cache_ttl": {
+          "type": "string",
+          "description": "How long fetched secrets are cached in memory (duration string, e.g. '5m').",
+          "default": "5m"
+        },
+        "openbao": {
+          "type": "object",
+          "description": "OpenBao secret store configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "address": {
+              "type": "string",
+              "description": "OpenBao server URL (e.g. 'http://openbao:8200').",
+              "default": ""
+            },
+            "mount_path": {
+              "type": "string",
+              "description": "KV v2 mount path.",
+              "default": "secret"
+            },
+            "auth": {
+              "type": "object",
+              "description": "OpenBao authentication configuration.",
+              "additionalProperties": false,
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "description": "Auth method.",
+                  "enum": ["token", "approle"],
+                  "default": ""
+                },
+                "token": {
+                  "type": "string",
+                  "description": "Static token (used when method: token).",
+                  "default": ""
+                },
+                "role_id": {
+                  "type": "string",
+                  "description": "AppRole role_id (used when method: approle).",
+                  "default": ""
+                },
+                "secret_id": {
+                  "type": "string",
+                  "description": "AppRole secret_id (used when method: approle).",
+                  "default": ""
+                }
+              }
+            }
+          }
+        },
+        "inject": {
+          "type": "object",
+          "description": "Secret injection configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "headers": {
+              "type": "array",
+              "description": "Secrets injected as HTTP request headers.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["secret_path", "secret_key", "header"],
+                "properties": {
+                  "secret_path": {
+                    "type": "string",
+                    "description": "KV path of the secret."
+                  },
+                  "secret_key": {
+                    "type": "string",
+                    "description": "Key within the secret map."
+                  },
+                  "header": {
+                    "type": "string",
+                    "description": "HTTP header name."
+                  }
+                }
+              }
+            },
+            "env_file": {
+              "type": "string",
+              "description": "Path to write a .env file with secret values."
+            },
+            "env": {
+              "type": "array",
+              "description": "Secrets written to the env file.",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "secret_path": {
+                    "type": "string",
+                    "description": "KV path of the secret."
+                  },
+                  "secret_key": {
+                    "type": "string",
+                    "description": "Key within the secret map."
+                  },
+                  "env_var": {
+                    "type": "string",
+                    "description": "Environment variable name."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "dynamic": {
+          "type": "object",
+          "description": "Dynamic secret generation configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "postgres": {
+              "type": "object",
+              "description": "Dynamic Postgres credential generation.",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Enable dynamic Postgres credential generation.",
+                  "default": false
+                },
+                "roles": {
+                  "type": "array",
+                  "description": "OpenBao database roles to request credentials for.",
+                  "default": [],
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["name"],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "OpenBao database role name."
+                      },
+                      "env_var_user": {
+                        "type": "string",
+                        "description": "Env var to write the generated username into."
+                      },
+                      "env_var_password": {
+                        "type": "string",
+                        "description": "Env var to write the generated password into."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "health": {
+          "type": "object",
+          "description": "Secret health check configuration.",
+          "additionalProperties": false,
+          "properties": {
+            "check_interval": {
+              "type": "string",
+              "description": "How often to run secret health checks (duration string, e.g. '6h').",
+              "default": "6h"
+            },
+            "max_static_age": {
+              "type": "string",
+              "description": "Maximum acceptable age of a static secret (duration string, e.g. '2160h' for 90 days).",
+              "default": "2160h"
+            },
+            "weak_patterns": {
+              "type": "array",
+              "description": "Substrings that indicate a weak or default secret.",
+              "items": { "type": "string" },
+              "default": []
+            }
+          }
+        }
+      }
+    },
+    "webhooks": {
+      "type": "object",
+      "description": "Webhook delivery configuration for audit events.",
+      "additionalProperties": false,
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "description": "Webhook endpoints to deliver audit events to.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["url", "events"],
+            "properties": {
+              "url": {
+                "type": "string",
+                "description": "HTTP(S) endpoint to POST events to.",
+                "format": "uri"
+              },
+              "events": {
+                "type": "array",
+                "description": "Event types to deliver. Use [\"*\"] to subscribe to all.",
+                "items": { "type": "string" }
+              },
+              "format": {
+                "type": "string",
+                "description": "Payload format.",
+                "enum": ["raw", "slack", "discord"],
+                "default": "raw"
+              },
+              "timeout_seconds": {
+                "type": "integer",
+                "description": "Per-request HTTP timeout in seconds.",
+                "default": 10,
+                "minimum": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "description": "Audit log sink configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable the audit log sink.",
+          "default": true
+        },
+        "output": {
+          "type": "string",
+          "description": "Write destination: 'stdout' or a file path.",
+          "default": "stdout"
+        }
+      }
+    },
+    "log": {
+      "type": "object",
+      "description": "Logging configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "type": "string",
+          "description": "Log level.",
+          "enum": ["debug", "info", "warn", "error"],
+          "default": "info"
+        },
+        "format": {
+          "type": "string",
+          "description": "Log format.",
+          "enum": ["json", "text"],
+          "default": "json"
+        }
+      }
+    },
+    "admin": {
+      "type": "object",
+      "description": "Admin API configuration.",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable the admin API at /_vibewarden/admin/*.",
+          "default": false
+        },
+        "token": {
+          "type": "string",
+          "description": "Bearer token for admin API authentication.",
+          "default": ""
+        }
+      }
+    },
+    "overrides": {
+      "type": "object",
+      "description": "Escape hatches for advanced users. All fields are optional.",
+      "additionalProperties": false,
+      "properties": {
+        "kratos_config": {
+          "type": "string",
+          "description": "Path to a custom kratos.yml file. When set, VibeWarden uses it instead of generating one."
+        },
+        "compose_file": {
+          "type": "string",
+          "description": "Path to a custom docker-compose.yml file."
+        },
+        "identity_schema": {
+          "type": "string",
+          "description": "Path to a custom Kratos identity schema JSON file."
+        }
+      }
+    }
+  }
+}
