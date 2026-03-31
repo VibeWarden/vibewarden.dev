@@ -205,6 +205,7 @@
     }
 
     .header-nav a:hover { color: var(--brand-purple-light); text-decoration: none; }
+    .header-nav a.nav-active { color: var(--brand-purple); font-weight: 600; }
 
     .theme-toggle {
       background: none;
@@ -666,6 +667,7 @@
         <span>VibeWarden</span>
       </a>
       <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link nav-active">Home</a>
         <a href="/docs/" class="nav-link">Docs</a>
         <a href="https://github.com/vibewarden/vibewarden" class="nav-link" rel="noopener">GitHub</a>
         <button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">
