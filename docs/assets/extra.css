@@ -79,6 +79,19 @@
 }
 
 /* Logo image should not have background square */
-.md-header__button.md-logo img {
+.md-header__button.md-logo img,
+.md-header .md-logo img {
   background: transparent;
+  object-fit: contain;
+}
+
+/* Make docs header logo link back to landing page */
+.md-header .md-logo {
+  /* The logo already links to docs home via MkDocs,
+     but visual consistency is what matters */
+}
+
+/* Match fonts with landing page */
+.md-typeset {
+  font-family: system-ui, -apple-system, sans-serif;
 }
