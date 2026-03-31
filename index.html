@@ -7,7 +7,8 @@
   <meta name="description" content="Zero-to-secure in minutes. TLS, auth, rate limiting, WAF, and AI-readable logs. One binary, one config file.">
   <meta name="theme-color" content="#7C3AED">
   <link rel="canonical" href="https://vibewarden.dev/">
-  <link rel="icon" type="image/png" href="/static/favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -186,7 +187,7 @@
 
     .header-logo:hover { text-decoration: none; }
 
-    .header-logo svg {
+    .header-logo img {
       width: 28px;
       height: 28px;
     }
@@ -661,11 +662,8 @@
   <header class="site-header" role="banner">
     <div class="container header-inner">
       <a href="/" class="header-logo" aria-label="VibeWarden home">
-        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-          <path d="M4 8L16 4L28 8L16 28L4 8Z" fill="url(#hg)"/>
-          <defs><linearGradient id="hg" x1="4" y1="4" x2="28" y2="28"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#06B6D4"/></linearGradient></defs>
-        </svg>
-        <span>\V/ VibeWarden</span>
+        <img src="/static/logo.png" alt="" width="28" height="28" aria-hidden="true">
+        <span>VibeWarden</span>
       </a>
       <nav class="header-nav" aria-label="Main navigation">
         <a href="/docs/" class="nav-link">Docs</a>
