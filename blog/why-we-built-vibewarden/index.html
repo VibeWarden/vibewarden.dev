@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why We Built VibeWarden — VibeWarden Blog</title>
+  <meta name="description" content="Vibe coding changed how fast we build apps. It didn't change how hard it is to secure them. Here's why we built a security sidecar for the AI-assisted development era.">
+  <meta name="theme-color" content="#7C3AED">
+  <link rel="canonical" href="https://vibewarden.dev/blog/why-we-built-vibewarden/">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VibeWarden">
+  <meta property="og:title" content="Why We Built VibeWarden">
+  <meta property="og:description" content="Vibe coding changed how fast we build apps. It didn't change how hard it is to secure them. Here's why we built a security sidecar for the AI-assisted development era.">
+  <meta property="og:url" content="https://vibewarden.dev/blog/why-we-built-vibewarden/">
+  <meta property="og:image" content="https://vibewarden.dev/static/logo-text.png">
+  <meta property="article:published_time" content="2026-03-31">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Why We Built VibeWarden">
+  <meta name="twitter:description" content="Vibe coding changed how fast we build apps. It didn't change how hard it is to secure them. Here's why we built a security sidecar for the AI-assisted development era.">
+  <meta name="twitter:image" content="https://vibewarden.dev/static/logo-text.png">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Why We Built VibeWarden",
+    "description": "Vibe coding changed how fast we build apps. It didn't change how hard it is to secure them.",
+    "datePublished": "2026-03-31",
+    "url": "https://vibewarden.dev/blog/why-we-built-vibewarden/",
+    "author": {
+      "@type": "Organization",
+      "name": "VibeWarden",
+      "url": "https://vibewarden.dev"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "VibeWarden",
+      "url": "https://vibewarden.dev",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://vibewarden.dev/static/logo.png"
+      }
+    }
+  }
+  </script>
+
+  <style>
+    /* ===== CSS Custom Properties ===== */
+    :root {
+      --brand-purple: #7C3AED;
+      --brand-purple-dark: #6D28D9;
+      --brand-purple-light: #8B5CF6;
+      --brand-cyan: #06B6D4;
+      --brand-cyan-dark: #0891B2;
+      --brand-gradient: linear-gradient(135deg, #7C3AED, #06B6D4);
+
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F8F7FC;
+      --bg-card: #FFFFFF;
+      --bg-code: #1E1B2E;
+      --text-primary: #1A1A2E;
+      --text-secondary: #4A4A6A;
+      --text-muted: #7A7A9A;
+      --text-code: #E2E0F0;
+      --border-color: #E8E5F0;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0F0E1A;
+      --bg-secondary: #1A1830;
+      --bg-card: #1E1B2E;
+      --bg-code: #12101F;
+      --text-primary: #E8E5F0;
+      --text-secondary: #B0ADC0;
+      --text-muted: #7A7890;
+      --text-code: #E2E0F0;
+      --border-color: #2A2840;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg-primary: #0F0E1A;
+        --bg-secondary: #1A1830;
+        --bg-card: #1E1B2E;
+        --bg-code: #12101F;
+        --text-primary: #E8E5F0;
+        --text-secondary: #B0ADC0;
+        --text-muted: #7A7890;
+        --text-code: #E2E0F0;
+        --border-color: #2A2840;
+        --card-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+      }
+    }
+
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: var(--brand-purple-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: 2px; border-radius: 2px; }
+
+    /* ===== Layout ===== */
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    /* ===== Header ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 0;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .header-logo:hover { text-decoration: none; }
+    .header-logo img { width: 28px; height: 28px; }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .header-nav a {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .header-nav a:hover { color: var(--brand-purple-light); text-decoration: none; }
+    .header-nav a.nav-active { color: var(--brand-purple); font-weight: 600; }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.4rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+      width: 36px;
+      height: 36px;
+    }
+
+    .theme-toggle:hover { border-color: var(--brand-purple); color: var(--brand-purple); }
+    .theme-toggle:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: 2px; }
+    .theme-toggle svg { width: 18px; height: 18px; }
+    .theme-toggle .icon-moon { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: none; }
+      :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: block; }
+    }
+
+    /* ===== Article ===== */
+    .article-header {
+      padding: 3rem 0 2rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .article-back:hover { color: var(--brand-purple-light); }
+    .article-back svg { width: 16px; height: 16px; }
+
+    .article-header h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .article-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .article-body {
+      max-width: 720px;
+      margin: 0 auto;
+      padding-bottom: 4rem;
+    }
+
+    .article-body h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .article-body h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .article-body p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+      line-height: 1.75;
+    }
+
+    .article-body ul, .article-body ol {
+      margin-bottom: 1.25rem;
+      padding-left: 1.5rem;
+    }
+
+    .article-body li {
+      margin-bottom: 0.4rem;
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+      line-height: 1.65;
+    }
+
+    .article-body strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .article-body code {
+      font-family: "SF Mono", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+      font-size: 0.88em;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 0.15em 0.35em;
+    }
+
+    .article-body pre {
+      background: var(--bg-code);
+      color: var(--text-code);
+      padding: 1.25rem 1.5rem;
+      border-radius: 10px;
+      font-family: "SF Mono", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    .article-body pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    .article-body pre .comment { color: #6B7280; }
+    .article-body pre .cmd { color: #C084FC; }
+    .article-body pre .key { color: #A78BFA; }
+    .article-body pre .value { color: #67E8F9; }
+    .article-body pre .flag { color: #67E8F9; }
+
+    .article-body hr {
+      border: none;
+      border-top: 1px solid var(--border-color);
+      margin: 2.5rem 0;
+    }
+
+    /* ===== Footer ===== */
+    .site-footer {
+      border-top: 1px solid var(--border-color);
+      padding: 2rem 0;
+      text-align: center;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-inner a { color: var(--text-secondary); }
+    .footer-inner a:hover { color: var(--brand-purple-light); }
+    .footer-sep { color: var(--border-color); }
+
+    /* ===== Skip Link ===== */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      background: var(--brand-purple);
+      color: #FFFFFF;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      z-index: 200;
+      font-weight: 600;
+    }
+
+    .skip-link:focus { top: 0.5rem; }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 480px) {
+      .article-header { padding: 2rem 0 1.5rem; }
+      .header-nav .nav-link { display: none; }
+      .article-body pre { padding: 1rem; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="/" class="header-logo" aria-label="VibeWarden home">
+        <img src="/static/logo.png" alt="" width="28" height="28" aria-hidden="true">
+        <span>VibeWarden</span>
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/docs/" class="nav-link">Docs</a>
+        <a href="/blog/" class="nav-link nav-active">Blog</a>
+        <a href="https://github.com/vibewarden/vibewarden" class="nav-link" rel="noopener">GitHub</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <article>
+        <div class="article-header">
+          <a href="/blog/" class="article-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            All posts
+          </a>
+          <h1>Why We Built VibeWarden</h1>
+          <div class="article-meta">
+            <time datetime="2026-03-31">March 31, 2026</time>
+          </div>
+        </div>
+
+        <div class="article-body">
+          <p>
+            Something changed in how developers build software. Over the past year, tools like Cursor, Claude Code, and GitHub Copilot turned a new generation of builders loose. People who previously couldn't ship a web app are now deploying full-stack applications in a weekend. Experienced developers are moving two to three times faster than before.
+          </p>
+          <p>
+            This is vibe coding -- you describe what you want, the AI writes the code, you iterate until it works. The feedback loop is tight. The results are real. Thousands of new apps are hitting production every week.
+          </p>
+          <p>
+            But there's a gap. A big one.
+          </p>
+
+          <h2>The security gap</h2>
+          <p>
+            AI coding assistants are great at building features. They are not great at bolting on production security after the fact. When you're done vibe coding your app, you still need to:
+          </p>
+          <ul>
+            <li>Configure nginx as a reverse proxy (and hope you copy the right config from Stack Overflow)</li>
+            <li>Set up certbot for TLS certificates, plus a cron job to renew them</li>
+            <li>Install fail2ban and write rules you'll never test</li>
+            <li>Add rate limiting -- maybe in your app code, maybe in nginx, maybe both</li>
+            <li>Implement authentication middleware by hand</li>
+            <li>Bolt on security headers (CSP, HSTS, X-Frame-Options) and hope you got them right</li>
+            <li>Set up logging that's actually searchable</li>
+          </ul>
+          <p>
+            That's at least six different tools, six different configuration formats, and six different failure modes. Each one is a part-time job to maintain. And if you're a solo developer or a small team riding the vibe coding wave, you probably skip most of these steps.
+          </p>
+          <p>
+            We know because we did the same thing.
+          </p>
+
+          <h2>One binary, one config file</h2>
+          <p>
+            VibeWarden replaces that entire stack with a single Go binary. It runs as a sidecar on the same machine as your app, sitting between the internet and your application. Every request passes through VibeWarden's middleware chain before reaching your code.
+          </p>
+          <p>
+            Here's what getting started actually looks like:
+          </p>
+          <pre><code><span class="comment"># Install</span>
+<span class="cmd">curl</span> -sS https://vibewarden.dev/install.sh | sh
+
+<span class="comment"># Generate a config file</span>
+<span class="cmd">vibew</span> init <span class="flag">--upstream 3000 --auth --rate-limit</span>
+
+<span class="comment"># Run it</span>
+<span class="cmd">vibew</span> dev</code></pre>
+          <p>
+            That's it. Your app on port 3000 is now behind a reverse proxy with automatic TLS, API key authentication, and rate limiting. No nginx. No certbot cron jobs. No code changes in your app.
+          </p>
+          <p>
+            Everything is configured in a single <code>vibewarden.yaml</code> file:
+          </p>
+          <pre><code><span class="key">upstream:</span> <span class="value">http://localhost:3000</span>
+<span class="key">tls:</span>
+  <span class="key">auto:</span> <span class="value">true</span>
+  <span class="key">domain:</span> <span class="value">myapp.dev</span>
+<span class="key">auth:</span>
+  <span class="key">type:</span> <span class="value">api-key</span>
+<span class="key">rate_limit:</span>
+  <span class="key">requests:</span> <span class="value">100</span>
+  <span class="key">window:</span> <span class="value">60s</span>
+<span class="key">waf:</span>
+  <span class="key">mode:</span> <span class="value">block</span></code></pre>
+          <p>
+            Enable a feature by adding a few lines of YAML. Disable it by removing them. Every feature is a plugin -- TLS, auth, rate limiting, WAF, security headers, CORS, egress proxy, and more -- and disabled plugins add zero overhead.
+          </p>
+
+          <h2>Built for the AI-assisted workflow</h2>
+          <p>
+            Here's the insight that shaped VibeWarden's design: if your app is vibe-coded, your security setup should be too.
+          </p>
+          <p>
+            When your AI coding assistant hits a security error, it needs to understand what happened. Traditional log formats -- long lines of unstructured text -- are hard for LLMs to parse reliably. VibeWarden emits <strong>structured audit events</strong> with a published JSON schema. Each event includes a human-readable summary, a machine-readable payload, and a severity level.
+          </p>
+          <p>
+            That means your AI agent can read a VibeWarden log line, understand that a request was blocked by the WAF for a SQL injection pattern, and suggest a fix -- without you having to interpret the log yourself.
+          </p>
+          <p>
+            The YAML configuration is equally intentional. YAML is one of the formats LLMs handle best. When you tell your AI assistant "add rate limiting at 200 requests per minute," it can edit <code>vibewarden.yaml</code> directly and get it right on the first try.
+          </p>
+          <p>
+            We also publish <code>llms.txt</code> and <code>llms-full.txt</code> files on our website -- AI-readable summaries of what VibeWarden is and how to set it up. When your coding assistant needs to look up VibeWarden docs, it can consume these files directly instead of scraping HTML.
+          </p>
+
+          <h2>What's in the box</h2>
+          <p>
+            VibeWarden ships as a single binary built in Go, with Caddy embedded as the reverse proxy engine. Here's what the middleware chain does to every inbound request:
+          </p>
+          <ol>
+            <li><strong>IP filtering</strong> -- allowlist or blocklist by IP and CIDR range</li>
+            <li><strong>Body size limits</strong> -- global and per-path maximum request sizes</li>
+            <li><strong>Rate limiting (per-IP)</strong> -- token bucket, in-memory or Redis-backed</li>
+            <li><strong>WAF</strong> -- blocks SQL injection, XSS, and path traversal (detect or block mode)</li>
+            <li><strong>Authentication</strong> -- JWT/OIDC, Ory Kratos session, or API key, with user identity injected as headers</li>
+            <li><strong>Rate limiting (per-user)</strong> -- applied after authentication</li>
+            <li><strong>Secret injection</strong> -- pulls secrets from OpenBao and injects them as request headers</li>
+            <li><strong>Reverse proxy</strong> -- forwards the clean request to your app</li>
+            <li><strong>Security headers</strong> -- HSTS, CSP, X-Frame-Options on every response</li>
+            <li><strong>Audit logging</strong> -- structured event for every security-relevant action</li>
+          </ol>
+          <p>
+            On the outbound side, the egress proxy controls what external APIs your app can talk to. You configure an allowlist of domains, and VibeWarden blocks everything else. This catches server-side request forgery (SSRF) and unexpected data exfiltration.
+          </p>
+          <p>
+            There's also a prompt injection detection layer for LLM-powered apps, catching injection attacks before they reach your model.
+          </p>
+
+          <h2>Zero code changes (for ingress)</h2>
+          <p>
+            VibeWarden intercepts traffic at the network level. Your app doesn't need to import a library, add middleware, or change a single line of code. It doesn't matter if your app is written in Python, Node, Go, Ruby, or whatever your AI assistant chose for you.
+          </p>
+          <p>
+            The egress proxy requires pointing your app's outbound requests through VibeWarden's proxy (usually one environment variable: <code>HTTP_PROXY</code>). But for everything on the inbound side -- TLS, auth, rate limiting, WAF, headers, logging -- it just works.
+          </p>
+
+          <h2>What's next</h2>
+          <p>
+            VibeWarden is open source under the Apache 2.0 license. The core will stay free.
+          </p>
+          <p>
+            We're working on:
+          </p>
+          <ul>
+            <li><strong>Community</strong> -- we want VibeWarden's defaults and rules to improve based on what real deployments encounter</li>
+            <li><strong>VibeWarden Pro</strong> -- a hosted dashboard for teams that want fleet-wide visibility, centralized config, and managed updates</li>
+            <li><strong>More integrations</strong> -- broader identity provider support, additional secret backends, and observability stack options</li>
+          </ul>
+          <p>
+            If you're building something with AI-assisted tools and you've been putting off security, give VibeWarden a try. Three commands, five minutes, and your app is production-hardened.
+          </p>
+          <pre><code><span class="cmd">curl</span> -sS https://vibewarden.dev/install.sh | sh
+<span class="cmd">vibew</span> init <span class="flag">--upstream 3000 --auth --rate-limit</span>
+<span class="cmd">vibew</span> dev</code></pre>
+          <p>
+            Read the <a href="/docs/">full documentation</a>, or check out the <a href="https://github.com/vibewarden/vibewarden">source on GitHub</a>.
+          </p>
+
+          <hr>
+
+          <p>
+            <em>You vibe, we warden. Security is no longer your burden.</em>
+          </p>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <span>Apache 2.0 License</span>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="/docs/">Documentation</a>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="/blog/">Blog</a>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var toggle = document.getElementById('themeToggle');
+      if (!toggle) return;
+
+      var root = document.documentElement;
+      var DOCS_KEY = '/docs/.__palette';
+
+      function getStored() {
+        try {
+          var own = localStorage.getItem('theme');
+          if (own === 'dark' || own === 'light') return own;
+          var mkdocs = JSON.parse(localStorage.getItem(DOCS_KEY));
+          if (mkdocs && mkdocs.color && mkdocs.color.scheme) {
+            return mkdocs.color.scheme === 'slate' ? 'dark' : 'light';
+          }
+        } catch(e) {}
+        return null;
+      }
+
+      function saveTheme(theme) {
+        try {
+          localStorage.setItem('theme', theme);
+          var scheme = theme === 'dark' ? 'slate' : 'default';
+          var palette = {
+            index: theme === 'dark' ? 1 : 0,
+            color: { scheme: scheme, primary: 'deep-purple', accent: 'cyan', media: '' }
+          };
+          localStorage.setItem(DOCS_KEY, JSON.stringify(palette));
+        } catch(e) {}
+      }
+
+      var stored = getStored();
+      if (stored) {
+        root.setAttribute('data-theme', stored);
+      }
+
+      toggle.addEventListener('click', function() {
+        var current = root.getAttribute('data-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var next;
+        if (current === 'dark') {
+          next = 'light';
+        } else if (current === 'light') {
+          next = 'dark';
+        } else {
+          next = prefersDark ? 'light' : 'dark';
+        }
+        root.setAttribute('data-theme', next);
+        saveTheme(next);
+      });
+    })();
+  </script>
+</body>
+</html>
