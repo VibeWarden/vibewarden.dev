@@ -23,75 +23,201 @@
   --md-accent-fg-color: #06B6D4;
 }
 
-/* ===== Consistent header with landing page (#31) ===== */
+/* Match fonts with landing page */
+.md-typeset {
+  font-family: system-ui, -apple-system, sans-serif;
+}
 
-/* Light mode: white header like landing page */
-[data-md-color-scheme="default"] .md-header {
+/* ===== Shared top navigation bar (injected by theme-sync.js) ===== */
+
+#vw-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   background: #FFFFFF;
-  color: #1A1A2E;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  border-bottom: 1px solid #E8E5F0;
+  padding: 0.75rem 1rem;
+  font-family: system-ui, -apple-system, sans-serif;
 }
-[data-md-color-scheme="default"] .md-header .md-header__title,
-[data-md-color-scheme="default"] .md-header .md-header__topic,
-[data-md-color-scheme="default"] .md-header .md-header__button,
-[data-md-color-scheme="default"] .md-header .md-source,
-[data-md-color-scheme="default"] .md-header .md-source__repository {
-  color: #1A1A2E;
+
+[data-md-color-scheme="slate"] #vw-topbar {
+  background: #1A1A2E;
+  border-bottom-color: #2A2A4A;
 }
-[data-md-color-scheme="default"] .md-header .md-header__button:hover,
-[data-md-color-scheme="default"] .md-header .md-source:hover {
+
+.vw-topbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vw-topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #1A1A2E;
+  text-decoration: none;
+}
+
+.vw-topbar-logo:hover { text-decoration: none; }
+
+.vw-topbar-logo img {
+  width: 28px;
+  height: 28px;
+}
+
+[data-md-color-scheme="slate"] .vw-topbar-logo {
+  color: #E2E0F0;
+}
+
+.vw-topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.vw-topbar-nav a {
+  color: #4A4A6A;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.vw-topbar-nav a:hover {
+  color: #8B5CF6;
+  text-decoration: none;
+}
+
+.vw-topbar-nav a.vw-active {
+  color: #7C3AED;
+  font-weight: 600;
+}
+
+[data-md-color-scheme="slate"] .vw-topbar-nav a {
+  color: #9A9ABB;
+}
+
+[data-md-color-scheme="slate"] .vw-topbar-nav a:hover {
+  color: #8B5CF6;
+}
+
+[data-md-color-scheme="slate"] .vw-topbar-nav a.vw-active {
+  color: #8B5CF6;
+}
+
+.vw-theme-toggle {
+  background: none;
+  border: 1px solid #E8E5F0;
+  border-radius: 8px;
+  padding: 0.4rem;
+  cursor: pointer;
+  color: #4A4A6A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.vw-theme-toggle:hover {
+  border-color: #7C3AED;
   color: #7C3AED;
 }
-[data-md-color-scheme="default"] .md-header .md-search__input {
+
+.vw-theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+[data-md-color-scheme="slate"] .vw-theme-toggle {
+  border-color: #2A2A4A;
+  color: #9A9ABB;
+}
+
+[data-md-color-scheme="slate"] .vw-theme-toggle:hover {
+  border-color: #8B5CF6;
+  color: #8B5CF6;
+}
+
+/* ===== Hide MkDocs native header elements that duplicate the shared bar ===== */
+
+/* Hide the logo, palette toggle, and source repo from MkDocs header
+   since they're now in the shared top bar */
+.md-header .md-header__button.md-logo,
+.md-header .md-header__button[for="__palette_0"],
+.md-header .md-header__button[for="__palette_1"],
+.md-header [data-md-component="palette"],
+.md-header .md-header__source {
+  display: none;
+}
+
+/* Restyle remaining MkDocs header as a secondary nav (search + title) */
+.md-header {
+  position: sticky;
+  box-shadow: none;
+}
+
+[data-md-color-scheme="default"] .md-header {
   background: #F8F7FC;
   color: #1A1A2E;
 }
 
-/* Light mode tabs */
+[data-md-color-scheme="default"] .md-header .md-header__title,
+[data-md-color-scheme="default"] .md-header .md-header__topic {
+  color: #1A1A2E;
+}
+
+[data-md-color-scheme="default"] .md-header .md-search__input {
+  background: #FFFFFF;
+  color: #1A1A2E;
+}
+
+[data-md-color-scheme="default"] .md-header .md-header__button {
+  color: #4A4A6A;
+}
+
+/* Tabs restyle */
 [data-md-color-scheme="default"] .md-tabs {
   background: #F8F7FC;
   border-bottom: 1px solid #E8E5F0;
 }
+
 [data-md-color-scheme="default"] .md-tabs__link {
   color: #4A4A6A;
 }
+
 [data-md-color-scheme="default"] .md-tabs__link--active,
 [data-md-color-scheme="default"] .md-tabs__item--active .md-tabs__link {
   color: #7C3AED;
 }
 
-/* Dark mode header */
+/* Dark mode secondary header */
 [data-md-color-scheme="slate"] .md-header {
-  background: #1A1A2E;
+  background: #16162A;
   color: #E2E0F0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
+
 [data-md-color-scheme="slate"] .md-tabs {
   background: #16162A;
   border-bottom: 1px solid #2A2A4A;
 }
+
 [data-md-color-scheme="slate"] .md-tabs__link {
   color: #9A9ABB;
 }
+
 [data-md-color-scheme="slate"] .md-tabs__link--active,
 [data-md-color-scheme="slate"] .md-tabs__item--active .md-tabs__link {
   color: #8B5CF6;
 }
 
-/* Logo image should not have background square */
-.md-header__button.md-logo img,
+/* Logo image transparency */
 .md-header .md-logo img {
   background: transparent;
   object-fit: contain;
-}
-
-/* Make docs header logo link back to landing page */
-.md-header .md-logo {
-  /* The logo already links to docs home via MkDocs,
-     but visual consistency is what matters */
-}
-
-/* Match fonts with landing page */
-.md-typeset {
-  font-family: system-ui, -apple-system, sans-serif;
 }
