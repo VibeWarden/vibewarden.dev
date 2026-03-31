@@ -243,8 +243,8 @@
     }
 
     .hero-logo {
-      width: 120px;
-      height: 120px;
+      width: 280px;
+      height: auto;
       margin: 0 auto 1.5rem;
     }
 
@@ -640,7 +640,7 @@
     @media (max-width: 480px) {
       section { padding: 3rem 0; }
       .hero { padding: 3.5rem 0 3rem; }
-      .hero-logo { width: 88px; height: 88px; }
+      .hero-logo { width: 200px; height: auto; }
       .header-nav .nav-link { display: none; }
       .hero-install { padding: 0.75rem 1rem; }
       .hero-install code { font-size: 0.8rem; }
@@ -684,7 +684,7 @@
     <!-- Hero -->
     <section class="hero" aria-labelledby="hero-heading">
       <div class="container">
-        <img src="/static/logo-text.png" alt="VibeWarden logo" class="hero-logo" width="120" height="120" loading="eager">
+        <img src="/static/logo-text.png" alt="VibeWarden logo" class="hero-logo" width="280" loading="eager">
         <h1 id="hero-heading">
           <span class="gradient-text">Security sidecar</span><br>
           for vibe-coded apps
@@ -934,15 +934,49 @@
 
   <script>
     // Dark mode toggle — progressive enhancement
+    // Syncs with MkDocs Material's __palette localStorage key so dark mode
+    // persists when navigating between landing page and docs.
     (function() {
       var toggle = document.getElementById('themeToggle');
       if (!toggle) return;
 
       var root = document.documentElement;
-      var stored = null;
-      try { stored = localStorage.getItem('theme'); } catch(e) {}
+      var DOCS_KEY = '/docs/.__palette';
 
-      if (stored === 'dark' || stored === 'light') {
+      // Read theme: check our key first, then MkDocs palette, then system
+      function getStored() {
+        try {
+          var own = localStorage.getItem('theme');
+          if (own === 'dark' || own === 'light') return own;
+          var mkdocs = JSON.parse(localStorage.getItem(DOCS_KEY));
+          if (mkdocs && mkdocs.color && mkdocs.color.scheme) {
+            return mkdocs.color.scheme === 'slate' ? 'dark' : 'light';
+          }
+        } catch(e) {}
+        return null;
+      }
+
+      // Write theme to both landing page and MkDocs keys
+      function saveTheme(theme) {
+        try {
+          localStorage.setItem('theme', theme);
+          // Write MkDocs Material format so docs pick it up
+          var scheme = theme === 'dark' ? 'slate' : 'default';
+          var palette = {
+            index: theme === 'dark' ? 1 : 0,
+            color: {
+              scheme: scheme,
+              primary: 'deep-purple',
+              accent: 'cyan',
+              media: ''
+            }
+          };
+          localStorage.setItem(DOCS_KEY, JSON.stringify(palette));
+        } catch(e) {}
+      }
+
+      var stored = getStored();
+      if (stored) {
         root.setAttribute('data-theme', stored);
       }
 
@@ -960,7 +994,7 @@
         }
 
         root.setAttribute('data-theme', next);
-        try { localStorage.setItem('theme', next); } catch(e) {}
+        saveTheme(next);
       });
     })();
 
