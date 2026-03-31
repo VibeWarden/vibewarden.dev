@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeWarden — Security sidecar for vibe-coded apps</title>
+  <meta name="description" content="Zero-to-secure in minutes. TLS, auth, rate limiting, WAF, and AI-readable logs. One binary, one config file.">
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 4rem auto; padding: 0 1rem; color: #1a1a2e; }
+    h1 { color: #7C3AED; }
+    code { background: #f3f0ff; padding: 0.2em 0.4em; border-radius: 3px; font-size: 0.9em; }
+    pre { background: #1a1a2e; color: #e0e0e0; padding: 1.5rem; border-radius: 8px; overflow-x: auto; }
+    a { color: #7C3AED; }
+    .cta { display: inline-block; background: #7C3AED; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; margin-top: 1rem; }
+    .cta:hover { background: #6D28D9; }
+  </style>
+</head>
+<body>
+  <h1>VibeWarden</h1>
+  <p><strong>Security sidecar for vibe-coded apps.</strong><br>
+  TLS, auth, rate limiting, WAF, and AI-readable structured logs.<br>
+  One binary. One config file. Zero-to-secure in minutes.</p>
+
+  <pre><code>curl -sS https://vibewarden.dev/install.sh | sh
+vibew init --upstream 3000 --auth --rate-limit
+vibew dev</code></pre>
+
+  <a href="https://github.com/vibewarden/vibewarden" class="cta">Get Started</a>
+
+  <h2>Why VibeWarden?</h2>
+  <ul>
+    <li><strong>For vibe coders</strong> — your AI agent can configure it</li>
+    <li><strong>One binary</strong> — no nginx + certbot + fail2ban duct tape</li>
+    <li><strong>AI-readable logs</strong> — every event has a schema, summary, and payload</li>
+    <li><strong>Prompt injection detection</strong> — protect your LLM-powered app</li>
+    <li><strong>Apache 2.0</strong> — free forever, no vendor lock-in</li>
+  </ul>
+
+  <p>Coming soon. <a href="https://github.com/vibewarden/vibewarden">Star on GitHub</a> to follow along.</p>
+</body>
+</html>

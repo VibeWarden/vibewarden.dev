@@ -1,0 +1,31 @@
+# VibeWarden
+
+> Security sidecar for vibe-coded apps
+
+VibeWarden is an open-source security sidecar that protects your web app with zero config changes. Single Go binary embedding Caddy. Runs locally next to your app.
+
+## Install
+curl -sS https://vibewarden.dev/install.sh | sh
+
+## Quick start
+vibew init --upstream 3000 --auth --rate-limit
+vibew dev
+
+## Features
+- TLS termination (Let's Encrypt, self-signed, external)
+- Authentication (JWT/OIDC, API keys, Ory Kratos sessions)
+- Rate limiting (per-IP, per-user, Redis-backed)
+- WAF (SQLi, XSS, path traversal detection)
+- Security headers (HSTS, CSP, CORP, COOP, etc.)
+- Egress proxy with SSRF protection
+- AI-readable structured logs with schema
+- Prompt injection detection for LLM apps
+- Prometheus metrics + OpenTelemetry export
+
+## Docs
+- Full setup guide: https://vibewarden.dev/llms-full.txt
+- Config reference: https://vibewarden.dev/docs/configuration
+- GitHub: https://github.com/vibewarden/vibewarden
+
+## License
+Apache 2.0 (free forever)
