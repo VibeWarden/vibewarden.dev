@@ -5,37 +5,939 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VibeWarden — Security sidecar for vibe-coded apps</title>
   <meta name="description" content="Zero-to-secure in minutes. TLS, auth, rate limiting, WAF, and AI-readable logs. One binary, one config file.">
+  <meta name="theme-color" content="#7C3AED">
+  <link rel="icon" type="image/png" href="/static/favicon.png">
   <style>
-    body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 4rem auto; padding: 0 1rem; color: #1a1a2e; }
-    h1 { color: #7C3AED; }
-    code { background: #f3f0ff; padding: 0.2em 0.4em; border-radius: 3px; font-size: 0.9em; }
-    pre { background: #1a1a2e; color: #e0e0e0; padding: 1.5rem; border-radius: 8px; overflow-x: auto; }
-    a { color: #7C3AED; }
-    .cta { display: inline-block; background: #7C3AED; color: white; padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 600; margin-top: 1rem; }
-    .cta:hover { background: #6D28D9; }
+    /* ===== CSS Custom Properties ===== */
+    :root {
+      --brand-purple: #7C3AED;
+      --brand-purple-dark: #6D28D9;
+      --brand-purple-light: #8B5CF6;
+      --brand-cyan: #06B6D4;
+      --brand-cyan-dark: #0891B2;
+      --brand-gradient: linear-gradient(135deg, #7C3AED, #06B6D4);
+
+      /* Light mode (default) */
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F8F7FC;
+      --bg-card: #FFFFFF;
+      --bg-code: #1E1B2E;
+      --text-primary: #1A1A2E;
+      --text-secondary: #4A4A6A;
+      --text-muted: #7A7A9A;
+      --text-code: #E2E0F0;
+      --border-color: #E8E5F0;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+      --card-shadow-hover: 0 4px 12px rgba(124,58,237,0.12), 0 8px 24px rgba(0,0,0,0.06);
+      --code-copy-bg: rgba(255,255,255,0.1);
+      --before-bg: #FEF2F2;
+      --before-border: #EF4444;
+      --before-text: #991B1B;
+      --after-bg: #F0FDF4;
+      --after-border: #22C55E;
+      --after-text: #166534;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0F0E1A;
+      --bg-secondary: #1A1830;
+      --bg-card: #1E1B2E;
+      --bg-code: #12101F;
+      --text-primary: #E8E5F0;
+      --text-secondary: #B0ADC0;
+      --text-muted: #7A7890;
+      --text-code: #E2E0F0;
+      --border-color: #2A2840;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+      --card-shadow-hover: 0 4px 12px rgba(124,58,237,0.25), 0 8px 24px rgba(0,0,0,0.3);
+      --code-copy-bg: rgba(255,255,255,0.08);
+      --before-bg: #2A1215;
+      --before-border: #DC2626;
+      --before-text: #FCA5A5;
+      --after-bg: #122015;
+      --after-border: #16A34A;
+      --after-text: #86EFAC;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg-primary: #0F0E1A;
+        --bg-secondary: #1A1830;
+        --bg-card: #1E1B2E;
+        --bg-code: #12101F;
+        --text-primary: #E8E5F0;
+        --text-secondary: #B0ADC0;
+        --text-muted: #7A7890;
+        --text-code: #E2E0F0;
+        --border-color: #2A2840;
+        --card-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+        --card-shadow-hover: 0 4px 12px rgba(124,58,237,0.25), 0 8px 24px rgba(0,0,0,0.3);
+        --code-copy-bg: rgba(255,255,255,0.08);
+        --before-bg: #2A1215;
+        --before-border: #DC2626;
+        --before-text: #FCA5A5;
+        --after-bg: #122015;
+        --after-border: #16A34A;
+        --after-text: #86EFAC;
+      }
+    }
+
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: var(--brand-purple-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: 2px; border-radius: 2px; }
+
+    /* ===== Layout ===== */
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    section {
+      padding: 4rem 0;
+    }
+
+    /* ===== Header ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 0;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .header-logo:hover { text-decoration: none; }
+
+    .header-logo svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .header-nav a {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .header-nav a:hover { color: var(--brand-purple-light); text-decoration: none; }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.4rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+      width: 36px;
+      height: 36px;
+    }
+
+    .theme-toggle:hover { border-color: var(--brand-purple); color: var(--brand-purple); }
+    .theme-toggle:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: 2px; }
+
+    .theme-toggle svg { width: 18px; height: 18px; }
+
+    .theme-toggle .icon-moon { display: none; }
+
+    [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: none; }
+      :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: block; }
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      text-align: center;
+      padding: 5rem 0 4rem;
+    }
+
+    .hero-logo {
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .hero h1 .gradient-text {
+      background: var(--brand-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero .tagline {
+      font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto 0.5rem;
+    }
+
+    .hero .slogan {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: 2rem;
+    }
+
+    .hero-install {
+      background: var(--bg-code);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      max-width: 520px;
+      margin: 0 auto 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .hero-install code {
+      color: var(--text-code);
+      font-family: "SF Mono", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+
+    .hero-install .copy-btn {
+      background: var(--code-copy-bg);
+      border: none;
+      border-radius: 6px;
+      padding: 0.4rem;
+      cursor: pointer;
+      color: var(--text-code);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .hero-install .copy-btn:hover { background: rgba(124,58,237,0.3); }
+    .hero-install .copy-btn:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: 2px; }
+    .hero-install .copy-btn svg { width: 18px; height: 18px; }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover { text-decoration: none; transform: translateY(-1px); }
+    .btn:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: 2px; }
+
+    .btn-primary {
+      background: var(--brand-gradient);
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+    }
+
+    .btn-primary:hover { box-shadow: 0 4px 16px rgba(124,58,237,0.4); }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+    }
+
+    .btn-secondary:hover { border-color: var(--brand-purple); }
+
+    .btn svg { width: 18px; height: 18px; }
+
+    /* ===== Section Headers ===== */
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-header h2 {
+      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ===== Features ===== */
+    .features {
+      background: var(--bg-secondary);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+      box-shadow: var(--card-shadow);
+    }
+
+    .feature-card:hover {
+      box-shadow: var(--card-shadow-hover);
+      border-color: var(--brand-purple);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: var(--brand-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .feature-icon svg { width: 22px; height: 22px; color: #FFFFFF; }
+
+    .feature-card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .feature-card p {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ===== How It Works ===== */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      counter-reset: step;
+    }
+
+    .step {
+      position: relative;
+      counter-increment: step;
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--brand-gradient);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .step h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .step p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .step pre {
+      background: var(--bg-code);
+      color: var(--text-code);
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: "SF Mono", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .step pre .comment { color: #6B7280; }
+    .step pre .key { color: #A78BFA; }
+    .step pre .value { color: #67E8F9; }
+    .step pre .cmd { color: #C084FC; }
+
+    /* ===== Comparison ===== */
+    .comparison {
+      background: var(--bg-secondary);
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 640px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+    }
+
+    .comparison-col {
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 2px solid;
+    }
+
+    .comparison-col.before {
+      background: var(--before-bg);
+      border-color: var(--before-border);
+    }
+
+    .comparison-col.after {
+      background: var(--after-bg);
+      border-color: var(--after-border);
+    }
+
+    .comparison-col h3 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .comparison-col.before h3 { color: var(--before-text); }
+    .comparison-col.after h3 { color: var(--after-text); }
+
+    .comparison-col ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .comparison-col li {
+      font-size: 0.9rem;
+      padding: 0.35rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .comparison-col.before li { color: var(--before-text); }
+    .comparison-col.after li { color: var(--after-text); }
+
+    .comparison-col li svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 0.15rem; }
+
+    /* ===== CTA ===== */
+    .cta-section {
+      text-align: center;
+      padding: 5rem 0;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .cta-section p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 480px;
+      margin: 0 auto 2rem;
+    }
+
+    .cta-install {
+      background: var(--bg-code);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      max-width: 520px;
+      margin: 0 auto 2rem;
+      text-align: left;
+    }
+
+    .cta-install code {
+      color: var(--text-code);
+      font-family: "SF Mono", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+    }
+
+    .cta-install .cmd { color: #C084FC; }
+    .cta-install .flag { color: #67E8F9; }
+
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* ===== Footer ===== */
+    .site-footer {
+      border-top: 1px solid var(--border-color);
+      padding: 2rem 0;
+      text-align: center;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-inner a {
+      color: var(--text-secondary);
+    }
+
+    .footer-inner a:hover { color: var(--brand-purple-light); }
+
+    .footer-sep { color: var(--border-color); }
+
+    /* ===== Skip Link ===== */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      background: var(--brand-purple);
+      color: #FFFFFF;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      z-index: 200;
+      font-weight: 600;
+    }
+
+    .skip-link:focus {
+      top: 0.5rem;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 480px) {
+      section { padding: 3rem 0; }
+      .hero { padding: 3.5rem 0 3rem; }
+      .hero-logo { width: 88px; height: 88px; }
+      .header-nav .nav-link { display: none; }
+      .hero-install { padding: 0.75rem 1rem; }
+      .hero-install code { font-size: 0.8rem; }
+    }
+
+    @media (min-width: 768px) {
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 1024px) {
+      .feature-grid { grid-template-columns: repeat(4, 1fr); }
+    }
   </style>
 </head>
 <body>
-  <h1>VibeWarden</h1>
-  <p><strong>Security sidecar for vibe-coded apps.</strong><br>
-  TLS, auth, rate limiting, WAF, and AI-readable structured logs.<br>
-  One binary. One config file. Zero-to-secure in minutes.</p>
+  <a class="skip-link" href="#main">Skip to main content</a>
 
-  <pre><code>curl -sS https://vibewarden.dev/install.sh | sh
-vibew init --upstream 3000 --auth --rate-limit
-vibew dev</code></pre>
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="/" class="header-logo" aria-label="VibeWarden home">
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M4 8L16 4L28 8L16 28L4 8Z" fill="url(#hg)"/>
+          <defs><linearGradient id="hg" x1="4" y1="4" x2="28" y2="28"><stop stop-color="#7C3AED"/><stop offset="1" stop-color="#06B6D4"/></linearGradient></defs>
+        </svg>
+        <span>\V/ VibeWarden</span>
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/docs/" class="nav-link">Docs</a>
+        <a href="https://github.com/vibewarden/vibewarden" class="nav-link" rel="noopener">GitHub</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
 
-  <a href="https://github.com/vibewarden/vibewarden" class="cta">Get Started</a>
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="container">
+        <img src="/static/logo-text.png" alt="VibeWarden logo" class="hero-logo" width="120" height="120" loading="eager">
+        <h1 id="hero-heading">
+          <span class="gradient-text">Security sidecar</span><br>
+          for vibe-coded apps
+        </h1>
+        <p class="tagline">TLS, auth, rate limiting, WAF, and AI-readable logs. One binary, one config file. Zero-to-secure in minutes.</p>
+        <p class="slogan">You vibe, we warden. Security is no longer your burden.</p>
 
-  <h2>Why VibeWarden?</h2>
-  <ul>
-    <li><strong>For vibe coders</strong> — your AI agent can configure it</li>
-    <li><strong>One binary</strong> — no nginx + certbot + fail2ban duct tape</li>
-    <li><strong>AI-readable logs</strong> — every event has a schema, summary, and payload</li>
-    <li><strong>Prompt injection detection</strong> — protect your LLM-powered app</li>
-    <li><strong>Apache 2.0</strong> — free forever, no vendor lock-in</li>
-  </ul>
+        <div class="hero-install" role="group" aria-label="Install command">
+          <code>curl -sS https://vibewarden.dev/install.sh | sh</code>
+          <button class="copy-btn" type="button" aria-label="Copy install command" data-copy="curl -sS https://vibewarden.dev/install.sh | sh">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+        </div>
 
-  <p>Coming soon. <a href="https://github.com/vibewarden/vibewarden">Star on GitHub</a> to follow along.</p>
+        <div class="hero-actions">
+          <a href="/docs/" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Read the Docs
+          </a>
+          <a href="https://github.com/vibewarden/vibewarden" class="btn btn-secondary" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            Star on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" aria-labelledby="features-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="features-heading">Everything you need, nothing you don't</h2>
+          <p>Production-grade security from a single binary. No nginx, no certbot, no duct tape.</p>
+        </div>
+        <div class="feature-grid" role="list">
+          <article class="feature-card" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3>Automatic TLS</h3>
+            <p>HTTPS certificates from Let's Encrypt, auto-renewed. Zero configuration needed.</p>
+          </article>
+          <article class="feature-card" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <h3>Authentication</h3>
+            <p>API keys, JWT validation, and OAuth2 proxy built in. Protect endpoints in one line.</p>
+          </article>
+          <article class="feature-card" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <h3>Rate Limiting</h3>
+            <p>Token bucket rate limiting per IP, user, or API key. Stop abuse before it starts.</p>
+          </article>
+          <article class="feature-card" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>WAF</h3>
+            <p>Web Application Firewall with OWASP rules. Block SQLi, XSS, and path traversal.</p>
+          </article>
+          <article class="feature-card" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <h3>AI-Readable Logs</h3>
+            <p>Structured events with schemas, summaries, and payloads. Your AI agent can parse them.</p>
+          </article>
+          <article class="feature-card" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <h3>Prompt Injection Detection</h3>
+            <p>Catch prompt injection attacks aimed at your LLM-powered app before they reach your model.</p>
+          </article>
+          <article class="feature-card" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            </div>
+            <h3>Egress Proxy</h3>
+            <p>Control and audit outbound traffic. Allowlist external APIs, block data exfiltration.</p>
+          </article>
+          <article class="feature-card" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+            </div>
+            <h3>Security Headers</h3>
+            <p>CSP, HSTS, X-Frame-Options, and more. Harden every response automatically.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" aria-labelledby="how-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="how-heading">Up and running in three steps</h2>
+          <p>From zero to production-grade security in under five minutes.</p>
+        </div>
+        <div class="steps-grid">
+          <div class="step">
+            <div class="step-number" aria-hidden="true">1</div>
+            <h3>Install</h3>
+            <p>A single command. No dependencies, no package managers.</p>
+            <pre><span class="cmd">curl</span> -sS https://vibewarden.dev/install.sh | sh</pre>
+          </div>
+          <div class="step">
+            <div class="step-number" aria-hidden="true">2</div>
+            <h3>Configure</h3>
+            <p>One YAML file. Human-readable, AI-configurable.</p>
+            <pre><span class="comment"># vibewarden.yaml</span>
+<span class="key">upstream:</span> <span class="value">http://localhost:3000</span>
+<span class="key">tls:</span>
+  <span class="key">auto:</span> <span class="value">true</span>
+  <span class="key">domain:</span> <span class="value">myapp.dev</span>
+<span class="key">auth:</span>
+  <span class="key">type:</span> <span class="value">api-key</span>
+<span class="key">rate_limit:</span>
+  <span class="key">requests:</span> <span class="value">100</span>
+  <span class="key">window:</span> <span class="value">60s</span></pre>
+          </div>
+          <div class="step">
+            <div class="step-number" aria-hidden="true">3</div>
+            <h3>Run</h3>
+            <p>Start the sidecar. That's it. You're secure.</p>
+            <pre><span class="cmd">vibew</span> dev
+<span class="comment"># Listening on https://myapp.dev</span>
+<span class="comment"># TLS certificate ready</span>
+<span class="comment"># WAF rules loaded</span>
+<span class="comment"># Rate limiter active</span></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison -->
+    <section class="comparison" aria-labelledby="comparison-heading">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="comparison-heading">Stop duct-taping your security</h2>
+          <p>Replace a fragile stack of tools with a single binary that just works.</p>
+        </div>
+        <div class="comparison-grid">
+          <div class="comparison-col before">
+            <h3>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              Before VibeWarden
+            </h3>
+            <ul>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                nginx config files you copy from Stack Overflow
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                certbot cron jobs that silently break
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                fail2ban rules you never test
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Hand-rolled auth middleware
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Logs you can't search or parse
+              </li>
+            </ul>
+          </div>
+          <div class="comparison-col after">
+            <h3>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              After VibeWarden
+            </h3>
+            <ul>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                One binary, one config file
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                TLS certificates auto-renewed
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                WAF + rate limiting out of the box
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Auth built in, configurable in YAML
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                Structured logs your AI agent can read
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" aria-labelledby="cta-heading">
+      <div class="container">
+        <h2 id="cta-heading">Ready to stop worrying about security?</h2>
+        <p>Get VibeWarden running in front of your app in under five minutes.</p>
+        <div class="cta-install" role="group" aria-label="Quick start commands">
+          <code>
+            <span class="cmd">curl</span> -sS https://vibewarden.dev/install.sh | sh<br>
+            <span class="cmd">vibew</span> init <span class="flag">--upstream 3000 --auth --rate-limit</span><br>
+            <span class="cmd">vibew</span> dev
+          </code>
+        </div>
+        <div class="cta-actions">
+          <a href="/docs/" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Get Started
+          </a>
+          <a href="https://github.com/vibewarden/vibewarden" class="btn btn-secondary" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            Star on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <span>Apache 2.0 License</span>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="/docs/">Documentation</a>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="/blog/">Blog</a>
+    </div>
+  </footer>
+
+  <script>
+    // Dark mode toggle — progressive enhancement
+    (function() {
+      var toggle = document.getElementById('themeToggle');
+      if (!toggle) return;
+
+      var root = document.documentElement;
+      var stored = null;
+      try { stored = localStorage.getItem('theme'); } catch(e) {}
+
+      if (stored === 'dark' || stored === 'light') {
+        root.setAttribute('data-theme', stored);
+      }
+
+      toggle.addEventListener('click', function() {
+        var current = root.getAttribute('data-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        var next;
+        if (current === 'dark') {
+          next = 'light';
+        } else if (current === 'light') {
+          next = 'dark';
+        } else {
+          next = prefersDark ? 'light' : 'dark';
+        }
+
+        root.setAttribute('data-theme', next);
+        try { localStorage.setItem('theme', next); } catch(e) {}
+      });
+    })();
+
+    // Copy button
+    (function() {
+      var buttons = document.querySelectorAll('[data-copy]');
+      for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('click', function() {
+          var text = this.getAttribute('data-copy');
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(text);
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
