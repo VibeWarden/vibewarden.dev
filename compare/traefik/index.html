@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeWarden vs Traefik — VibeWarden</title>
+  <meta name="description" content="Compare VibeWarden to Traefik. Purpose-built app security sidecar vs general-purpose reverse proxy. Built-in auth, WAF, and AI logs vs middleware plugins.">
+  <meta name="theme-color" content="#7C3AED">
+  <link rel="canonical" href="https://vibewarden.dev/compare/traefik/">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="VibeWarden">
+  <meta property="og:title" content="VibeWarden vs Traefik">
+  <meta property="og:description" content="Compare VibeWarden to Traefik. Purpose-built app security sidecar vs general-purpose reverse proxy. Built-in auth, WAF, and AI logs vs middleware plugins.">
+  <meta property="og:url" content="https://vibewarden.dev/compare/traefik/">
+  <meta property="og:image" content="https://vibewarden.dev/static/logo-text.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VibeWarden vs Traefik">
+  <meta name="twitter:description" content="Compare VibeWarden to Traefik. Purpose-built app security sidecar vs general-purpose reverse proxy. Built-in auth, WAF, and AI logs vs middleware plugins.">
+  <meta name="twitter:image" content="https://vibewarden.dev/static/logo-text.png">
+
+  <style>
+    /* ===== CSS Custom Properties ===== */
+    :root {
+      --brand-purple: #7C3AED;
+      --brand-purple-dark: #6D28D9;
+      --brand-purple-light: #8B5CF6;
+      --brand-cyan: #06B6D4;
+      --brand-cyan-dark: #0891B2;
+      --brand-gradient: linear-gradient(135deg, #7C3AED, #06B6D4);
+
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F8F7FC;
+      --bg-card: #FFFFFF;
+      --bg-code: #1E1B2E;
+      --text-primary: #1A1A2E;
+      --text-secondary: #4A4A6A;
+      --text-muted: #7A7A9A;
+      --text-code: #E2E0F0;
+      --border-color: #E8E5F0;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+      --card-shadow-hover: 0 4px 12px rgba(124,58,237,0.12), 0 8px 24px rgba(0,0,0,0.06);
+      --code-copy-bg: rgba(255,255,255,0.1);
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0F0E1A;
+      --bg-secondary: #1A1830;
+      --bg-card: #1E1B2E;
+      --bg-code: #12101F;
+      --text-primary: #E8E5F0;
+      --text-secondary: #B0ADC0;
+      --text-muted: #7A7890;
+      --text-code: #E2E0F0;
+      --border-color: #2A2840;
+      --card-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+      --card-shadow-hover: 0 4px 12px rgba(124,58,237,0.25), 0 8px 24px rgba(0,0,0,0.3);
+      --code-copy-bg: rgba(255,255,255,0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg-primary: #0F0E1A;
+        --bg-secondary: #1A1830;
+        --bg-card: #1E1B2E;
+        --bg-code: #12101F;
+        --text-primary: #E8E5F0;
+        --text-secondary: #B0ADC0;
+        --text-muted: #7A7890;
+        --text-code: #E2E0F0;
+        --border-color: #2A2840;
+        --card-shadow: 0 1px 3px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+        --card-shadow-hover: 0 4px 12px rgba(124,58,237,0.25), 0 8px 24px rgba(0,0,0,0.3);
+        --code-copy-bg: rgba(255,255,255,0.08);
+      }
+    }
+
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: var(--brand-purple-light); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: 2px; border-radius: 2px; }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 0 1.25rem; }
+    section { padding: 3rem 0; }
+
+    /* ===== Header ===== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.75rem 0;
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+
+    .site-header .container { max-width: 1120px; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .header-logo:hover { text-decoration: none; }
+    .header-logo img { width: 28px; height: 28px; }
+
+    .header-nav { display: flex; align-items: center; gap: 1.5rem; }
+    .header-nav a { color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; }
+    .header-nav a:hover { color: var(--brand-purple-light); text-decoration: none; }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.4rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+      width: 36px;
+      height: 36px;
+    }
+
+    .theme-toggle:hover { border-color: var(--brand-purple); color: var(--brand-purple); }
+    .theme-toggle:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: 2px; }
+    .theme-toggle svg { width: 18px; height: 18px; }
+    .theme-toggle .icon-moon { display: none; }
+
+    [data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+    [data-theme="dark"] .theme-toggle .icon-moon { display: block; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: none; }
+      :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: block; }
+    }
+
+    /* ===== Breadcrumb ===== */
+    .breadcrumb {
+      padding: 1rem 0 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .breadcrumb a { color: var(--text-secondary); }
+
+    /* ===== Article ===== */
+    .page-hero { padding: 2.5rem 0 1.5rem; }
+
+    .page-hero h1 {
+      font-size: clamp(1.5rem, 4vw, 2.25rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+
+    .page-hero h1 .gradient-text {
+      background: var(--brand-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .page-hero .lead {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    article h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin: 2.5rem 0 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    article h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 1.75rem 0 0.5rem;
+    }
+
+    article p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    article ul {
+      margin: 0.5rem 0 1.25rem 1.25rem;
+      color: var(--text-secondary);
+    }
+
+    article li {
+      margin-bottom: 0.35rem;
+      line-height: 1.6;
+    }
+
+    /* ===== Code Blocks ===== */
+    .code-block {
+      background: var(--bg-code);
+      border-radius: 10px;
+      margin: 1rem 0 1.5rem;
+      overflow: hidden;
+    }
+
+    .code-label {
+      display: block;
+      padding: 0.6rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .code-block pre {
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: "SF Mono", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      color: var(--text-code);
+      margin: 0;
+    }
+
+    .code-block .comment { color: #6B7280; }
+    .code-block .key { color: #A78BFA; }
+    .code-block .value { color: #67E8F9; }
+    .code-block .cmd { color: #C084FC; }
+    .code-block .string { color: #86EFAC; }
+
+    /* ===== Config Comparison ===== */
+    .config-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0 2rem;
+    }
+
+    @media (max-width: 700px) {
+      .config-compare { grid-template-columns: 1fr; }
+    }
+
+    .config-compare .code-block { margin: 0; }
+
+    /* ===== Table ===== */
+    .table-wrap {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      margin: 1.5rem 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    thead { background: var(--bg-secondary); }
+
+    th {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    tr:last-child td { border-bottom: none; }
+    td:first-child { font-weight: 500; color: var(--text-primary); }
+
+    /* ===== Verdict ===== */
+    .verdict {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin: 2.5rem 0;
+    }
+
+    .verdict h2 { margin-top: 0; }
+
+    /* ===== CTA ===== */
+    .cta-bar {
+      text-align: center;
+      padding: 3rem 0;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .cta-bar p {
+      color: var(--text-secondary);
+      margin-bottom: 1.25rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover { text-decoration: none; transform: translateY(-1px); }
+    .btn:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: 2px; }
+
+    .btn-primary {
+      background: var(--brand-gradient);
+      color: #FFFFFF;
+      box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+    }
+
+    .btn-primary:hover { box-shadow: 0 4px 16px rgba(124,58,237,0.4); }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+    }
+
+    .btn-secondary:hover { border-color: var(--brand-purple); }
+    .btn svg { width: 18px; height: 18px; }
+
+    /* ===== Footer ===== */
+    .site-footer {
+      border-top: 1px solid var(--border-color);
+      padding: 2rem 0;
+      text-align: center;
+    }
+
+    .site-footer .container { max-width: 1120px; }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .footer-inner a { color: var(--text-secondary); }
+    .footer-inner a:hover { color: var(--brand-purple-light); }
+    .footer-sep { color: var(--border-color); }
+
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      background: var(--brand-purple);
+      color: #FFFFFF;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      z-index: 200;
+      font-weight: 600;
+    }
+
+    .skip-link:focus { top: 0.5rem; }
+
+    @media (max-width: 480px) {
+      section { padding: 2rem 0; }
+      .page-hero { padding: 1.5rem 0 1rem; }
+      .header-nav .nav-link { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="/" class="header-logo" aria-label="VibeWarden home">
+        <img src="/static/logo.png" alt="" width="28" height="28" aria-hidden="true">
+        <span>VibeWarden</span>
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/docs/" class="nav-link">Docs</a>
+        <a href="https://github.com/vibewarden/vibewarden" class="nav-link" rel="noopener">GitHub</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/compare/">Comparisons</a> / Traefik
+      </nav>
+
+      <div class="page-hero">
+        <h1><span class="gradient-text">VibeWarden</span> vs Traefik</h1>
+        <p class="lead">Traefik is a powerful, general-purpose reverse proxy built for complex infrastructure. VibeWarden is a purpose-built security sidecar for individual apps. Different tools, different jobs.</p>
+      </div>
+
+      <article>
+        <h2>General-purpose proxy vs security sidecar</h2>
+        <p>Traefik is designed to sit at the edge of your infrastructure and route traffic to many services. It auto-discovers containers, manages load balancing, and integrates with Kubernetes, Docker, Consul, and more.</p>
+        <p>VibeWarden is designed to sit next to one app and secure it. It does not care about your container orchestrator or service mesh. You point it at your app's port and it handles TLS, auth, WAF, rate limiting, and egress control.</p>
+        <p>This means Traefik gives you features you do not need for a single app, while VibeWarden gives you security features that Traefik does not have.</p>
+
+        <h2>Setup: side by side</h2>
+        <p>Here is what it takes to get a secured reverse proxy running with each tool.</p>
+
+        <div class="config-compare">
+          <div class="code-block">
+            <span class="code-label">Traefik (docker-compose + config)</span>
+<pre><span class="comment"># docker-compose.yml</span>
+<span class="key">services</span>:
+  <span class="key">traefik</span>:
+    <span class="key">image</span>: <span class="value">traefik:v3</span>
+    <span class="key">ports</span>:
+      - <span class="string">"443:443"</span>
+    <span class="key">volumes</span>:
+      - <span class="string">/var/run/docker.sock:/var/run/docker.sock</span>
+      - <span class="string">./traefik.yml:/traefik.yml</span>
+      - <span class="string">./acme.json:/acme.json</span>
+
+  <span class="key">app</span>:
+    <span class="key">image</span>: <span class="value">my-app</span>
+    <span class="key">labels</span>:
+      - <span class="string">"traefik.enable=true"</span>
+      - <span class="string">"traefik.http.routers.app.rule=Host(`app.example.com`)"</span>
+      - <span class="string">"traefik.http.routers.app.tls.certresolver=le"</span>
+      - <span class="string">"traefik.http.routers.app.middlewares=rate-limit"</span>
+      - <span class="string">"traefik.http.middlewares.rate-limit.ratelimit.average=60"</span>
+
+<span class="comment"># traefik.yml</span>
+<span class="key">entryPoints</span>:
+  <span class="key">websecure</span>:
+    <span class="key">address</span>: <span class="value">:443</span>
+<span class="key">certificatesResolvers</span>:
+  <span class="key">le</span>:
+    <span class="key">acme</span>:
+      <span class="key">email</span>: <span class="value">you@example.com</span>
+      <span class="key">storage</span>: <span class="value">acme.json</span>
+      <span class="key">httpChallenge</span>:
+        <span class="key">entryPoint</span>: <span class="value">web</span>
+<span class="key">providers</span>:
+  <span class="key">docker</span>:
+    <span class="key">exposedByDefault</span>: <span class="value">false</span></pre>
+          </div>
+          <div class="code-block">
+            <span class="code-label">VibeWarden (3 commands)</span>
+<pre><span class="comment"># Install</span>
+<span class="cmd">curl</span> -sS https://vibewarden.dev/install.sh | sh
+
+<span class="comment"># Generate config</span>
+<span class="cmd">vibew</span> init \
+  <span class="value">--upstream 3000</span> \
+  <span class="value">--auth</span> \
+  <span class="value">--rate-limit</span>
+
+<span class="comment"># Start</span>
+<span class="cmd">vibew</span> dev
+
+<span class="comment"># That's it. Your vibewarden.yaml:</span>
+<span class="key">domain</span>: <span class="value">app.example.com</span>
+<span class="key">upstream</span>: <span class="value">http://127.0.0.1:3000</span>
+<span class="key">tls</span>:
+  <span class="key">auto</span>: <span class="value">true</span>
+<span class="key">kratos</span>:
+  <span class="key">enabled</span>: <span class="value">true</span>
+<span class="key">rate_limit</span>:
+  <span class="key">per_ip</span>:
+    <span class="key">requests</span>: <span class="value">60</span>
+    <span class="key">window</span>: <span class="value">1m</span></pre>
+          </div>
+        </div>
+
+        <p>Traefik requires a docker-compose file, a Traefik config file, Docker labels on every service, and an understanding of entrypoints, routers, and middlewares. VibeWarden needs one YAML file.</p>
+
+        <h2>Feature comparison</h2>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Capability</th>
+                <th>Traefik</th>
+                <th>VibeWarden</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Reverse proxy</td>
+                <td>Yes (multi-service)</td>
+                <td>Yes (single-app sidecar)</td>
+              </tr>
+              <tr>
+                <td>Automatic TLS</td>
+                <td>Built in (ACME)</td>
+                <td>Built in (ACME)</td>
+              </tr>
+              <tr>
+                <td>Authentication</td>
+                <td>BasicAuth middleware or external service (ForwardAuth)</td>
+                <td>Built in (Kratos -- OAuth2, API keys, JWT)</td>
+              </tr>
+              <tr>
+                <td>WAF</td>
+                <td>No built-in WAF (requires plugin or external service)</td>
+                <td>Built in (OWASP rules)</td>
+              </tr>
+              <tr>
+                <td>Rate limiting</td>
+                <td>Built in (middleware, basic)</td>
+                <td>Built in (per-IP, per-user, token bucket)</td>
+              </tr>
+              <tr>
+                <td>AI-readable logs</td>
+                <td>JSON access logs (no schema)</td>
+                <td>Structured JSON events with published schemas</td>
+              </tr>
+              <tr>
+                <td>Prompt injection detection</td>
+                <td>No</td>
+                <td>Built in</td>
+              </tr>
+              <tr>
+                <td>Egress proxy</td>
+                <td>No (ingress only)</td>
+                <td>Built in (allowlist, audit, circuit breakers)</td>
+              </tr>
+              <tr>
+                <td>Security headers</td>
+                <td>Via middleware config</td>
+                <td>Automatic (CSP, HSTS, X-Frame-Options)</td>
+              </tr>
+              <tr>
+                <td>Container auto-discovery</td>
+                <td>Yes (Docker, K8s, Consul, etc.)</td>
+                <td>No (sidecar, not infrastructure)</td>
+              </tr>
+              <tr>
+                <td>Load balancing</td>
+                <td>Yes (round-robin, weighted, etc.)</td>
+                <td>No (single upstream)</td>
+              </tr>
+              <tr>
+                <td>Config surface</td>
+                <td>YAML + Docker labels + middleware chain</td>
+                <td>1 YAML file</td>
+              </tr>
+              <tr>
+                <td>Setup time</td>
+                <td>~15 minutes</td>
+                <td>~3 minutes</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>What VibeWarden adds that Traefik does not have</h2>
+        <ul>
+          <li><strong>Built-in authentication</strong> -- Traefik's ForwardAuth middleware requires you to deploy and maintain a separate auth service. VibeWarden bundles Kratos, giving you OAuth2, API key validation, and JWT verification without extra infrastructure.</li>
+          <li><strong>WAF with OWASP rules</strong> -- Traefik has no built-in WAF. You need a plugin or an external service. VibeWarden blocks SQLi, XSS, and path traversal out of the box.</li>
+          <li><strong>Prompt injection detection</strong> -- if your app uses an LLM, VibeWarden inspects inbound requests for injection patterns.</li>
+          <li><strong>Egress proxy</strong> -- control and audit your app's outbound traffic. Allowlist which external APIs it can call. Traefik only handles inbound traffic.</li>
+          <li><strong>AI-readable structured logs</strong> -- every event follows a published JSON schema that AI agents can parse without custom code.</li>
+        </ul>
+
+        <h2>When Traefik is the better choice</h2>
+        <p>Traefik is a great tool. It is the better choice when:</p>
+        <ul>
+          <li><strong>You run many services</strong> -- Traefik excels at routing traffic to dozens of containers using auto-discovery and Docker labels. VibeWarden secures one app at a time.</li>
+          <li><strong>You need load balancing</strong> -- round-robin, weighted, sticky sessions across multiple instances. VibeWarden proxies to a single upstream.</li>
+          <li><strong>You use Kubernetes</strong> -- Traefik integrates as an Ingress controller. VibeWarden is a sidecar, not an infrastructure component.</li>
+          <li><strong>You need the plugin ecosystem</strong> -- Traefik has a marketplace of middleware plugins for various needs. VibeWarden is opinionated about what it includes.</li>
+        </ul>
+
+        <div class="verdict">
+          <h2>The bottom line</h2>
+          <p>If you are deploying a single app and want security out of the box -- auth, WAF, rate limiting, egress control, AI logs -- VibeWarden gets you there in 3 commands with zero middleware configuration. If you are managing infrastructure with many services and need flexible routing, Traefik is built for that job.</p>
+        </div>
+      </article>
+
+      <div class="cta-bar">
+        <p>Secure your app in 3 commands.</p>
+        <a href="/docs/" class="btn btn-primary">Get Started</a>
+        <a href="/compare/" class="btn btn-secondary">See All Comparisons</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <span>Apache 2.0 License</span>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="/docs/">Documentation</a>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="/blog/">Blog</a>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var toggle = document.getElementById('themeToggle');
+      if (!toggle) return;
+      var root = document.documentElement;
+      var DOCS_KEY = '/docs/.__palette';
+      function getStored() {
+        try {
+          var own = localStorage.getItem('theme');
+          if (own === 'dark' || own === 'light') return own;
+          var mkdocs = JSON.parse(localStorage.getItem(DOCS_KEY));
+          if (mkdocs && mkdocs.color && mkdocs.color.scheme) {
+            return mkdocs.color.scheme === 'slate' ? 'dark' : 'light';
+          }
+        } catch(e) {}
+        return null;
+      }
+      function saveTheme(theme) {
+        try {
+          localStorage.setItem('theme', theme);
+          var scheme = theme === 'dark' ? 'slate' : 'default';
+          localStorage.setItem(DOCS_KEY, JSON.stringify({
+            index: theme === 'dark' ? 1 : 0,
+            color: { scheme: scheme, primary: 'deep-purple', accent: 'cyan', media: '' }
+          }));
+        } catch(e) {}
+      }
+      var stored = getStored();
+      if (stored) root.setAttribute('data-theme', stored);
+      toggle.addEventListener('click', function() {
+        var current = root.getAttribute('data-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var next;
+        if (current === 'dark') next = 'light';
+        else if (current === 'light') next = 'dark';
+        else next = prefersDark ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        saveTheme(next);
+      });
+    })();
+  </script>
+</body>
+</html>
