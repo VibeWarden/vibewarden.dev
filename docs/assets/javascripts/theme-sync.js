@@ -71,7 +71,9 @@
       '</a>' +
       '<nav class="vw-topbar-nav">' +
         '<a href="/">Home</a>' +
+        '<a href="/pricing/">Pricing</a>' +
         '<a href="/docs/" class="vw-active">Docs</a>' +
+        '<a href="/support/">Support</a>' +
         '<a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>' +
         '<button class="vw-theme-toggle" type="button" aria-label="Toggle dark mode">' +
           '<svg class="vw-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:' + (theme === 'dark' ? 'none' : 'block') + '">' +
