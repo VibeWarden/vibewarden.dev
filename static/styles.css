@@ -105,17 +105,28 @@ a:focus-visible { outline: 2px solid var(--brand-purple); outline-offset: 2px; b
 
 section {
   padding: 4rem 0;
+  position: relative;
+}
+
+/* #48 — Increased section spacing on desktop */
+@media (min-width: 768px) {
+  section {
+    padding: 6rem 0;
+  }
 }
 
 /* ===== Header ===== */
+/* #45 — Frosted-glass sticky header */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--bg-primary);
-  border-bottom: 1px solid var(--border-color);
+  background: color-mix(in srgb, var(--bg-primary) 80%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(0, 0, 0, 0.03);
   padding: 0.75rem 0;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .header-inner {
@@ -264,6 +275,68 @@ section {
 
 .skip-link:focus {
   top: 0.5rem;
+}
+
+/* ===== #46 — Scroll entrance animations ===== */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger feature cards */
+.reveal[style*="--delay"] {
+  transition-delay: var(--delay);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ===== #49 — Soft section dividers ===== */
+.section-divider {
+  position: relative;
+}
+
+.section-divider::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, var(--bg-primary), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.section-divider-reverse::before {
+  background: linear-gradient(to bottom, var(--bg-secondary), transparent);
+}
+
+.section-divider-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to top, var(--bg-primary), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.section-divider-bottom-alt::after {
+  background: linear-gradient(to top, var(--bg-secondary), transparent);
 }
 
 /* ===== Responsive (shared) ===== */

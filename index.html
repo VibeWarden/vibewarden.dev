@@ -50,10 +50,53 @@
   </script>
   <link rel="stylesheet" href="/static/styles.css">
   <style>
-    /* ===== Hero ===== */
+    /* ===== #44 — Gradient mesh hero background ===== */
     .hero {
       text-align: center;
       padding: 5rem 0 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero::before {
+      width: 500px;
+      height: 500px;
+      top: -150px;
+      left: -100px;
+      background: radial-gradient(circle, var(--brand-purple) 0%, transparent 70%);
+      opacity: 0.15;
+    }
+
+    .hero::after {
+      width: 500px;
+      height: 500px;
+      bottom: -150px;
+      right: -100px;
+      background: radial-gradient(circle, var(--brand-cyan) 0%, transparent 70%);
+      opacity: 0.15;
+    }
+
+    [data-theme="dark"] .hero::before { opacity: 0.25; }
+    [data-theme="dark"] .hero::after { opacity: 0.25; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .hero::before { opacity: 0.25; }
+      :root:not([data-theme="light"]) .hero::after { opacity: 0.25; }
+    }
+
+    .hero .container {
+      position: relative;
+      z-index: 1;
     }
 
     .hero-logo {
@@ -183,6 +226,7 @@
       gap: 1.25rem;
     }
 
+    /* #47 — Glowing gradient border on feature cards */
     .feature-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
@@ -190,12 +234,42 @@
       padding: 1.5rem;
       transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
       box-shadow: var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: conic-gradient(from var(--card-angle, 0deg), var(--brand-purple), var(--brand-cyan), var(--brand-purple));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .feature-card::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: 11px;
+      background: var(--bg-card);
+      z-index: -1;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
     }
 
     .feature-card:hover {
       box-shadow: var(--card-shadow-hover);
-      border-color: var(--brand-purple);
+      border-color: transparent;
       transform: translateY(-2px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .feature-card::before { transition: none; }
     }
 
     .feature-icon {
@@ -469,63 +543,63 @@
     </section>
 
     <!-- Features -->
-    <section class="features" aria-labelledby="features-heading">
+    <section class="features section-divider section-divider-bottom" aria-labelledby="features-heading">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header reveal">
           <h2 id="features-heading">Everything you need, nothing you don't</h2>
           <p>Production-grade security from a single binary. No nginx, no certbot, no duct tape.</p>
         </div>
         <div class="feature-grid" role="list">
-          <article class="feature-card" role="listitem">
+          <article class="feature-card reveal" role="listitem" style="--delay: 0ms">
             <div class="feature-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </div>
             <h3>Automatic TLS</h3>
             <p>HTTPS certificates from Let's Encrypt, auto-renewed. Zero configuration needed.</p>
           </article>
-          <article class="feature-card" role="listitem">
+          <article class="feature-card reveal" role="listitem" style="--delay: 60ms">
             <div class="feature-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
             <h3>Authentication</h3>
             <p>API keys, JWT validation, and OAuth2 proxy built in. Protect endpoints in one line.</p>
           </article>
-          <article class="feature-card" role="listitem">
+          <article class="feature-card reveal" role="listitem" style="--delay: 120ms">
             <div class="feature-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
             </div>
             <h3>Rate Limiting</h3>
             <p>Token bucket rate limiting per IP, user, or API key. Stop abuse before it starts.</p>
           </article>
-          <article class="feature-card" role="listitem">
+          <article class="feature-card reveal" role="listitem" style="--delay: 180ms">
             <div class="feature-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
             <h3>WAF</h3>
             <p>Web Application Firewall with OWASP rules. Block SQLi, XSS, and path traversal.</p>
           </article>
-          <article class="feature-card" role="listitem">
+          <article class="feature-card reveal" role="listitem" style="--delay: 240ms">
             <div class="feature-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             </div>
             <h3>AI-Readable Logs</h3>
             <p>Structured events with schemas, summaries, and payloads. Your AI agent can parse them.</p>
           </article>
-          <article class="feature-card" role="listitem">
+          <article class="feature-card reveal" role="listitem" style="--delay: 300ms">
             <div class="feature-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             </div>
             <h3>Prompt Injection Detection</h3>
             <p>Catch prompt injection attacks aimed at your LLM-powered app before they reach your model.</p>
           </article>
-          <article class="feature-card" role="listitem">
+          <article class="feature-card reveal" role="listitem" style="--delay: 360ms">
             <div class="feature-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             </div>
             <h3>Egress Proxy</h3>
             <p>Control and audit outbound traffic. Allowlist external APIs, block data exfiltration.</p>
           </article>
-          <article class="feature-card" role="listitem">
+          <article class="feature-card reveal" role="listitem" style="--delay: 420ms">
             <div class="feature-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
             </div>
@@ -539,18 +613,18 @@
     <!-- How It Works -->
     <section class="how-it-works" aria-labelledby="how-heading">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header reveal">
           <h2 id="how-heading">Up and running in three steps</h2>
           <p>From zero to production-grade security in under five minutes.</p>
         </div>
         <div class="steps-grid">
-          <div class="step">
+          <div class="step reveal" style="--delay: 0ms">
             <div class="step-number" aria-hidden="true">1</div>
             <h3>Install</h3>
             <p>A single command. No dependencies, no package managers.</p>
             <pre><span class="cmd">curl</span> -sS https://vibewarden.dev/install.sh | sh</pre>
           </div>
-          <div class="step">
+          <div class="step reveal" style="--delay: 100ms">
             <div class="step-number" aria-hidden="true">2</div>
             <h3>Configure</h3>
             <p>One YAML file. Human-readable, AI-configurable.</p>
@@ -565,7 +639,7 @@
   <span class="key">requests:</span> <span class="value">100</span>
   <span class="key">window:</span> <span class="value">60s</span></pre>
           </div>
-          <div class="step">
+          <div class="step reveal" style="--delay: 200ms">
             <div class="step-number" aria-hidden="true">3</div>
             <h3>Run</h3>
             <p>Start the sidecar. That's it. You're secure.</p>
@@ -580,14 +654,14 @@
     </section>
 
     <!-- Comparison -->
-    <section class="comparison" aria-labelledby="comparison-heading">
+    <section class="comparison section-divider section-divider-bottom" aria-labelledby="comparison-heading">
       <div class="container">
-        <div class="section-header">
+        <div class="section-header reveal">
           <h2 id="comparison-heading">Stop duct-taping your security</h2>
           <p>Replace a fragile stack of tools with a single binary that just works.</p>
         </div>
         <div class="comparison-grid">
-          <div class="comparison-col before">
+          <div class="comparison-col before reveal" style="--delay: 0ms">
             <h3>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
               Before VibeWarden
@@ -615,7 +689,7 @@
               </li>
             </ul>
           </div>
-          <div class="comparison-col after">
+          <div class="comparison-col after reveal" style="--delay: 150ms">
             <h3>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
               After VibeWarden
@@ -764,6 +838,42 @@
             navigator.clipboard.writeText(text);
           }
         });
+      }
+    })();
+
+    // #46 — Scroll entrance animations (IntersectionObserver)
+    (function() {
+      // Bail if user prefers reduced motion
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        // Make all reveal elements visible immediately
+        var els = document.querySelectorAll('.reveal');
+        for (var i = 0; i < els.length; i++) {
+          els[i].classList.add('revealed');
+        }
+        return;
+      }
+
+      if (!('IntersectionObserver' in window)) {
+        // Fallback: show everything
+        var els = document.querySelectorAll('.reveal');
+        for (var i = 0; i < els.length; i++) {
+          els[i].classList.add('revealed');
+        }
+        return;
+      }
+
+      var observer = new IntersectionObserver(function(entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) {
+            entries[i].target.classList.add('revealed');
+            observer.unobserve(entries[i].target);
+          }
+        }
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      var elements = document.querySelectorAll('.reveal');
+      for (var j = 0; j < elements.length; j++) {
+        observer.observe(elements[j]);
       }
     })();
   </script>
