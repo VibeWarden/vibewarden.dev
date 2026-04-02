@@ -578,6 +578,7 @@
       <nav class="header-nav" aria-label="Main navigation">
         <a href="/" class="nav-link nav-active">Home</a>
         <a href="/pricing/" class="nav-link">Pricing</a>
+        <a href="/blog/" class="nav-link">Blog</a>
         <a href="/docs/" class="nav-link">Docs</a>
         <a href="/support/" class="nav-link">Support</a>
         <a href="https://github.com/vibewarden/vibewarden" class="nav-link" rel="noopener">GitHub</a>
@@ -670,8 +671,8 @@
             <div class="feature-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
-            <h3>Authentication</h3>
-            <p>API keys, JWT validation, and OAuth2 proxy built in. Protect endpoints in one line.</p>
+            <h3>Auth & Access Control</h3>
+            <p>JWT, API keys, OAuth2, and Ory Kratos sessions. Per-route scope rules control who can access what.</p>
           </article>
           <article class="feature-card reveal" role="listitem" style="--delay: 120ms">
             <div class="feature-icon" aria-hidden="true">
@@ -685,7 +686,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
             <h3>WAF</h3>
-            <p>Web Application Firewall with OWASP rules. Block SQLi, XSS, and path traversal.</p>
+            <p>Custom pattern-based detection for SQLi, XSS, path traversal, and command injection. Block or detect mode.</p>
           </article>
           <article class="feature-card reveal" role="listitem" style="--delay: 240ms">
             <div class="feature-icon" aria-hidden="true">
@@ -699,7 +700,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             </div>
             <h3>Prompt Injection Detection</h3>
-            <p>Catch prompt injection attacks aimed at your LLM-powered app before they reach your model.</p>
+            <p>Request inspection for common prompt injection patterns. Protect LLM-powered endpoints from manipulation.</p>
           </article>
           <article class="feature-card reveal" role="listitem" style="--delay: 360ms">
             <div class="feature-icon" aria-hidden="true">
@@ -714,6 +715,13 @@
             </div>
             <h3>Security Headers</h3>
             <p>CSP, HSTS, X-Frame-Options, and more. Harden every response automatically.</p>
+          </article>
+          <article class="feature-card reveal" role="listitem" style="--delay: 480ms">
+            <div class="feature-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+            </div>
+            <h3>Secrets Management</h3>
+            <p>OpenBao-backed secrets injection. API keys, database credentials, and dynamic Postgres passwords — fetched, cached, and rotated automatically.</p>
           </article>
         </div>
       </div>
