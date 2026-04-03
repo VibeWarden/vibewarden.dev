@@ -71,7 +71,6 @@
       '</a>' +
       '<nav class="vw-topbar-nav">' +
         '<a href="/">Home</a>' +
-        '<a href="/pricing/">Pricing</a>' +
         '<a href="/blog/">Blog</a>' +
         '<a href="/docs/" class="vw-active">Docs</a>' +
         '<a href="/support/">Support</a>' +
