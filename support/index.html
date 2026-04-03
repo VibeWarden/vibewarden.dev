@@ -264,7 +264,8 @@
       <nav class="header-nav" aria-label="Main navigation">
         <a href="/" class="nav-link">Home</a>
         <a href="/blog/" class="nav-link">Blog</a>
-        <a href="/docs/" class="nav-link">Docs</a>
+        <a href="/docs/vibewarden/" class="nav-link">Docs</a>
+        <a href="/tools/" class="nav-link">Tools</a>
         <a href="/support/" class="nav-link nav-active">Support</a>
         <a href="https://github.com/vibewarden/vibewarden" class="nav-link" rel="noopener">GitHub</a>
         <button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">
@@ -327,7 +328,7 @@
             </div>
             <h3>Documentation</h3>
             <p>Guides, configuration reference, and examples. Most questions are answered here.</p>
-            <a href="/docs/" class="card-link">
+            <a href="/docs/vibewarden/" class="card-link">
               Read the docs
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
@@ -339,7 +340,7 @@
             </div>
             <h3>Troubleshooting</h3>
             <p>Common issues and their solutions. Check here before opening an issue.</p>
-            <a href="/docs/troubleshooting/" class="card-link">
+            <a href="/docs/vibewarden/troubleshooting/" class="card-link">
               Troubleshooting guide
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
@@ -388,7 +389,7 @@
       <span class="footer-sep" aria-hidden="true">|</span>
       <a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>
       <span class="footer-sep" aria-hidden="true">|</span>
-      <a href="/docs/">Documentation</a>
+      <a href="/docs/vibewarden/">Documentation</a>
       <span class="footer-sep" aria-hidden="true">|</span>
       <a href="/blog/">Blog</a>
     </div>
@@ -403,7 +404,7 @@
       if (!toggle) return;
 
       var root = document.documentElement;
-      var DOCS_KEY = '/docs/.__palette';
+      var DOCS_KEY = '/docs/vibewarden/.__palette';
 
       // Read theme: check our key first, then MkDocs palette, then system
       function getStored() {

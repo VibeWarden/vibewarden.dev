@@ -2,7 +2,7 @@
 // Injected into all docs HTML pages. Will need to be ported to the
 // vibewarden repo's mkdocs.yml (extra_javascript) for persistence.
 (function() {
-  var DOCS_KEY = '/docs/.__palette';
+  var DOCS_KEY = '/docs/vibewarden/.__palette';
   var THEME_KEY = 'theme';
 
   // --- Theme sync ---
@@ -72,7 +72,8 @@
       '<nav class="vw-topbar-nav">' +
         '<a href="/">Home</a>' +
         '<a href="/blog/">Blog</a>' +
-        '<a href="/docs/" class="vw-active">Docs</a>' +
+        '<a href="/docs/vibewarden/" class="vw-active">Docs</a>' +
+        '<a href="/tools/">Tools</a>' +
         '<a href="/support/">Support</a>' +
         '<a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>' +
         '<button class="vw-theme-toggle" type="button" aria-label="Toggle dark mode">' +
