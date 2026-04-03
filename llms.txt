@@ -24,7 +24,7 @@ vibew dev
 
 ## Docs
 - Full setup guide: https://vibewarden.dev/llms-full.txt
-- Config reference: https://vibewarden.dev/docs/configuration
+- Config reference: https://vibewarden.dev/docs/vibewarden/vibewarden/configuration
 - GitHub: https://github.com/vibewarden/vibewarden
 
 ## License
