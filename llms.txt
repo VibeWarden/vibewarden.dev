@@ -19,7 +19,6 @@ vibew dev
 - Security headers (HSTS, CSP, CORP, COOP, etc.)
 - Egress proxy with SSRF protection
 - AI-readable structured logs with schema
-- Prompt injection detection for LLM apps
 - Prometheus metrics + OpenTelemetry export
 
 ## Docs
