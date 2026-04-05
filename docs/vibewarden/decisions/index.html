@@ -17182,6 +17182,69 @@ app port directly — it has no security.</p>
 - Database connection settings</p>
 <p>The reload service should detect these cases and return an informative error
 message indicating that a restart is required.</p>
+<hr />
+<h2 id="adr-063-vibew-deploy-core-ssh-rsync-remote-deployment">ADR-063: vibew deploy core — SSH + rsync remote deployment<a class="headerlink" href="#adr-063-vibew-deploy-core-ssh-rsync-remote-deployment" title="Permanent link">&para;</a></h2>
+<p><strong>Date</strong>: 2026-04-03
+<strong>Status</strong>: Accepted</p>
+<h3 id="context_28">Context<a class="headerlink" href="#context_28" title="Permanent link">&para;</a></h3>
+<p>VibeWarden targets vibe coders who need zero-to-secure in minutes. After a project
+is scaffolded and tested locally, the user needs a simple way to deploy the
+generated Docker Compose stack to a remote server. The common deployment target
+is a Linux VPS (Hetzner, DigitalOcean, etc.) accessible via SSH.</p>
+<p>The question: should we use a Go SSH library (e.g. <code>golang.org/x/crypto/ssh</code>) or
+shell out to the system <code>ssh</code> and <code>rsync</code> binaries?</p>
+<h3 id="decision_28">Decision<a class="headerlink" href="#decision_28" title="Permanent link">&para;</a></h3>
+<p>Shell out to the system <code>ssh</code> and <code>rsync</code> binaries. No Go SSH library.</p>
+<p>Reasons:
+1. <strong>SSH agent forwarding</strong>: system ssh automatically uses the user's running
+   ssh-agent, so key-based auth just works without any credential management in Go.
+2. <strong>SSH config</strong>: system ssh reads <code>~/.ssh/config</code> (ProxyJump, IdentityFile,
+   ServerAliveInterval, etc.) — all of this is free when shelling out.
+3. <strong>Simplicity</strong>: no additional Go dependency, no license concern, no TLS
+   handshake implementation to maintain.
+4. <strong>rsync is the right tool for file sync</strong>: delta transfer, permission
+   preservation, exclude patterns — reinventing this in Go would be worse.</p>
+<p>Target URL format: <code>ssh://user@host[:port]</code> — parsed with <code>net/url</code> from stdlib.
+The remote directory is hardcoded to <code>~/vibewarden/&lt;project-name&gt;/</code> for
+predictability and simplicity in v1.</p>
+<p>The deploy flow:
+1. Load and validate config from <code>--config</code> path
+2. Run <code>generate</code> internally (calls <code>generateapp.Service.Generate</code>)
+3. SSH to remote, verify Docker and Docker Compose are installed
+4. <code>rsync</code> the <code>.vibewarden/generated/</code> directory + <code>vibewarden.yaml</code> to
+   <code>~/vibewarden/&lt;project-name&gt;/</code>
+5. On remote: <code>docker compose pull &amp;&amp; docker compose up -d</code>
+6. Health check: HTTP GET <code>/_vibewarden/health</code> via SSH port-forward with
+   60-second timeout and exponential backoff retries
+7. Report success or failure</p>
+<h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-240-1"><a id="__codelineno-240-1" name="__codelineno-240-1" href="#__codelineno-240-1"></a>internal/ports/remote.go           — RemoteExecutor interface
+</span><span id="__span-240-2"><a id="__codelineno-240-2" name="__codelineno-240-2" href="#__codelineno-240-2"></a>internal/adapters/ssh/executor.go  — SSH adapter (os/exec shell-out)
+</span><span id="__span-240-3"><a id="__codelineno-240-3" name="__codelineno-240-3" href="#__codelineno-240-3"></a>internal/app/deploy/service.go     — Deploy application service
+</span><span id="__span-240-4"><a id="__codelineno-240-4" name="__codelineno-240-4" href="#__codelineno-240-4"></a>internal/cli/cmd/deploy.go         — cobra command + subcommands
+</span></code></pre></div>
+<p>CLI surface:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-241-1"><a id="__codelineno-241-1" name="__codelineno-241-1" href="#__codelineno-241-1"></a>vibew deploy --config vibewarden.prod.yaml --target ssh://user@host
+</span><span id="__span-241-2"><a id="__codelineno-241-2" name="__codelineno-241-2" href="#__codelineno-241-2"></a>vibew deploy status --target ssh://user@host
+</span><span id="__span-241-3"><a id="__codelineno-241-3" name="__codelineno-241-3" href="#__codelineno-241-3"></a>vibew deploy logs --target ssh://user@host [--lines 50]
+</span></code></pre></div></p>
+<h3 id="consequences_27">Consequences<a class="headerlink" href="#consequences_27" title="Permanent link">&para;</a></h3>
+<p><strong>Positive:</strong>
+- Zero new Go dependencies
+- SSH agent / <code>~/.ssh/config</code> work transparently
+- rsync handles incremental updates efficiently
+- Simple, auditable implementation</p>
+<p><strong>Negative:</strong>
+- Requires <code>ssh</code> and <code>rsync</code> to be installed on the developer's machine
+  (both are available by default on macOS and most Linux distros)
+- No Windows support in v1 (Windows ships neither ssh nor rsync by default in
+  all versions); documented limitation, deferred to v2
+- Integration tests require a real SSH target; unit tests use a mock executor</p>
+<p><strong>Limitations (v1):</strong>
+- Remote directory is <code>~/vibewarden/&lt;project-name&gt;/</code> — not configurable
+- No rollback on failure — the operator must redeploy manually
+- Health check polls <code>/_vibewarden/health</code> via a direct HTTP call over an
+  SSH tunnel; does not validate TLS certificate in v1</p>
 
 
 
