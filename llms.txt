@@ -16,10 +16,14 @@ vibew dev
 - Authentication (JWT/OIDC, API keys, Ory Kratos sessions)
 - Rate limiting (per-IP, per-user, Redis-backed)
 - WAF (SQLi, XSS, path traversal detection)
+- Webhook signature verification (Stripe, GitHub, Slack, Twilio)
 - Security headers (HSTS, CSP, CORP, COOP, etc.)
 - Egress proxy with SSRF protection
+- Hot config reload (file watcher + admin API)
 - AI-readable structured logs with schema
 - Prometheus metrics + OpenTelemetry export
+- MCP server for AI agent integration (vibew mcp)
+- Config JSON schema for editor autocomplete
 
 ## Docs
 - Full setup guide: https://vibewarden.dev/llms-full.txt
