@@ -1096,6 +1096,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#can-i-use-a-different-auth-provider-in-dev-vs-prod" class="md-nav__link">
+    <span class="md-ellipsis">
+      Can I use a different auth provider in dev vs prod?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#where-do-i-report-security-vulnerabilities" class="md-nav__link">
     <span class="md-ellipsis">
       Where do I report security vulnerabilities?
@@ -1281,6 +1290,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#can-i-use-a-different-auth-provider-in-dev-vs-prod" class="md-nav__link">
+    <span class="md-ellipsis">
+      Can I use a different auth provider in dev vs prod?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#where-do-i-report-security-vulnerabilities" class="md-nav__link">
     <span class="md-ellipsis">
       Where do I report security vulnerabilities?
@@ -1327,6 +1345,18 @@
 <p>The open-source core is Apache 2.0 — free forever. A Pro tier (fleet dashboard for managing multiple instances) is planned but not yet available.</p>
 <h2 id="can-i-use-it-in-kubernetes">Can I use it in Kubernetes?<a class="headerlink" href="#can-i-use-it-in-kubernetes" title="Permanent link">&para;</a></h2>
 <p>Yes, as a sidecar container in the same pod as your application. A Helm chart is planned. For now, deploy the Docker image directly.</p>
+<h2 id="can-i-use-a-different-auth-provider-in-dev-vs-prod">Can I use a different auth provider in dev vs prod?<a class="headerlink" href="#can-i-use-a-different-auth-provider-in-dev-vs-prod" title="Permanent link">&para;</a></h2>
+<p>Yes. This is the recommended pattern. Use <code>auth.mode: kratos</code> locally for a
+full self-contained auth loop (registration, login, password reset — no
+internet required), and <code>auth.mode: jwt</code> in production to validate tokens from
+your cloud IAM (Cognito, Auth0, Azure AD, etc.).</p>
+<p>Your application code does not change between environments. VibeWarden injects
+the same <code>X-User-Id</code>, <code>X-User-Email</code>, and <code>X-User-Verified</code> headers in both
+modes. Only the VibeWarden config differs.</p>
+<p>Switch between them with <code>vibewarden start --config vibewarden.dev.yaml</code> or
+via environment variable interpolation in a single shared config file.</p>
+<p>See the <a href="../identity-providers/#devprod-auth-split">Dev/Prod auth split</a> section
+in the identity providers guide for full examples.</p>
 <h2 id="where-do-i-report-security-vulnerabilities">Where do I report security vulnerabilities?<a class="headerlink" href="#where-do-i-report-security-vulnerabilities" title="Permanent link">&para;</a></h2>
 <p>See <a href="https://github.com/vibewarden/vibewarden/blob/main/SECURITY.md">SECURITY.md</a>. Use GitHub Security Advisories or email security@vibewarden.dev.</p>
 

@@ -889,6 +889,75 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#devprod-auth-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dev/Prod auth split
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dev/Prod auth split">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      The pattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development-config-vibewardendevyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development config (vibewarden.dev.yaml)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-config-vibewardenyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production config (vibewarden.yaml)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switching-via-the-config-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switching via the --config flag
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switching-via-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switching via environment variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key message
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ai-agent-readable-summary" class="md-nav__link">
     <span class="md-ellipsis">
       AI-agent-readable summary
@@ -1686,6 +1755,75 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#devprod-auth-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dev/Prod auth split
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dev/Prod auth split">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      The pattern
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#development-config-vibewardendevyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development config (vibewarden.dev.yaml)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-config-vibewardenyaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production config (vibewarden.yaml)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switching-via-the-config-flag" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switching via the --config flag
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switching-via-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Switching via environment variables
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key message
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ai-agent-readable-summary" class="md-nav__link">
     <span class="md-ellipsis">
       AI-agent-readable summary
@@ -2162,23 +2300,169 @@ valid).</p>
 </li>
 </ol>
 <hr />
+<h2 id="devprod-auth-split">Dev/Prod auth split<a class="headerlink" href="#devprod-auth-split" title="Permanent link">&para;</a></h2>
+<p>Your application code never needs to know which auth provider is active. The
+app reads the same <code>X-User-Id</code>, <code>X-User-Email</code>, and <code>X-User-Verified</code> headers
+in every environment. Only the VibeWarden config changes between development
+and production.</p>
+<h3 id="the-pattern">The pattern<a class="headerlink" href="#the-pattern" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Environment</th>
+<th>Auth mode</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dev</code></td>
+<td><code>kratos</code></td>
+<td>Local login/registration/password-reset flows without cloud accounts or internet access</td>
+</tr>
+<tr>
+<td><code>prod</code></td>
+<td><code>jwt</code></td>
+<td>Validate tokens from your cloud IAM — no extra infrastructure to run</td>
+</tr>
+</tbody>
+</table>
+<h3 id="development-config-vibewardendevyaml">Development config (<code>vibewarden.dev.yaml</code>)<a class="headerlink" href="#development-config-vibewardendevyaml" title="Permanent link">&para;</a></h3>
+<p>Use Kratos for a fully local auth loop. Kratos handles registration, login,
+password reset, and email verification inside your Docker Compose stack.</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># vibewarden.dev.yaml</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nt">server</span><span class="p">:</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nt">upstream</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://localhost:3000&quot;</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="nt">listen</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;:8080&quot;</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nt">auth</span><span class="p">:</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kratos</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="nt">kratos</span><span class="p">:</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">  </span><span class="nt">public_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://127.0.0.1:4433&quot;</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">  </span><span class="nt">admin_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://127.0.0.1:4434&quot;</span>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">  </span><span class="c1"># external: false  — VibeWarden starts Kratos for you (default)</span>
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>
+</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="nt">plugins</span><span class="p">:</span>
+</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="w">  </span><span class="nt">user-management</span><span class="p">:</span>
+</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="w">    </span><span class="nt">adapter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+</span></code></pre></div>
+<p>No cloud accounts, no API keys, no internet access required.</p>
+<h3 id="production-config-vibewardenyaml">Production config (<code>vibewarden.yaml</code>)<a class="headerlink" href="#production-config-vibewardenyaml" title="Permanent link">&para;</a></h3>
+<p>Validate JWTs from your cloud IAM. Pick the example that matches your provider.</p>
+<p><strong>Amazon Cognito:</strong></p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># vibewarden.yaml</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nt">server</span><span class="p">:</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="nt">upstream</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://localhost:3000&quot;</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="nt">listen</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;:8080&quot;</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="nt">auth</span><span class="p">:</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jwt</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">  </span><span class="nt">jwt</span><span class="p">:</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">    </span><span class="nt">jwks_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://cognito-idp.&lt;region&gt;.amazonaws.com/&lt;user-pool-id&gt;/.well-known/jwks.json&quot;</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">    </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://cognito-idp.&lt;region&gt;.amazonaws.com/&lt;user-pool-id&gt;&quot;</span>
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">    </span><span class="nt">audience</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;app-client-id&gt;&quot;</span>
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="w">    </span><span class="nt">claims_to_headers</span><span class="p">:</span>
+</span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="w">      </span><span class="nt">sub</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Id</span>
+</span><span id="__span-22-14"><a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="w">      </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Email</span>
+</span><span id="__span-22-15"><a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="w">      </span><span class="nt">email_verified</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Verified</span>
+</span></code></pre></div>
+<p><strong>Auth0:</strong></p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nt">auth</span><span class="p">:</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jwt</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="nt">jwt</span><span class="p">:</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">    </span><span class="nt">jwks_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://&lt;tenant&gt;.us.auth0.com/.well-known/jwks.json&quot;</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">    </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://&lt;tenant&gt;.us.auth0.com/&quot;</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">    </span><span class="nt">audience</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://api.your-app.com&quot;</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">    </span><span class="nt">claims_to_headers</span><span class="p">:</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">      </span><span class="nt">sub</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Id</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">      </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Email</span>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="w">      </span><span class="nt">email_verified</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Verified</span>
+</span></code></pre></div>
+<p><strong>Azure AD (Microsoft Entra ID):</strong></p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nt">auth</span><span class="p">:</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jwt</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="nt">jwt</span><span class="p">:</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">    </span><span class="nt">jwks_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://login.microsoftonline.com/&lt;tenant-id&gt;/discovery/v2.0/keys&quot;</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://login.microsoftonline.com/&lt;tenant-id&gt;/v2.0&quot;</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">    </span><span class="nt">audience</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&lt;application-client-id&gt;&quot;</span>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">    </span><span class="nt">claims_to_headers</span><span class="p">:</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="w">      </span><span class="nt">sub</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Id</span>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">      </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Email</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Name</span>
+</span></code></pre></div>
+<p>Replace the angle-bracket placeholders with your real values. The JWKS URLs
+above are the canonical patterns published by each provider — they do not
+change unless you migrate regions or tenants.</p>
+<h3 id="switching-via-the-config-flag">Switching via the <code>--config</code> flag<a class="headerlink" href="#switching-via-the-config-flag" title="Permanent link">&para;</a></h3>
+<p>Pass the config file at startup. No code changes, no environment variables
+required:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># development</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>vibewarden<span class="w"> </span>start<span class="w"> </span>--config<span class="w"> </span>vibewarden.dev.yaml
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># production (default name picked up automatically)</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>vibewarden<span class="w"> </span>start
+</span></code></pre></div>
+<p>Keep both files in version control. Do not commit secrets — use environment
+variable interpolation for sensitive values (see below).</p>
+<h3 id="switching-via-environment-variables">Switching via environment variables<a class="headerlink" href="#switching-via-environment-variables" title="Permanent link">&para;</a></h3>
+<p>VibeWarden interpolates <code>${VAR}</code> placeholders in the config file. Set a
+single env var to select the provider, and override only the fields that
+change between environments:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="c1"># vibewarden.yaml — works in dev and prod</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="nt">auth</span><span class="p">:</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jwt</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">  </span><span class="nt">jwt</span><span class="p">:</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="w">    </span><span class="nt">jwks_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${AUTH_JWKS_URL}&quot;</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="w">    </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${AUTH_ISSUER}&quot;</span>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="w">    </span><span class="nt">audience</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;${AUTH_AUDIENCE}&quot;</span>
+</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a><span class="w">    </span><span class="nt">claims_to_headers</span><span class="p">:</span>
+</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a><span class="w">      </span><span class="nt">sub</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Id</span>
+</span><span id="__span-26-10"><a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a><span class="w">      </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Email</span>
+</span><span id="__span-26-11"><a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a><span class="w">      </span><span class="nt">email_verified</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-User-Verified</span>
+</span></code></pre></div>
+<p>Then export the appropriate values per environment:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="c1"># .env.dev</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="nv">AUTH_JWKS_URL</span><span class="o">=</span>http://127.0.0.1:4433/.well-known/jwks.json
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="nv">AUTH_ISSUER</span><span class="o">=</span>http://127.0.0.1:4433
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="nv">AUTH_AUDIENCE</span><span class="o">=</span>vibewarden-dev
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="c1"># .env.prod</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="nv">AUTH_JWKS_URL</span><span class="o">=</span>https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_XXXXXX/.well-known/jwks.json
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a><span class="nv">AUTH_ISSUER</span><span class="o">=</span>https://cognito-idp.eu-west-1.amazonaws.com/eu-west-1_XXXXXX
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="nv">AUTH_AUDIENCE</span><span class="o">=</span>6rp8xxxxxxxxxxxxxxxxxxxxxxxx
+</span></code></pre></div>
+<h3 id="key-message">Key message<a class="headerlink" href="#key-message" title="Permanent link">&para;</a></h3>
+<p><strong>Same app code. Same headers. Only config changes.</strong></p>
+<p>Your upstream receives <code>X-User-Id</code>, <code>X-User-Email</code>, and <code>X-User-Verified</code>
+regardless of whether VibeWarden is running in Kratos mode locally or
+validating Cognito JWTs in production. The auth split is entirely a
+deployment-time concern.</p>
+<hr />
 <h2 id="ai-agent-readable-summary">AI-agent-readable summary<a class="headerlink" href="#ai-agent-readable-summary" title="Permanent link">&para;</a></h2>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">{</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nt">&quot;schema_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v1&quot;</span><span class="p">,</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nt">&quot;topic&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;identity-providers&quot;</span><span class="p">,</span>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="nt">&quot;modes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;none&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;jwt&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;kratos&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;api-key&quot;</span><span class="p">],</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span><span class="nt">&quot;recommended_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jwt&quot;</span><span class="p">,</span>
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">  </span><span class="nt">&quot;jwt_required_fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;auth.jwt.issuer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;auth.jwt.audience&quot;</span><span class="p">],</span>
-</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="nt">&quot;jwks_discovery&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;auth.jwt.jwks_url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;auth.jwt.issuer_url&quot;</span><span class="p">],</span>
-</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span><span class="nt">&quot;default_claims_to_headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">    </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X-User-Id&quot;</span><span class="p">,</span>
-</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X-User-Email&quot;</span><span class="p">,</span>
-</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">    </span><span class="nt">&quot;email_verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X-User-Verified&quot;</span>
-</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">  </span><span class="nt">&quot;provider_examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;auth0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;keycloak&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;firebase&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;cognito&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;okta&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;supabase&quot;</span><span class="p">],</span>
-</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="w">  </span><span class="nt">&quot;kratos_use_cases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;browser_flows&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;mfa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;social_login&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;self_hosted_accounts&quot;</span><span class="p">],</span>
-</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="w">  </span><span class="nt">&quot;api_key_use_cases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;machine_to_machine&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ci_cd&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;service_accounts&quot;</span><span class="p">]</span>
-</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="p">}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="p">{</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nt">&quot;schema_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v1&quot;</span><span class="p">,</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span><span class="nt">&quot;topic&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;identity-providers&quot;</span><span class="p">,</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span><span class="nt">&quot;modes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;none&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;jwt&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;kratos&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;api-key&quot;</span><span class="p">],</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">  </span><span class="nt">&quot;recommended_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jwt&quot;</span><span class="p">,</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">  </span><span class="nt">&quot;jwt_required_fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;auth.jwt.issuer&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;auth.jwt.audience&quot;</span><span class="p">],</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">  </span><span class="nt">&quot;jwks_discovery&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;auth.jwt.jwks_url&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;auth.jwt.issuer_url&quot;</span><span class="p">],</span>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="w">  </span><span class="nt">&quot;default_claims_to_headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="w">    </span><span class="nt">&quot;sub&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X-User-Id&quot;</span><span class="p">,</span>
+</span><span id="__span-28-10"><a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X-User-Email&quot;</span><span class="p">,</span>
+</span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="w">    </span><span class="nt">&quot;email_verified&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;X-User-Verified&quot;</span>
+</span><span id="__span-28-12"><a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-28-13"><a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="w">  </span><span class="nt">&quot;provider_examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;auth0&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;keycloak&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;firebase&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;cognito&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;okta&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;supabase&quot;</span><span class="p">],</span>
+</span><span id="__span-28-14"><a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="w">  </span><span class="nt">&quot;kratos_use_cases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;browser_flows&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;mfa&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;social_login&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;self_hosted_accounts&quot;</span><span class="p">],</span>
+</span><span id="__span-28-15"><a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a><span class="w">  </span><span class="nt">&quot;api_key_use_cases&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;machine_to_machine&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ci_cd&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;service_accounts&quot;</span><span class="p">],</span>
+</span><span id="__span-28-16"><a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="w">  </span><span class="nt">&quot;dev_prod_split&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-28-17"><a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a><span class="w">    </span><span class="nt">&quot;dev_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;kratos&quot;</span><span class="p">,</span>
+</span><span id="__span-28-18"><a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a><span class="w">    </span><span class="nt">&quot;prod_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;jwt&quot;</span><span class="p">,</span>
+</span><span id="__span-28-19"><a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a><span class="w">    </span><span class="nt">&quot;switching_mechanisms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;--config flag&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;env var interpolation&quot;</span><span class="p">],</span>
+</span><span id="__span-28-20"><a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a><span class="w">    </span><span class="nt">&quot;upstream_headers_unchanged&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-28-21"><a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-28-22"><a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a><span class="p">}</span>
 </span></code></pre></div>
 
 
