@@ -1054,6 +1054,10 @@ CLI commands:
   vibew build              Build Docker image for your app
   vibew restart            Restart containers without full recreate
 
+  vibew deploy --config <file> --target ssh://user@host   Deploy to remote server
+  vibew deploy status --target ssh://...                   Check remote health
+  vibew deploy logs --target ssh://... [--lines N]         Tail remote logs
+
   vibew doctor exit codes:
     0 — all checks passed (OK or WARN only)
     1 — at least one check failed (FAIL)
