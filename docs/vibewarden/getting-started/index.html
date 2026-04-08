@@ -520,6 +520,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#which-command-do-i-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      Which command do I need?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#step-1-install-the-vibew-wrapper" class="md-nav__link">
     <span class="md-ellipsis">
       Step 1 — Install the vibew wrapper
@@ -1335,6 +1344,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#which-command-do-i-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      Which command do I need?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#step-1-install-the-vibew-wrapper" class="md-nav__link">
     <span class="md-ellipsis">
       Step 1 — Install the vibew wrapper
@@ -1578,6 +1596,33 @@ and explains what happens under the hood.</p>
 no extra flags needed on Apple Silicon (M1/M2/M3) or ARM64 servers such as
 AWS Graviton.</p>
 </div>
+<hr />
+<h2 id="which-command-do-i-need">Which command do I need?<a class="headerlink" href="#which-command-do-i-need" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Starting a new project</td>
+<td><code>vibew init --lang go myapp</code></td>
+</tr>
+<tr>
+<td>Adding the sidecar to an existing app</td>
+<td><code>vibew wrap</code></td>
+</tr>
+<tr>
+<td>Adding a feature to an existing config</td>
+<td><code>vibew add &lt;feature&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>This guide covers the <code>vibew wrap</code> workflow for existing apps. If you are
+starting from scratch, run <code>vibew init</code> instead -- it scaffolds both the app
+and the sidecar config in one step, then follow from <strong>Step 3</strong> below.</p>
 <hr />
 <h2 id="step-1-install-the-vibew-wrapper">Step 1 — Install the <code>vibew</code> wrapper<a class="headerlink" href="#step-1-install-the-vibew-wrapper" title="Permanent link">&para;</a></h2>
 <p>The <code>vibew</code> script is a thin shell wrapper that downloads the correct VibeWarden
