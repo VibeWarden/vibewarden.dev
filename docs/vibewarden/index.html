@@ -1276,7 +1276,7 @@ TLS, authentication, rate limiting, WAF, secrets management, and AI-readable aud
 all in a single binary that sits next to your app.</p>
 <hr />
 <h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
-<div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">macOS / Linux</label><label for="__tabbed_1_2">Windows</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="1:1"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">macOS / Linux</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Download the vibew wrapper</span>
@@ -1289,15 +1289,15 @@ all in a single binary that sits next to your app.</p>
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>./vibew<span class="w"> </span>dev
 </span></code></pre></div>
 </div>
-<div class="tabbed-block">
-<div class="language-powershell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="n">https</span><span class="p">://</span><span class="n">vibewarden</span><span class="p">.</span><span class="n">dev</span><span class="p">/</span><span class="n">vibew</span><span class="p">.</span><span class="n">ps1</span> <span class="n">-OutFile</span> <span class="n">vibew</span><span class="p">.</span><span class="n">ps1</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">.\</span><span class="n">vibew</span><span class="p">.</span><span class="n">ps1</span> <span class="n">wrap</span> <span class="p">-</span><span class="n">-upstream</span> <span class="n">3000</span> <span class="p">-</span><span class="n">-auth</span> <span class="p">-</span><span class="n">-rate-limit</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">.\</span><span class="n">vibew</span><span class="p">.</span><span class="n">ps1</span> <span class="n">dev</span>
-</span></code></pre></div>
-</div>
 </div>
 </div>
 <p>Your app on port 3000 is now behind VibeWarden at <code>https://localhost:8443</code>. Done.</p>
+<div class="admonition note">
+<p class="admonition-title">Windows</p>
+<p>Windows support is planned — see <a href="https://github.com/vibewarden/vibewarden/issues/667">#667 (winget)</a>
+and <a href="https://github.com/vibewarden/vibewarden/issues/668">#668 (Scoop)</a>.
+VibeWarden currently builds for macOS and Linux only.</p>
+</div>
 <hr />
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
@@ -1414,15 +1414,15 @@ It is never hosted remotely.</p>
 </tbody>
 </table>
 <p>The <code>jwt</code> mode works with any OIDC-compatible provider:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">auth</span><span class="p">:</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jwt</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">jwt</span><span class="p">:</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">jwks_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://your-provider/.well-known/jwks.json&quot;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">issuer</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;https://your-provider/&quot;</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">audience</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-api-identifier&quot;</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">public_paths</span><span class="p">:</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/static/*</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">auth</span><span class="p">:</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jwt</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">jwt</span><span class="p">:</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">jwks_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://your-provider/.well-known/jwks.json&quot;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">issuer</span><span class="p">:</span><span class="w">   </span><span class="s">&quot;https://your-provider/&quot;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">audience</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;your-api-identifier&quot;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">public_paths</span><span class="p">:</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/static/*</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/health</span>
 </span></code></pre></div>
 <p>Your app receives authenticated user info via headers:</p>
 <table>
