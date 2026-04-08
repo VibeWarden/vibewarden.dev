@@ -13,10 +13,6 @@
         <link rel="canonical" href="https://vibewarden.dev/docs/examples/rails/">
       
       
-        <link rel="prev" href="../django/">
-      
-      
-        <link rel="next" href="../../upgrading/">
       
       
       <link rel="icon" href="../../assets/logo.png">
@@ -24,7 +20,7 @@
     
     
       
-        <title>Rails - VibeWarden</title>
+        <title>VibeWarden + Rails - VibeWarden</title>
       
     
     
@@ -115,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Rails
+              VibeWarden + Rails
             
           </span>
         </div>
@@ -308,12 +304,10 @@
         
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../express/" class="md-tabs__link">
           
   
@@ -802,30 +796,27 @@
       
   
   
-    
   
   
-  
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   <span class="md-ellipsis">
@@ -836,7 +827,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Framework Examples
@@ -880,217 +871,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../django/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Django
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Rails
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    Rails
-  </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      Architecture
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vibewardenyaml" class="md-nav__link">
-    <span class="md-ellipsis">
-      vibewarden.yaml
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#docker-composeyml" class="md-nav__link">
-    <span class="md-ellipsis">
-      docker-compose.yml
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reading-x-user-headers-in-rails" class="md-nav__link">
-    <span class="md-ellipsis">
-      Reading X-User-* headers in Rails
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Reading X-User-* headers in Rails">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#available-headers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Available headers
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#middleware" class="md-nav__link">
-    <span class="md-ellipsis">
-      Middleware
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#concern-for-controllers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Concern for controllers
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#controllers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Controllers
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#views-accessing-the-current-user" class="md-nav__link">
-    <span class="md-ellipsis">
-      Views — accessing the current user
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rails-configuration-for-production-behind-a-proxy" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rails configuration for production behind a proxy
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Rails configuration for production behind a proxy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#csrf-protection" class="md-nav__link">
-    <span class="md-ellipsis">
-      CSRF protection
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#health-check-rails-71" class="md-nav__link">
-    <span class="md-ellipsis">
-      Health check (Rails 7.1+)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#logging" class="md-nav__link">
-    <span class="md-ellipsis">
-      Logging
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1217,6 +997,48 @@
   
   <span class="md-ellipsis">
     Architectural Decisions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../claude-md-snippet/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Claude Code Snippet
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../schema-evolution/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Schema Evolution
   </span>
   
 
