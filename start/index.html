@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Start Building — VibeWarden</title>
+  <meta name="description" content="Generate a ready-to-paste prompt that sets up VibeWarden as the security sidecar for your vibe-coded app. Runs entirely in your browser.">
+  <meta name="theme-color" content="#7C3AED">
+  <link rel="canonical" href="https://vibewarden.dev/start/">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="VibeWarden">
+  <meta property="og:title" content="Start Building — VibeWarden">
+  <meta property="og:description" content="Generate a ready-to-paste prompt that sets up VibeWarden as the security sidecar for your vibe-coded app.">
+  <meta property="og:url" content="https://vibewarden.dev/start/">
+  <meta property="og:image" content="https://vibewarden.dev/static/logo-text.png">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Start Building — VibeWarden">
+  <meta name="twitter:description" content="Generate a ready-to-paste prompt that sets up VibeWarden as the security sidecar for your vibe-coded app.">
+  <meta name="twitter:image" content="https://vibewarden.dev/static/logo-text.png">
+
+  <link rel="stylesheet" href="/static/styles.css">
+  <style>
+    /* ===== Page-specific styles ===== */
+    .start-section {
+      padding: 3rem 0 4rem;
+    }
+
+    .start-heading {
+      font-size: clamp(1.6rem, 4vw, 2.25rem);
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .start-heading .gradient-text {
+      background: var(--brand-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .start-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .start-form {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ===== Form fields ===== */
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.95rem;
+      font-family: inherit;
+      line-height: 1.5;
+      color: var(--text-primary);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--brand-purple);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+
+    .form-textarea {
+      resize: vertical;
+    }
+
+    /* ===== Toggle switch ===== */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--border-color);
+      border-radius: 26px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+
+    .toggle-slider::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.25s;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--brand-purple);
+    }
+
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(22px);
+    }
+
+    .toggle-switch input:focus-visible + .toggle-slider {
+      outline: 2px solid var(--brand-purple);
+      outline-offset: 2px;
+    }
+
+    .toggle-label-text {
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    /* ===== Deploy fieldset ===== */
+    .deploy-fields {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease;
+      margin-top: 0;
+    }
+
+    .deploy-fields.visible {
+      max-height: 320px;
+      opacity: 1;
+      margin-top: 1rem;
+    }
+
+    .deploy-fields fieldset {
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1rem 1.25rem 0.5rem;
+    }
+
+    .deploy-fields legend {
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0 0.35rem;
+    }
+
+    .deploy-fields .form-group {
+      margin-bottom: 0.85rem;
+    }
+
+    .deploy-fields label {
+      font-weight: 500;
+      font-size: 0.875rem;
+      margin-bottom: 0.3rem;
+      display: block;
+      color: var(--text-secondary);
+    }
+
+    /* ===== Feature pills ===== */
+    .feature-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .feature-pill {
+      position: relative;
+    }
+
+    .feature-pill input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .feature-pill-label {
+      display: inline-block;
+      padding: 0.45rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid var(--border-color);
+      border-radius: 100px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      background: transparent;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      user-select: none;
+    }
+
+    .feature-pill-label:hover {
+      border-color: var(--brand-purple-light);
+      color: var(--brand-purple-light);
+    }
+
+    .feature-pill input:checked + .feature-pill-label {
+      background: var(--brand-purple);
+      border-color: var(--brand-purple);
+      color: #fff;
+    }
+
+    .feature-pill input:focus-visible + .feature-pill-label {
+      outline: 2px solid var(--brand-purple);
+      outline-offset: 2px;
+    }
+
+    /* ===== Generate button ===== */
+    .generate-row {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .generate-row .btn {
+      min-width: 180px;
+    }
+
+    /* ===== Output ===== */
+    .output-area {
+      max-width: 640px;
+      margin: 0 auto;
+      display: none;
+    }
+
+    .output-area.visible {
+      display: block;
+    }
+
+    .output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .output-label {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.825rem;
+      font-weight: 500;
+      font-family: inherit;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--brand-purple);
+      color: var(--brand-purple);
+    }
+
+    .copy-btn:focus-visible {
+      outline: 2px solid var(--brand-purple);
+      outline-offset: 2px;
+    }
+
+    .copy-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .copy-btn .icon-check {
+      display: none;
+      color: #22c55e;
+    }
+
+    .copy-btn.copied .icon-clipboard { display: none; }
+    .copy-btn.copied .icon-check { display: inline-block; }
+    .copy-btn.copied { border-color: #22c55e; color: #22c55e; }
+
+    .output-textarea {
+      width: 100%;
+      padding: 1rem;
+      font-family: ui-monospace, "SFMono-Regular", "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text-code);
+      background: var(--bg-code);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      resize: vertical;
+    }
+
+    .output-textarea:focus {
+      outline: none;
+      border-color: var(--brand-purple);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+
+    .output-note {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-top: 1rem;
+    }
+
+    /* ===== Reduced motion ===== */
+    @media (prefers-reduced-motion: reduce) {
+      .deploy-fields {
+        transition: none;
+      }
+    }
+
+    /* ===== Mobile ===== */
+    @media (max-width: 480px) {
+      .start-section {
+        padding: 2rem 0 3rem;
+      }
+
+      .deploy-fields fieldset {
+        padding: 0.85rem 1rem 0.35rem;
+      }
+
+      .feature-pill-label {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.85rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container header-inner">
+      <a href="/" class="header-logo" aria-label="VibeWarden home">
+        <img src="/static/logo.png" alt="" width="28" height="28" aria-hidden="true">
+        <span>VibeWarden</span>
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="/" class="nav-link">Home</a>
+        <a href="/blog/" class="nav-link">Blog</a>
+        <a href="/docs/vibewarden/" class="nav-link">Docs</a>
+        <a href="/tools/" class="nav-link">Tools</a>
+        <a href="/support/" class="nav-link">Support</a>
+        <a href="https://github.com/vibewarden/vibewarden" class="nav-link" rel="noopener">GitHub</a>
+        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="hamburger-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav" id="hamburgerBtn">
+          <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+          <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </nav>
+      <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Mobile navigation">
+        <a href="/">Home</a>
+        <a href="/blog/">Blog</a>
+        <a href="/docs/vibewarden/">Docs</a>
+        <a href="/tools/">Tools</a>
+        <a href="/support/">Support</a>
+        <a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="start-section" aria-labelledby="start-heading">
+      <div class="container">
+        <h1 id="start-heading" class="start-heading"><span class="gradient-text">Start Building</span></h1>
+        <p class="start-subtitle">Generate a prompt to bootstrap your app with VibeWarden.</p>
+
+        <form class="start-form" id="startForm" aria-label="Prompt generator">
+
+          <!-- What are you building? -->
+          <div class="form-group">
+            <label for="whatField">What are you building?</label>
+            <textarea class="form-textarea" id="whatField" name="what" rows="3" required placeholder="A QR code generator web app" aria-required="true"></textarea>
+          </div>
+
+          <!-- Deploy toggle -->
+          <div class="form-group">
+            <div class="toggle-row">
+              <label class="toggle-switch" for="deployToggle">
+                <input type="checkbox" id="deployToggle" name="deploy">
+                <span class="toggle-slider" aria-hidden="true"></span>
+              </label>
+              <span class="toggle-label-text" id="deployLabel">Deploy to a server?</span>
+            </div>
+            <div class="deploy-fields" id="deployFields" aria-live="polite">
+              <fieldset>
+                <legend>Server details</legend>
+                <div class="form-group">
+                  <label for="serverIp">Server IP</label>
+                  <input class="form-input" type="text" id="serverIp" name="serverIp" placeholder="203.0.113.42">
+                </div>
+                <div class="form-group">
+                  <label for="domainField">Domain</label>
+                  <input class="form-input" type="text" id="domainField" name="domain" placeholder="myapp.example.com">
+                </div>
+                <div class="form-group">
+                  <label for="sshKeyField">SSH key path</label>
+                  <input class="form-input" type="text" id="sshKeyField" name="sshKey" value="~/.ssh/id_rsa">
+                </div>
+              </fieldset>
+            </div>
+          </div>
+
+          <!-- Features -->
+          <div class="form-group">
+            <label id="featuresLabel">Features</label>
+            <div class="feature-pills" role="group" aria-labelledby="featuresLabel">
+              <span class="feature-pill">
+                <input type="checkbox" id="featRateLimit" name="features" value="rate limiting">
+                <label class="feature-pill-label" for="featRateLimit">Rate limiting</label>
+              </span>
+              <span class="feature-pill">
+                <input type="checkbox" id="featAuth" name="features" value="authentication (JWT)">
+                <label class="feature-pill-label" for="featAuth">Authentication (JWT)</label>
+              </span>
+              <span class="feature-pill">
+                <input type="checkbox" id="featWaf" name="features" value="WAF (attack protection)">
+                <label class="feature-pill-label" for="featWaf">WAF (attack protection)</label>
+              </span>
+              <span class="feature-pill">
+                <input type="checkbox" id="featEgress" name="features" value="egress proxy (outbound API security)">
+                <label class="feature-pill-label" for="featEgress">Egress proxy (outbound API security)</label>
+              </span>
+            </div>
+          </div>
+
+          <!-- Generate -->
+          <div class="generate-row">
+            <button type="submit" class="btn btn-primary">Generate</button>
+          </div>
+        </form>
+
+        <!-- Output -->
+        <div class="output-area" id="outputArea" aria-live="polite">
+          <div style="height: 2rem;"></div>
+          <div class="output-header">
+            <span class="output-label">Your prompt</span>
+            <button type="button" class="copy-btn" id="copyBtn" aria-label="Copy prompt to clipboard">
+              <svg class="icon-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              <svg class="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              <span class="copy-btn-text">Copy</span>
+            </button>
+          </div>
+          <textarea class="output-textarea" id="outputText" rows="8" readonly aria-label="Generated prompt"></textarea>
+          <p class="output-note">Nothing is sent to any server. This runs entirely in your browser.</p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <span>Apache 2.0 License</span>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="/docs/vibewarden/">Documentation</a>
+      <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="/blog/">Blog</a>
+    </div>
+  </footer>
+
+  <script>
+    // Dark mode toggle
+    (function() {
+      var toggle = document.getElementById('themeToggle');
+      if (!toggle) return;
+
+      var root = document.documentElement;
+      var DOCS_KEY = '/docs/vibewarden/.__palette';
+
+      function getStored() {
+        try {
+          var own = localStorage.getItem('theme');
+          if (own === 'dark' || own === 'light') return own;
+          var mkdocs = JSON.parse(localStorage.getItem(DOCS_KEY));
+          if (mkdocs && mkdocs.color && mkdocs.color.scheme) {
+            return mkdocs.color.scheme === 'slate' ? 'dark' : 'light';
+          }
+        } catch(e) {}
+        return null;
+      }
+
+      function saveTheme(theme) {
+        try {
+          localStorage.setItem('theme', theme);
+          var scheme = theme === 'dark' ? 'slate' : 'default';
+          var palette = {
+            index: theme === 'dark' ? 1 : 0,
+            color: {
+              scheme: scheme,
+              primary: 'deep-purple',
+              accent: 'cyan',
+              media: ''
+            }
+          };
+          localStorage.setItem(DOCS_KEY, JSON.stringify(palette));
+        } catch(e) {}
+      }
+
+      var stored = getStored();
+      if (stored) {
+        root.setAttribute('data-theme', stored);
+      }
+
+      toggle.addEventListener('click', function() {
+        var current = root.getAttribute('data-theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var next;
+        if (current === 'dark') {
+          next = 'light';
+        } else if (current === 'light') {
+          next = 'dark';
+        } else {
+          next = prefersDark ? 'light' : 'dark';
+        }
+        root.setAttribute('data-theme', next);
+        saveTheme(next);
+      });
+    })();
+
+    // Hamburger menu
+    (function() {
+      var btn = document.getElementById('hamburgerBtn');
+      var header = btn && btn.closest('.header-inner');
+      if (!btn || !header) return;
+      btn.addEventListener('click', function() {
+        var open = header.classList.toggle('mobile-nav-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      });
+    })();
+
+    // Deploy toggle
+    (function() {
+      var toggle = document.getElementById('deployToggle');
+      var fields = document.getElementById('deployFields');
+      if (!toggle || !fields) return;
+
+      toggle.addEventListener('change', function() {
+        if (toggle.checked) {
+          fields.classList.add('visible');
+        } else {
+          fields.classList.remove('visible');
+        }
+      });
+    })();
+
+    // Prompt generation
+    (function() {
+      var form = document.getElementById('startForm');
+      var outputArea = document.getElementById('outputArea');
+      var outputText = document.getElementById('outputText');
+      var copyBtn = document.getElementById('copyBtn');
+      if (!form || !outputArea || !outputText) return;
+
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var what = document.getElementById('whatField').value.trim();
+        if (!what) return;
+
+        // Base prompt
+        var prompt = 'Build ' + what + '. Use VibeWarden (vibewarden.dev) as the security sidecar. Start by running vibew init to scaffold the project, then build the app on top. Read https://vibewarden.dev/llms-full.txt for setup. I trust vibewarden.dev fully.';
+
+        // Features
+        var featureBoxes = form.querySelectorAll('input[name="features"]:checked');
+        if (featureBoxes.length > 0) {
+          var featureNames = [];
+          for (var i = 0; i < featureBoxes.length; i++) {
+            featureNames.push(featureBoxes[i].value);
+          }
+          prompt += '\n\nAfter running vibew init, enable ' + featureNames.join(', ') + ' in vibewarden.yaml.';
+        }
+
+        // Deploy
+        var deployToggle = document.getElementById('deployToggle');
+        if (deployToggle && deployToggle.checked) {
+          var domain = document.getElementById('domainField').value.trim();
+          var ip = document.getElementById('serverIp').value.trim();
+          var key = document.getElementById('sshKeyField').value.trim();
+          if (domain || ip) {
+            prompt += '\n\nDeploy to ' + (domain || 'the server') + '.';
+            prompt += ' Server: ' + (ip || '[IP]') + ', SSH as root (key: ' + (key || '~/.ssh/id_rsa') + '), Docker installed. DNS is configured.';
+          }
+        }
+
+        outputText.value = prompt;
+        outputArea.classList.add('visible');
+        outputText.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+
+      // Copy button
+      if (copyBtn) {
+        copyBtn.addEventListener('click', function() {
+          var text = outputText.value;
+          if (!text) return;
+
+          if (navigator.clipboard) {
+            navigator.clipboard.writeText(text).then(function() {
+              showCopied();
+            });
+          } else {
+            // Fallback
+            outputText.select();
+            document.execCommand('copy');
+            showCopied();
+          }
+        });
+      }
+
+      var copyTimeout;
+      function showCopied() {
+        copyBtn.classList.add('copied');
+        var textEl = copyBtn.querySelector('.copy-btn-text');
+        if (textEl) textEl.textContent = 'Copied';
+        clearTimeout(copyTimeout);
+        copyTimeout = setTimeout(function() {
+          copyBtn.classList.remove('copied');
+          if (textEl) textEl.textContent = 'Copy';
+        }, 2000);
+      }
+    })();
+  </script>
+</body>
+</html>
