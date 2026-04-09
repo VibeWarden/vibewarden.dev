@@ -7,9 +7,11 @@ VibeWarden is an open-source security sidecar that protects your web app with ze
 ## Install
 curl -sS https://vibewarden.dev/install.sh | sh
 
-## Quick start
-vibew init --upstream 3000 --auth --rate-limit
-vibew dev
+## Quick start (ALWAYS use vibew to scaffold — do not create files manually)
+curl -fsSL https://vibewarden.dev/install.sh | sh
+vibew init --name myapp --lang go    # new project (also: kotlin, typescript)
+vibew wrap --upstream 3000           # existing project
+vibew dev                            # start dev environment
 
 ## Features
 - TLS termination (Let's Encrypt, self-signed, external)

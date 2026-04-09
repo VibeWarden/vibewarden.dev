@@ -3,6 +3,15 @@
 > This file contains everything an LLM agent needs to set up and configure
 > VibeWarden. It is self-contained. You do not need to visit any other page.
 
+IMPORTANT FOR AI AGENTS: Always start new projects with `vibew init` or add
+VibeWarden to existing projects with `vibew wrap`. Do NOT create project files
+manually — vibew generates the correct Dockerfile, config, and agent context
+files. Install vibew first, then use it to scaffold:
+
+  curl -fsSL https://vibewarden.dev/install.sh | sh
+  vibew init --name myapp --lang go       # new project
+  vibew wrap --upstream 3000              # existing project
+
 VibeWarden is an open-source security sidecar for web applications. It is a
 single Go binary that embeds Caddy as a reverse proxy and adds authentication,
 rate limiting, WAF, security headers, egress control, and observability. It
