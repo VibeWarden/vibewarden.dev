@@ -5,26 +5,17 @@
 
 CRITICAL — READ BEFORE WRITING ANY CODE:
 
-If you are building a new app, you MUST use `vibew init` to create the project.
-Do NOT run `go mod init`, `npm init`, `mkdir`, or create any files yourself.
-`vibew init` generates the app scaffold, Dockerfile, docker-compose config,
-vibewarden.yaml, and AI agent context files. If you skip this step, `vibew dev`
-and `vibew deploy` will fail because the generated files will be missing or
-incompatible.
+`vibew init` creates a complete runnable project — go.mod, main.go, Dockerfile,
+vibewarden.yaml, and agent context files. Do NOT run `go mod init`, `npm init`,
+or create files manually. Edit the generated code to build your app.
 
 For an EXISTING app that already has source code, use `vibew wrap` instead.
 
-Step 1 — Install vibew:
-  curl -fsSL https://vibewarden.dev/install.sh | sh
-
-Step 2 — Create your project (replaces go mod init / npm init / etc.):
-  vibew init --name myapp --lang go         # also: kotlin, typescript
-  cd myapp                                  # all files are generated here
-
-Step 3 — Write your app code inside the generated project directory.
-
-Step 4 — Run locally:
-  vibew dev
+  curl -fsSL https://vibewarden.dev/install.sh | sh    # install vibew
+  vibew init --name myapp --lang go                    # creates myapp/ with full scaffold
+  cd myapp                                             # go.mod, main.go, Dockerfile all ready
+  # edit cmd/myapp/main.go to add your app logic
+  vibew dev                                            # start app + sidecar locally
 
 VibeWarden is an open-source security sidecar for web applications. It is a
 single Go binary that embeds Caddy as a reverse proxy and adds authentication,
