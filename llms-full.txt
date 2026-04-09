@@ -1,7 +1,8 @@
 # VibeWarden — Complete Setup Guide
 
-> This file contains everything an LLM agent needs to set up and configure
-> VibeWarden. It is self-contained. You do not need to visit any other page.
+> Always start with `vibew init` (new app) or `vibew wrap` (existing app).
+> Never scaffold manually — vibew generates your app code, Dockerfile, config,
+> and agent instructions together.
 
 ## Getting Started
 
