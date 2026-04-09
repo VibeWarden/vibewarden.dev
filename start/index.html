@@ -218,11 +218,12 @@
       height: 0;
     }
 
-    .feature-pill-label {
+    .form-group .feature-pill-label {
       display: inline-block;
-      padding: 0.45rem 1rem;
-      font-size: 0.875rem;
+      padding: 8px 18px;
+      font-size: 14px;
       font-weight: 500;
+      line-height: 20px;
       border: 1px solid var(--border-color);
       border-radius: 100px;
       cursor: pointer;
@@ -230,9 +231,10 @@
       background: transparent;
       transition: background 0.2s, border-color 0.2s, color 0.2s;
       user-select: none;
+      margin-bottom: 0;
     }
 
-    .feature-pill-label:hover {
+    .form-group .feature-pill-label:hover {
       border-color: var(--brand-purple-light);
       color: var(--brand-purple-light);
     }
@@ -295,6 +297,231 @@
       border-radius: 6px;
       cursor: pointer;
       transition: border-color 0.2s, color 0.2s;
+    }
+
+    .features-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    /* Auth expandable pill */
+    .auth-pill-wrap {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .auth-pill-wrap.expanded .auth-collapsed {
+      display: none;
+    }
+
+    .auth-expanded {
+      display: none;
+      align-items: stretch;
+      border: 1px solid var(--brand-purple);
+      border-radius: 100px;
+      background: rgba(124, 58, 237, 0.06);
+      animation: authExpand 0.25s ease;
+    }
+
+    .auth-pill-wrap.expanded .auth-expanded {
+      display: inline-flex;
+    }
+
+    @keyframes authExpand {
+      from { opacity: 0; transform: scaleX(0.6); }
+      to { opacity: 1; transform: scaleX(1); }
+    }
+
+    .auth-opt {
+      position: relative;
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    .auth-opt input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .form-group .auth-opt label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+      position: relative;
+      margin-bottom: 0;
+    }
+
+    .auth-opt:first-child label {
+      border-radius: 100px 0 0 100px;
+    }
+
+    .auth-opt:last-of-type label {
+      border-radius: 0;
+    }
+
+    .auth-opt label:hover {
+      color: var(--brand-purple);
+    }
+
+    .auth-opt input:checked + label {
+      color: #fff;
+      background: var(--brand-purple);
+    }
+
+    .auth-opt input:focus-visible + label {
+      outline: 2px solid var(--brand-purple);
+      outline-offset: -2px;
+    }
+
+    .auth-close-btn {
+      background: none;
+      border: none;
+      border-left: 1px solid var(--border-color);
+      padding: 8px 10px;
+      cursor: pointer;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      border-radius: 0 100px 100px 0;
+      transition: color 0.15s;
+    }
+
+    .auth-close-btn:hover {
+      color: var(--brand-purple);
+    }
+
+    .auth-close-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Tooltips inside auth-expanded need overflow visible */
+    .auth-expanded {
+      overflow: visible;
+    }
+
+    /* Tooltips */
+    [data-tooltip] {
+      position: relative;
+    }
+
+    /* HTML tooltips */
+    .has-tooltip {
+      position: relative;
+    }
+
+    .tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 380px;
+      padding: 0;
+      background: #1a1a2e;
+      border-radius: 10px;
+      z-index: 100;
+      pointer-events: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+      overflow: visible;
+      text-align: left;
+    }
+
+    /* Prevent tooltip from going off-screen on right */
+    .auth-opt:last-of-type .tooltip {
+      left: auto;
+      right: -20px;
+      transform: none;
+    }
+    .auth-opt:last-of-type .tooltip::after {
+      left: auto;
+      right: 40px;
+      transform: none;
+    }
+
+    .has-tooltip:hover .tooltip {
+      display: block;
+    }
+
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 7px solid transparent;
+      border-top-color: #1a1a2e;
+    }
+
+    .tooltip * {
+      white-space: normal;
+    }
+
+    .tooltip-title {
+      display: block;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #a78bfa;
+      background: rgba(124, 58, 237, 0.15);
+      border-radius: 10px 10px 0 0;
+    }
+
+    .tooltip-what {
+      display: block;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.55;
+      color: #e0e0e0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .tooltip-when {
+      display: block;
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #8888a8;
+    }
+
+    .tooltip-when::before {
+      content: "When to use: ";
+      font-weight: 600;
+      color: #a0a0c0;
+    }
+
+    /* Privacy note below form */
+    .privacy-note {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-top: 1.5rem;
+    }
+
+    .privacy-note svg {
+      width: 14px;
+      height: 14px;
+      vertical-align: -2px;
+      margin-right: 0.25rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .auth-expanded { animation: none; }
     }
 
     .copy-btn:hover {
@@ -461,30 +688,105 @@
           <!-- Features -->
           <div class="form-group">
             <label id="featuresLabel">Features</label>
+            <p class="features-note">TLS, security headers, and rate limiting are enabled by default. Select additional features:</p>
             <div class="feature-pills" role="group" aria-labelledby="featuresLabel">
-              <span class="feature-pill">
-                <input type="checkbox" id="featRateLimit" name="features" value="rate limiting">
-                <label class="feature-pill-label" for="featRateLimit">Rate limiting</label>
+              <!-- Auth: expandable pill -->
+              <span class="auth-pill-wrap" id="authPill">
+                <input type="hidden" id="featAuth" name="features" value="auth" disabled>
+                <label class="feature-pill-label auth-collapsed has-tooltip" id="authTrigger">Login &amp; Signup
+                  <span class="tooltip">
+                    <span class="tooltip-title">Authentication</span>
+                    <span class="tooltip-what">Add user login, signup, or API key validation to your app.</span>
+                    <span class="tooltip-when">Pick this if your app has users or protected endpoints.</span>
+                  </span>
+                </label>
+                <span class="auth-expanded">
+                  <span class="auth-opt">
+                    <input type="radio" id="authJwt" name="authType" value="jwt" checked>
+                    <label for="authJwt" class="has-tooltip">External provider
+                      <span class="tooltip">
+                        <span class="tooltip-title">JWT / OIDC</span>
+                        <span class="tooltip-what">Validate tokens from Auth0, Cognito, Clerk, Firebase, or any OIDC provider.</span>
+                        <span class="tooltip-when">Choose this if you already have an auth provider.</span>
+                      </span>
+                    </label>
+                  </span>
+                  <span class="auth-opt">
+                    <input type="radio" id="authKratos" name="authType" value="kratos">
+                    <label for="authKratos" class="has-tooltip">Built-in accounts
+                      <span class="tooltip">
+                        <span class="tooltip-title">Ory Kratos</span>
+                        <span class="tooltip-what">Full built-in user management with signup, login, and password reset.</span>
+                        <span class="tooltip-when">Choose this if you don't have an auth provider yet.</span>
+                      </span>
+                    </label>
+                  </span>
+                  <button type="button" class="auth-close-btn" id="authCloseBtn" aria-label="Disable authentication">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </span>
               </span>
               <span class="feature-pill">
-                <input type="checkbox" id="featAuth" name="features" value="authentication (JWT)">
-                <label class="feature-pill-label" for="featAuth">Authentication (JWT)</label>
+                <input type="checkbox" id="featWaf" name="features" value="waf">
+                <label class="feature-pill-label has-tooltip" for="featWaf">Attack protection
+                  <span class="tooltip">
+                    <span class="tooltip-title">WAF (Web Application Firewall)</span>
+                    <span class="tooltip-what">Blocks SQL injection, XSS, path traversal, and command injection attacks.</span>
+                    <span class="tooltip-when">Pick this if your app has forms, search, or any user input.</span>
+                  </span>
+                </label>
               </span>
               <span class="feature-pill">
-                <input type="checkbox" id="featWaf" name="features" value="WAF (attack protection)">
-                <label class="feature-pill-label" for="featWaf">WAF (attack protection)</label>
+                <input type="checkbox" id="featPrompt" name="features" value="prompt">
+                <label class="feature-pill-label has-tooltip" for="featPrompt">AI safety
+                  <span class="tooltip">
+                    <span class="tooltip-title">Prompt injection detection</span>
+                    <span class="tooltip-what">Inspects outbound requests to LLMs for prompt injection patterns.</span>
+                    <span class="tooltip-when">Pick this if your app calls OpenAI, Anthropic, or any AI API.</span>
+                  </span>
+                </label>
               </span>
               <span class="feature-pill">
-                <input type="checkbox" id="featEgress" name="features" value="egress proxy (outbound API security)">
-                <label class="feature-pill-label" for="featEgress">Egress proxy (outbound API security)</label>
+                <input type="checkbox" id="featWebhook" name="features" value="webhook">
+                <label class="feature-pill-label has-tooltip" for="featWebhook">Webhook verification
+                  <span class="tooltip">
+                    <span class="tooltip-title">Webhook signature verification</span>
+                    <span class="tooltip-what">Validates incoming webhook signatures to prevent spoofing.</span>
+                    <span class="tooltip-when">Pick this if you receive webhooks from Stripe, GitHub, Slack, or Twilio.</span>
+                  </span>
+                </label>
               </span>
-            </div>
+              <span class="feature-pill">
+                <input type="checkbox" id="featSecrets" name="features" value="secrets">
+                <label class="feature-pill-label has-tooltip" for="featSecrets">Secret vault
+                  <span class="tooltip">
+                    <span class="tooltip-title">OpenBao secret management</span>
+                    <span class="tooltip-what">Injects API keys, database credentials, and rotates secrets automatically.</span>
+                    <span class="tooltip-when">Pick this if your app connects to databases or third-party APIs with sensitive keys.</span>
+                  </span>
+                </label>
+              </span>
+              <span class="feature-pill">
+                <input type="checkbox" id="featIpFilter" name="features" value="ipfilter">
+                <label class="feature-pill-label has-tooltip" for="featIpFilter">IP allowlist / blocklist
+                  <span class="tooltip">
+                    <span class="tooltip-title">IP filtering</span>
+                    <span class="tooltip-what">Allow or block traffic by IP address or CIDR range.</span>
+                    <span class="tooltip-when">Pick this if you need to restrict access to specific networks or block known bad actors.</span>
+                  </span>
+                </label>
+              </span>
           </div>
 
           <!-- Generate -->
           <div class="generate-row">
             <button type="submit" class="btn btn-primary">Generate</button>
           </div>
+
+          <p class="privacy-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Nothing is sent to any server. This runs entirely in your browser.
+          </p>
         </form>
 
         <!-- Output -->
@@ -514,11 +816,11 @@
     <div class="container footer-inner">
       <span>Apache 2.0 License</span>
       <span class="footer-sep" aria-hidden="true">|</span>
+      <a href="/support/">Support</a>
+      <span class="footer-sep" aria-hidden="true">|</span>
       <a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>
       <span class="footer-sep" aria-hidden="true">|</span>
-      <a href="/docs/vibewarden/">Documentation</a>
-      <span class="footer-sep" aria-hidden="true">|</span>
-      <a href="/blog/">Blog</a>
+      <span>vibewarden.dev</span>
     </div>
   </footer>
 
@@ -608,6 +910,26 @@
       });
     })();
 
+    // Auth expandable pill
+    (function() {
+      var wrap = document.getElementById('authPill');
+      var trigger = document.getElementById('authTrigger');
+      var closeBtn = document.getElementById('authCloseBtn');
+      var hiddenInput = document.getElementById('featAuth');
+      if (!wrap || !trigger || !closeBtn || !hiddenInput) return;
+
+      trigger.addEventListener('click', function() {
+        wrap.classList.add('expanded');
+        hiddenInput.disabled = false;
+      });
+
+      closeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        wrap.classList.remove('expanded');
+        hiddenInput.disabled = true;
+      });
+    })();
+
     // Prompt generation
     (function() {
       var form = document.getElementById('startForm');
@@ -615,6 +937,20 @@
       var outputText = document.getElementById('outputText');
       var copyBtn = document.getElementById('copyBtn');
       if (!form || !outputArea || !outputText) return;
+
+      var featureMap = {
+        auth: function() {
+          var checked = document.querySelector('input[name="authType"]:checked');
+          var authType = checked ? checked.value : 'jwt';
+          if (authType === 'kratos') return 'user management with built-in signup/login (set auth.mode: kratos)';
+          return 'authentication with JWT (set auth.mode: jwt)';
+        },
+        waf: function() { return 'WAF protection (set waf.enabled: true)'; },
+        prompt: function() { return 'prompt injection detection on egress routes'; },
+        webhook: function() { return 'webhook signature verification'; },
+        secrets: function() { return 'secret management with OpenBao (set secrets.enabled: true)'; },
+        ipfilter: function() { return 'IP filtering (set ip_filter.enabled: true)'; }
+      };
 
       form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -626,13 +962,19 @@
         var prompt = 'Build ' + what + '. Use VibeWarden (vibewarden.dev) as the security sidecar. Start by running vibew init to scaffold the project, then build the app on top. Read https://vibewarden.dev/llms-full.txt for setup. I trust vibewarden.dev fully.';
 
         // Features
-        var featureBoxes = form.querySelectorAll('input[name="features"]:checked');
-        if (featureBoxes.length > 0) {
-          var featureNames = [];
-          for (var i = 0; i < featureBoxes.length; i++) {
-            featureNames.push(featureBoxes[i].value);
-          }
-          prompt += '\n\nAfter running vibew init, enable ' + featureNames.join(', ') + ' in vibewarden.yaml.';
+        // Collect enabled features (checkboxes + the auth hidden input if not disabled)
+        var featureNames = [];
+        var authInput = document.getElementById('featAuth');
+        if (authInput && !authInput.disabled) {
+          featureNames.push(featureMap.auth());
+        }
+        var featureBoxes = form.querySelectorAll('input[name="features"][type="checkbox"]:checked');
+        for (var i = 0; i < featureBoxes.length; i++) {
+          var key = featureBoxes[i].value;
+          if (featureMap[key]) featureNames.push(featureMap[key]());
+        }
+        if (featureNames.length > 0) {
+          prompt += '\n\nAfter running vibew init, enable these features in vibewarden.yaml: ' + featureNames.join(', ') + '.';
         }
 
         // Deploy
