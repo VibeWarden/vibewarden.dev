@@ -20,17 +20,27 @@ PATH A — New project:
   cd myapp
 
   This creates: go.mod, cmd/myapp/main.go (with /health endpoint), Dockerfile,
-  vibewarden.yaml, AGENTS-VIBEWARDEN.md, CLAUDE.md, .claude/commands/,
-  .vibewarden-version, .gitignore. Edit cmd/myapp/main.go to build your app.
+  vibewarden.yaml, .vibewarden-version, .gitignore, and importantly:
+  - AGENTS-VIBEWARDEN.md — instructions for YOU (the AI agent) on what the
+    sidecar handles, what NOT to implement in app code, and architectural rules
+  - CLAUDE.md — project-specific context
+  - .claude/commands/ — slash commands for common workflows
+  Read AGENTS-VIBEWARDEN.md after init — it tells you what security features
+  to never reimplement. Edit cmd/myapp/main.go to build your app.
 
 PATH B — Existing app (you already have source code):
 
   cd my-existing-app
   vibew wrap --upstream 3000
 
-  This adds: vibewarden.yaml, Dockerfile (if missing), AGENTS-VIBEWARDEN.md,
-  CLAUDE.md. Your existing code is untouched. Your app MUST have a GET /health
-  endpoint returning HTTP 200 — the sidecar waits for it before starting.
+  This adds: vibewarden.yaml, Dockerfile (if missing), and:
+  - AGENTS-VIBEWARDEN.md — instructions for YOU (the AI agent) on what the
+    sidecar handles and what NOT to implement in app code
+  - CLAUDE.md — project-specific context
+  Your existing code is untouched. Read AGENTS-VIBEWARDEN.md — it tells you
+  which security features are already handled (do not reimplement them).
+  Your app MUST have a GET /health endpoint returning HTTP 200 — the sidecar
+  waits for it before starting.
 
 Then run locally:
 
