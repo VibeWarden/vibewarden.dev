@@ -984,8 +984,8 @@
           var ip = document.getElementById('serverIp').value.trim();
           var key = document.getElementById('sshKeyField').value.trim();
           if (domain || ip) {
-            prompt += '\n\nDeploy to ' + (domain || 'the server') + '.';
-            prompt += ' Server: ' + (ip || '[IP]') + ', SSH as root (key: ' + (key || '~/.ssh/id_rsa') + '), Docker installed. DNS is configured.';
+            prompt += '\n\nDeploy to ' + (domain || 'the server') + ' using vibew deploy.';
+            prompt += ' Server: ' + (ip || '[IP]') + ', SSH as root (key: ' + (key || '~/.ssh/id_rsa') + '), Docker installed. DNS is configured. Run vibew deploy to push and start the app on the server.';
           }
         }
 
