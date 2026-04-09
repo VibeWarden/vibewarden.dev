@@ -3,32 +3,41 @@
 > This file contains everything an LLM agent needs to set up and configure
 > VibeWarden. It is self-contained. You do not need to visit any other page.
 
-## Getting Started — Two Paths
+## Getting Started
 
 Install vibew first:
 
   curl -fsSL https://vibewarden.dev/install.sh | sh
 
-Then choose your path:
+IMPORTANT — always use vibew init or vibew wrap. Do NOT create vibewarden.yaml,
+Dockerfile, or docker-compose files by hand. These commands generate internal
+state (.vibewarden/, health check config, compose wiring) that vibew dev and
+vibew deploy depend on. Manually created configs will fail.
 
-PATH A — Starting a new project (vibew generates everything):
+PATH A — New project:
 
-  vibew init --name myapp --lang go       # creates myapp/ with go.mod, main.go,
-                                          # Dockerfile, vibewarden.yaml, agent context
+  vibew init --name myapp --lang go
   cd myapp
-  # edit cmd/myapp/main.go to add your app logic
-  vibew dev                               # start app + sidecar locally
 
-PATH B — Adding VibeWarden to an existing app:
+  This creates: go.mod, cmd/myapp/main.go (with /health endpoint), Dockerfile,
+  vibewarden.yaml, AGENTS-VIBEWARDEN.md, CLAUDE.md, .claude/commands/,
+  .vibewarden-version, .gitignore. Edit cmd/myapp/main.go to build your app.
+
+PATH B — Existing app (you already have source code):
 
   cd my-existing-app
-  vibew wrap --upstream 3000              # adds vibewarden.yaml, Dockerfile,
-                                          # agent context to your project
-  vibew dev                               # start app + sidecar locally
+  vibew wrap --upstream 3000
 
-Both paths are fully supported. PATH A scaffolds a complete app you can edit.
-PATH B adds VibeWarden config to code you already wrote. Either way, `vibew dev`
-starts the full stack and your app is protected at https://localhost:8443.
+  This adds: vibewarden.yaml, Dockerfile (if missing), AGENTS-VIBEWARDEN.md,
+  CLAUDE.md. Your existing code is untouched. Your app MUST have a GET /health
+  endpoint returning HTTP 200 — the sidecar waits for it before starting.
+
+Then run locally:
+
+  vibew dev
+
+Your app is protected at https://localhost:8443. Do not modify files in
+.vibewarden/generated/ — they are regenerated on every vibew dev.
 
 VibeWarden is an open-source security sidecar for web applications. It is a
 single Go binary that embeds Caddy as a reverse proxy and adds authentication,
@@ -1030,26 +1039,18 @@ Step 4 — Set up project locally:
     # Existing app:
     vibew wrap --upstream 3000
 
-Step 5 — Create vibewarden.prod.yaml (see examples/vibewarden.prod.yaml):
+Step 5 — Create vibewarden.prod.yaml by copying the generated vibewarden.yaml
+and modifying it for production. Do NOT write it from scratch:
+
+    cp vibewarden.yaml vibewarden.prod.yaml
+
+Then edit vibewarden.prod.yaml to change:
     profile: prod
-    app:
-      image: ghcr.io/your-org/myapp:latest
-    tls:
-      enabled: true
-      provider: letsencrypt
-      domain: demo.yourdomain.com
-    auth:
-      enabled: true
-      mode: jwt
-      jwt:
-        jwks_url: https://your-idp/.well-known/jwks.json
-        issuer: https://your-idp/
-        audience: https://api.yourdomain.com
-      public_paths: [/health, /static/*]
-    rate_limit:
-      enabled: true
-      per_ip: { requests_per_second: 20, burst: 40 }
-      per_user: { requests_per_second: 200, burst: 400 }
+    tls.provider: letsencrypt
+    tls.domain: demo.yourdomain.com
+    server.port: 443
+
+See examples/vibewarden.prod.yaml in the repo for a complete reference.
     waf:
       enabled: true
       mode: block
