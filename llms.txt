@@ -10,8 +10,8 @@ curl -sS https://vibewarden.dev/install.sh | sh
 ## Quick start
 curl -fsSL https://vibewarden.dev/install.sh | sh
 
-# New project — vibew scaffolds everything (go.mod, main.go, Dockerfile):
-vibew init --name myapp --lang go && cd myapp && vibew dev
+# New project — vibew scaffolds everything (Dockerfile, vibewarden.yaml, agent context files):
+vibew init myapp && cd myapp && vibew dev
 
 # Existing project — add VibeWarden to your app:
 cd my-app && vibew wrap --upstream 3000 && vibew dev
