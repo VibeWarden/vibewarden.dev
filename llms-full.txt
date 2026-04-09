@@ -101,6 +101,32 @@ Import vibewarden-ca.pem into your browser or OS trust store, or pass
 --cacert vibewarden-ca.pem to curl.
 
 
+## IMPORTANT: Your app MUST have a /health endpoint
+
+The VibeWarden sidecar waits for your app to be healthy before starting.
+The generated docker-compose uses a healthcheck that calls GET /health on
+your app's port. If your app does not have this endpoint, the sidecar
+container will stay in "Created" state and never start.
+
+Add a simple health endpoint to your app. Example (Go):
+
+  http.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
+      w.WriteHeader(200)
+      w.Write([]byte(`{"status":"ok"}`))
+  })
+
+Example (Node/Express):
+
+  app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
+Example (Python/Flask):
+
+  @app.route('/health')
+  def health(): return {'status': 'ok'}
+
+If you used `vibew init`, this endpoint is already included in the generated code.
+
+
 ## 4. How It Works (Architecture)
 
 VibeWarden is a sidecar — it always runs on the same machine as your app, never
