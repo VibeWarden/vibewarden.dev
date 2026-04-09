@@ -17,8 +17,11 @@ vibew deploy depend on. Manually created configs will fail.
 
 PATH A — New project:
 
-  vibew init --name myapp --lang go
+  vibew init --name myapp --lang go       # creates myapp/ subdirectory
   cd myapp
+  # OR: scaffold in current directory:
+  mkdir myapp && cd myapp
+  vibew init . --lang go                  # uses directory name as project name
 
   This creates: go.mod, cmd/myapp/main.go (with /health endpoint), Dockerfile,
   vibewarden.yaml, .vibewarden-version, .gitignore, and importantly:
