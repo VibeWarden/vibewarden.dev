@@ -3,19 +3,32 @@
 > This file contains everything an LLM agent needs to set up and configure
 > VibeWarden. It is self-contained. You do not need to visit any other page.
 
-CRITICAL — READ BEFORE WRITING ANY CODE:
+## Getting Started — Two Paths
 
-`vibew init` creates a complete runnable project — go.mod, main.go, Dockerfile,
-vibewarden.yaml, and agent context files. Do NOT run `go mod init`, `npm init`,
-or create files manually. Edit the generated code to build your app.
+Install vibew first:
 
-For an EXISTING app that already has source code, use `vibew wrap` instead.
+  curl -fsSL https://vibewarden.dev/install.sh | sh
 
-  curl -fsSL https://vibewarden.dev/install.sh | sh    # install vibew
-  vibew init --name myapp --lang go                    # creates myapp/ with full scaffold
-  cd myapp                                             # go.mod, main.go, Dockerfile all ready
+Then choose your path:
+
+PATH A — Starting a new project (vibew generates everything):
+
+  vibew init --name myapp --lang go       # creates myapp/ with go.mod, main.go,
+                                          # Dockerfile, vibewarden.yaml, agent context
+  cd myapp
   # edit cmd/myapp/main.go to add your app logic
-  vibew dev                                            # start app + sidecar locally
+  vibew dev                               # start app + sidecar locally
+
+PATH B — Adding VibeWarden to an existing app:
+
+  cd my-existing-app
+  vibew wrap --upstream 3000              # adds vibewarden.yaml, Dockerfile,
+                                          # agent context to your project
+  vibew dev                               # start app + sidecar locally
+
+Both paths are fully supported. PATH A scaffolds a complete app you can edit.
+PATH B adds VibeWarden config to code you already wrote. Either way, `vibew dev`
+starts the full stack and your app is protected at https://localhost:8443.
 
 VibeWarden is an open-source security sidecar for web applications. It is a
 single Go binary that embeds Caddy as a reverse proxy and adds authentication,
