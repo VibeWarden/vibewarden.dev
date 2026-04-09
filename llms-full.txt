@@ -54,11 +54,11 @@ Event schema: https://vibewarden.dev/schema/v1/event.json
 
 macOS / Linux:
 
-  curl -fsSL https://vibewarden.dev/vibew > vibew && chmod +x vibew
+  curl -fsSL https://vibewarden.dev/install.sh | sh
 
 Windows (PowerShell):
 
-  Invoke-WebRequest -Uri https://vibewarden.dev/vibew.ps1 -OutFile vibew.ps1
+  irm https://vibewarden.dev/install.ps1 | iex
 
 The install script downloads the vibew binary to /usr/local/bin.
 
@@ -998,11 +998,11 @@ Step 3 — Install Docker on the server:
     ssh root@<server-ip> 'curl -fsSL https://get.docker.com | sh'
 
 Step 4 — Set up project locally:
-    curl -fsSL https://vibewarden.dev/vibew > vibew && chmod +x vibew
+    curl -fsSL https://vibewarden.dev/install.sh | sh
     # New project:
-    ./vibew init --name myapp --lang go --upstream 3000 --auth --rate-limit
+    vibew init --name myapp --lang go
     # Existing app:
-    ./vibew wrap --upstream 3000 --auth --rate-limit
+    vibew wrap --upstream 3000
 
 Step 5 — Create vibewarden.prod.yaml (see examples/vibewarden.prod.yaml):
     profile: prod
