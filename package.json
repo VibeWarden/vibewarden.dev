@@ -1,0 +1,14 @@
+{
+  "name": "vibewarden-dev",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npx @11ty/eleventy --config=eleventy.config.ts",
+    "serve": "npx @11ty/eleventy --config=eleventy.config.ts --serve",
+    "start": "npm run serve"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "tsx": "^4.0.0"
+  }
+}

@@ -1,25 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Support — VibeWarden</title>
-  <meta name="description" content="Get help with VibeWarden. Community support via GitHub, documentation, security reporting, and upcoming pro support options.">
-  <meta name="theme-color" content="#7C3AED">
-  <link rel="canonical" href="https://vibewarden.dev/support/">
-  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+---
+title: "Support — VibeWarden"
+description: "Get help with VibeWarden. Community support via GitHub, documentation, security reporting, and upcoming pro support options."
+canonical: "https://vibewarden.dev/support/"
+navActiveId: support
+hasMobileNav: false
+ogType: website
+ogTitle: "Support — VibeWarden"
+ogDescription: "Get help with VibeWarden. Community support, security reporting, and pro support options."
+---
+{% extends "base.njk" %}
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="VibeWarden">
-  <meta property="og:title" content="Support — VibeWarden">
-  <meta property="og:description" content="Get help with VibeWarden. Community support, security reporting, and pro support options.">
-  <meta property="og:url" content="https://vibewarden.dev/support/">
-  <meta property="og:image" content="https://vibewarden.dev/static/logo-text.png">
 
-  <link rel="stylesheet" href="/static/styles.css">
-  <style>
+{% block pageStyles %}
+<style>
     /* ===== Support Cards ===== */
     .support-grid {
       display: grid;
@@ -250,37 +243,9 @@
       .support-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
-</head>
-<body>
-  <a class="skip-link" href="#main">Skip to main content</a>
+{% endblock %}
 
-  <!-- Header -->
-  <header class="site-header" role="banner">
-    <div class="container header-inner">
-      <a href="/" class="header-logo" aria-label="VibeWarden home">
-        <img src="/static/logo.png" alt="" width="28" height="28" aria-hidden="true">
-        <span>VibeWarden</span>
-      </a>
-      <nav class="header-nav" aria-label="Main navigation">
-        <a href="/" class="nav-link">Home</a>
-        <a href="/blog/" class="nav-link">Blog</a>
-        <a href="/docs/vibewarden/" class="nav-link">Docs</a>
-        <a href="/tools/" class="nav-link">Tools</a>
-        <a href="/support/" class="nav-link nav-active">Support</a>
-        <a href="https://github.com/vibewarden/vibewarden" class="nav-link" rel="noopener">GitHub</a>
-        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-      </nav>
-    </div>
-  </header>
-
-  <main id="main">
+{% block content %}
     <!-- Page Hero -->
     <section class="page-hero" aria-labelledby="page-heading">
       <div class="container">
@@ -380,86 +345,4 @@
         </a>
       </div>
     </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-inner">
-      <span>Apache 2.0 License</span>
-      <span class="footer-sep" aria-hidden="true">|</span>
-      <a href="/support/">Support</a>
-      <span class="footer-sep" aria-hidden="true">|</span>
-      <a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>
-      <span class="footer-sep" aria-hidden="true">|</span>
-      <span>vibewarden.dev</span>
-    </div>
-  </footer>
-
-  <script>
-    // Dark mode toggle — progressive enhancement
-    // Syncs with MkDocs Material's __palette localStorage key so dark mode
-    // persists when navigating between landing page and docs.
-    (function() {
-      var toggle = document.getElementById('themeToggle');
-      if (!toggle) return;
-
-      var root = document.documentElement;
-      var DOCS_KEY = '/docs/vibewarden/.__palette';
-
-      // Read theme: check our key first, then MkDocs palette, then system
-      function getStored() {
-        try {
-          var own = localStorage.getItem('theme');
-          if (own === 'dark' || own === 'light') return own;
-          var mkdocs = JSON.parse(localStorage.getItem(DOCS_KEY));
-          if (mkdocs && mkdocs.color && mkdocs.color.scheme) {
-            return mkdocs.color.scheme === 'slate' ? 'dark' : 'light';
-          }
-        } catch(e) {}
-        return null;
-      }
-
-      // Write theme to both landing page and MkDocs keys
-      function saveTheme(theme) {
-        try {
-          localStorage.setItem('theme', theme);
-          // Write MkDocs Material format so docs pick it up
-          var scheme = theme === 'dark' ? 'slate' : 'default';
-          var palette = {
-            index: theme === 'dark' ? 1 : 0,
-            color: {
-              scheme: scheme,
-              primary: 'deep-purple',
-              accent: 'cyan',
-              media: ''
-            }
-          };
-          localStorage.setItem(DOCS_KEY, JSON.stringify(palette));
-        } catch(e) {}
-      }
-
-      var stored = getStored();
-      if (stored) {
-        root.setAttribute('data-theme', stored);
-      }
-
-      toggle.addEventListener('click', function() {
-        var current = root.getAttribute('data-theme');
-        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        var next;
-        if (current === 'dark') {
-          next = 'light';
-        } else if (current === 'light') {
-          next = 'dark';
-        } else {
-          next = prefersDark ? 'light' : 'dark';
-        }
-
-        root.setAttribute('data-theme', next);
-        saveTheme(next);
-      });
-    })();
-  </script>
-</body>
-</html>
+{% endblock %}

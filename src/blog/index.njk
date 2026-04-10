@@ -1,0 +1,102 @@
+---
+title: "Blog — VibeWarden"
+description: "VibeWarden blog. Security guides, vibe coding best practices, and release announcements."
+canonical: "https://vibewarden.dev/blog/"
+navActiveId: blog
+hasMobileNav: false
+ogType: website
+ogTitle: "Blog — VibeWarden"
+ogDescription: "Security guides, vibe coding best practices, and release announcements."
+---
+{% extends "base.njk" %}
+
+
+{% block pageStyles %}
+<style>
+    /* ===== Blog Index ===== */
+    .blog-header {
+      padding: 3rem 0 2rem;
+    }
+
+    .blog-header h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .blog-header p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-top: 0.5rem;
+      max-width: 560px;
+    }
+
+    .post-list {
+      padding-bottom: 4rem;
+    }
+
+    .post-card {
+      display: block;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--card-shadow);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .post-card:hover {
+      box-shadow: var(--card-shadow-hover);
+      border-color: var(--brand-purple);
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    .post-card h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    .post-card .post-date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .post-card .post-excerpt {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 480px) {
+      .blog-header { padding: 2rem 0 1.5rem; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <div class="blog-header">
+        <h1>Blog</h1>
+        <p>Security guides, vibe coding best practices, and release announcements.</p>
+      </div>
+
+      <div class="post-list">
+        <a href="/blog/why-we-built-vibewarden/" class="post-card">
+          <h2>Why We Built VibeWarden</h2>
+          <div class="post-date">
+            <time datetime="2026-03-31">March 31, 2026</time>
+          </div>
+          <p class="post-excerpt">
+            Vibe coding changed how fast we build apps. It didn't change how hard it is to secure them. VibeWarden is a security sidecar that sits in front of your app and handles TLS, auth, rate limiting, WAF, and structured logging -- one binary, one config, zero code changes.
+          </p>
+        </a>
+      </div>
+    </div>
+{% endblock %}

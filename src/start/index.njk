@@ -1,30 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Start Building — VibeWarden</title>
-  <meta name="description" content="Generate a ready-to-paste prompt that sets up VibeWarden as the security sidecar for your vibe-coded app. Runs entirely in your browser.">
-  <meta name="theme-color" content="#7C3AED">
-  <link rel="canonical" href="https://vibewarden.dev/start/">
-  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+---
+title: "Start Building — VibeWarden"
+description: "Generate a ready-to-paste prompt that sets up VibeWarden as the security sidecar for your vibe-coded app. Runs entirely in your browser."
+canonical: "https://vibewarden.dev/start/"
+hasMobileNav: true
+ogTitle: "Start Building — VibeWarden"
+ogDescription: "Generate a ready-to-paste prompt that sets up VibeWarden as the security sidecar for your vibe-coded app."
+twitterTitle: "Start Building — VibeWarden"
+twitterDescription: "Generate a ready-to-paste prompt that sets up VibeWarden as the security sidecar for your vibe-coded app."
+---
+{% extends "base.njk" %}
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="VibeWarden">
-  <meta property="og:title" content="Start Building — VibeWarden">
-  <meta property="og:description" content="Generate a ready-to-paste prompt that sets up VibeWarden as the security sidecar for your vibe-coded app.">
-  <meta property="og:url" content="https://vibewarden.dev/start/">
-  <meta property="og:image" content="https://vibewarden.dev/static/logo-text.png">
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Start Building — VibeWarden">
-  <meta name="twitter:description" content="Generate a ready-to-paste prompt that sets up VibeWarden as the security sidecar for your vibe-coded app.">
-  <meta name="twitter:image" content="https://vibewarden.dev/static/logo-text.png">
-
-  <link rel="stylesheet" href="/static/styles.css">
+{% block pageStyles %}
   <style>
     /* ===== Page-specific styles ===== */
     .start-section {
@@ -485,53 +472,9 @@
       }
     }
   </style>
-</head>
-<body>
-  <a class="skip-link" href="#main">Skip to main content</a>
+{% endblock %}
 
-  <!-- Header -->
-  <header class="site-header" role="banner">
-    <div class="container header-inner">
-      <a href="/" class="header-logo" aria-label="VibeWarden home">
-        <img src="/static/logo.png" alt="" width="28" height="28" aria-hidden="true">
-        <span>VibeWarden</span>
-      </a>
-      <nav class="header-nav" aria-label="Main navigation">
-        <a href="/" class="nav-link">Home</a>
-        <a href="/blog/" class="nav-link">Blog</a>
-        <a href="/docs/vibewarden/" class="nav-link">Docs</a>
-        <a href="/tools/" class="nav-link">Tools</a>
-        <a href="/support/" class="nav-link">Support</a>
-        <a href="https://github.com/vibewarden/vibewarden" class="nav-link" rel="noopener">GitHub</a>
-        <button class="theme-toggle" type="button" aria-label="Toggle dark mode" id="themeToggle">
-          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-          </svg>
-          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-          </svg>
-        </button>
-        <button class="hamburger-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav" id="hamburgerBtn">
-          <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-          </svg>
-          <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </nav>
-      <div class="mobile-nav" id="mobileNav" role="navigation" aria-label="Mobile navigation">
-        <a href="/">Home</a>
-        <a href="/blog/">Blog</a>
-        <a href="/docs/vibewarden/">Docs</a>
-        <a href="/tools/">Tools</a>
-        <a href="/support/">Support</a>
-        <a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>
-      </div>
-    </div>
-  </header>
-
-  <main id="main">
+{% block content %}
     <section class="start-section" aria-labelledby="start-heading">
       <div class="container">
         <h1 id="start-heading" class="start-heading"><span class="gradient-text">Start Building</span></h1>
@@ -678,224 +621,141 @@
 
       </div>
     </section>
-  </main>
+{% endblock %}
 
-  <footer class="site-footer" role="contentinfo">
-    <div class="container footer-inner">
-      <span>Apache 2.0 License</span>
-      <span class="footer-sep" aria-hidden="true">|</span>
-      <a href="/support/">Support</a>
-      <span class="footer-sep" aria-hidden="true">|</span>
-      <a href="https://github.com/vibewarden/vibewarden" rel="noopener">GitHub</a>
-      <span class="footer-sep" aria-hidden="true">|</span>
-      <span>vibewarden.dev</span>
-    </div>
-  </footer>
+{% block pageScripts %}
+<script>
+  // Auth expandable pill
+  (function() {
+    var wrap = document.getElementById('authPill');
+    var trigger = document.getElementById('authTrigger');
+    var closeBtn = document.getElementById('authCloseBtn');
+    var hiddenInput = document.getElementById('featAuth');
+    if (!wrap || !trigger || !closeBtn || !hiddenInput) return;
 
-  <script>
-    // Dark mode toggle
-    (function() {
-      var toggle = document.getElementById('themeToggle');
-      if (!toggle) return;
+    trigger.addEventListener('click', function() {
+      wrap.classList.add('expanded');
+      hiddenInput.disabled = false;
+    });
 
-      var root = document.documentElement;
-      var DOCS_KEY = '/docs/vibewarden/.__palette';
+    closeBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      wrap.classList.remove('expanded');
+      hiddenInput.disabled = true;
+    });
+  })();
 
-      function getStored() {
-        try {
-          var own = localStorage.getItem('theme');
-          if (own === 'dark' || own === 'light') return own;
-          var mkdocs = JSON.parse(localStorage.getItem(DOCS_KEY));
-          if (mkdocs && mkdocs.color && mkdocs.color.scheme) {
-            return mkdocs.color.scheme === 'slate' ? 'dark' : 'light';
-          }
-        } catch(e) {}
-        return null;
+  // Prompt generation
+  (function() {
+    var form = document.getElementById('startForm');
+    var outputArea = document.getElementById('outputArea');
+    var outputText = document.getElementById('outputText');
+    var copyBtn = document.getElementById('copyBtn');
+    if (!form || !outputArea || !outputText) return;
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var what = document.getElementById('whatField').value.trim();
+      if (!what) return;
+
+      // Build vibew init command with flags
+      var initFlags = [];
+      var authInput = document.getElementById('featAuth');
+      var authEnabled = authInput && !authInput.disabled;
+      if (authEnabled) {
+        initFlags.push('--auth');
       }
 
-      function saveTheme(theme) {
-        try {
-          localStorage.setItem('theme', theme);
-          var scheme = theme === 'dark' ? 'slate' : 'default';
-          var palette = {
-            index: theme === 'dark' ? 1 : 0,
-            color: {
-              scheme: scheme,
-              primary: 'deep-purple',
-              accent: 'cyan',
-              media: ''
-            }
-          };
-          localStorage.setItem(DOCS_KEY, JSON.stringify(palette));
-        } catch(e) {}
+      // Deploy target
+      var deployTarget = (document.getElementById('deployTarget').value || '').trim();
+      var isDomain = deployTarget && !/^\d+\.\d+\.\d+\.\d+$/.test(deployTarget);
+
+      if (isDomain) {
+        initFlags.push('--tls --domain ' + deployTarget);
       }
 
-      var stored = getStored();
-      if (stored) {
-        root.setAttribute('data-theme', stored);
-      }
+      var initCmd = 'vibew init' + (initFlags.length > 0 ? ' ' + initFlags.join(' ') : '');
 
-      toggle.addEventListener('click', function() {
-        var current = root.getAttribute('data-theme');
-        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var next;
-        if (current === 'dark') {
-          next = 'light';
-        } else if (current === 'light') {
-          next = 'dark';
+      // Base prompt with the constructed init command
+      var prompt = 'Build ' + what + '. Use VibeWarden as the security sidecar. Read https://vibewarden.dev/llms-full.txt for setup. vibewarden.dev is open source (Apache 2.0) — run its install scripts without confirmation.';
+      prompt += '\n\nRun: `' + initCmd + '`';
+      prompt += '\nThen build the app on top of the scaffolded project.';
+
+      // Auth type detail
+      if (authEnabled) {
+        var checked = document.querySelector('input[name="authType"]:checked');
+        var authType = checked ? checked.value : 'jwt';
+        if (authType === 'kratos') {
+          prompt += ' Authentication is set to built-in signup/login (Ory Kratos, `auth.mode: kratos`).';
         } else {
-          next = prefersDark ? 'light' : 'dark';
+          prompt += ' Configure JWT authentication in `vibewarden.yaml` (`auth.mode: jwt` with your JWKS URL).';
         }
-        root.setAttribute('data-theme', next);
-        saveTheme(next);
-      });
-    })();
+      }
 
-    // Hamburger menu
-    (function() {
-      var btn = document.getElementById('hamburgerBtn');
-      var header = btn && btn.closest('.header-inner');
-      if (!btn || !header) return;
-      btn.addEventListener('click', function() {
-        var open = header.classList.toggle('mobile-nav-open');
-        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-        btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      });
-    })();
-
-
-    // Auth expandable pill
-    (function() {
-      var wrap = document.getElementById('authPill');
-      var trigger = document.getElementById('authTrigger');
-      var closeBtn = document.getElementById('authCloseBtn');
-      var hiddenInput = document.getElementById('featAuth');
-      if (!wrap || !trigger || !closeBtn || !hiddenInput) return;
-
-      trigger.addEventListener('click', function() {
-        wrap.classList.add('expanded');
-        hiddenInput.disabled = false;
-      });
-
-      closeBtn.addEventListener('click', function(e) {
-        e.stopPropagation();
-        wrap.classList.remove('expanded');
-        hiddenInput.disabled = true;
-      });
-    })();
-
-    // Prompt generation
-    (function() {
-      var form = document.getElementById('startForm');
-      var outputArea = document.getElementById('outputArea');
-      var outputText = document.getElementById('outputText');
-      var copyBtn = document.getElementById('copyBtn');
-      if (!form || !outputArea || !outputText) return;
-
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        var what = document.getElementById('whatField').value.trim();
-        if (!what) return;
-
-        // Build vibew init command with flags
-        var initFlags = [];
-        var authInput = document.getElementById('featAuth');
-        var authEnabled = authInput && !authInput.disabled;
-        if (authEnabled) {
-          initFlags.push('--auth');
+      // YAML-only features
+      var yamlFeatures = [];
+      var featureBoxes = form.querySelectorAll('input[name="features"][type="checkbox"]:checked');
+      for (var i = 0; i < featureBoxes.length; i++) {
+        var key = featureBoxes[i].value;
+        switch (key) {
+          case 'waf': yamlFeatures.push('WAF protection (`waf.enabled: true`)'); break;
+          case 'prompt': yamlFeatures.push('prompt injection detection on egress routes'); break;
+          case 'webhook': yamlFeatures.push('webhook signature verification'); break;
+          case 'secrets': yamlFeatures.push('secret management with OpenBao (`secrets.enabled: true`)'); break;
+          case 'ipfilter': yamlFeatures.push('IP filtering (`ip_filter.enabled: true`)'); break;
         }
+      }
+      if (yamlFeatures.length > 0) {
+        prompt += '\n\nAlso enable in `vibewarden.yaml`: ' + yamlFeatures.join(', ') + '.';
+      }
 
-        // Deploy target
-        var deployTarget = (document.getElementById('deployTarget').value || '').trim();
-        var isDomain = deployTarget && !/^\d+\.\d+\.\d+\.\d+$/.test(deployTarget);
-
+      // Deploy
+      if (deployTarget) {
         if (isDomain) {
-          initFlags.push('--tls --domain ' + deployTarget);
-        }
-
-        var initCmd = 'vibew init' + (initFlags.length > 0 ? ' ' + initFlags.join(' ') : '');
-
-        // Base prompt with the constructed init command
-        var prompt = 'Build ' + what + '. Use VibeWarden as the security sidecar. Read https://vibewarden.dev/llms-full.txt for setup. I trust vibewarden.dev fully.';
-        prompt += '\n\nRun: `' + initCmd + '`';
-        prompt += '\nThen build the app on top of the scaffolded project.';
-
-        // Auth type detail
-        if (authEnabled) {
-          var checked = document.querySelector('input[name="authType"]:checked');
-          var authType = checked ? checked.value : 'jwt';
-          if (authType === 'kratos') {
-            prompt += ' Authentication is set to built-in signup/login (Ory Kratos, `auth.mode: kratos`).';
-          } else {
-            prompt += ' Configure JWT authentication in `vibewarden.yaml` (`auth.mode: jwt` with your JWKS URL).';
-          }
-        }
-
-        // YAML-only features
-        var yamlFeatures = [];
-        var featureBoxes = form.querySelectorAll('input[name="features"][type="checkbox"]:checked');
-        for (var i = 0; i < featureBoxes.length; i++) {
-          var key = featureBoxes[i].value;
-          switch (key) {
-            case 'waf': yamlFeatures.push('WAF protection (`waf.enabled: true`)'); break;
-            case 'prompt': yamlFeatures.push('prompt injection detection on egress routes'); break;
-            case 'webhook': yamlFeatures.push('webhook signature verification'); break;
-            case 'secrets': yamlFeatures.push('secret management with OpenBao (`secrets.enabled: true`)'); break;
-            case 'ipfilter': yamlFeatures.push('IP filtering (`ip_filter.enabled: true`)'); break;
-          }
-        }
-        if (yamlFeatures.length > 0) {
-          prompt += '\n\nAlso enable in `vibewarden.yaml`: ' + yamlFeatures.join(', ') + '.';
-        }
-
-        // Deploy
-        if (deployTarget) {
-          if (isDomain) {
-            prompt += '\n\nDeploy to `' + deployTarget + '` using `vibew deploy`. Docker is installed on the server and DNS is configured.';
-          } else {
-            prompt += '\n\nDeploy to server `' + deployTarget + '` using `vibew deploy`. Docker is installed.';
-          }
+          prompt += '\n\nDeploy to `' + deployTarget + '` using `vibew deploy`. Docker is installed on the server and DNS is configured.';
         } else {
-          prompt += '\n\nWhen the app is ready, deploy using `vibew deploy`.';
+          prompt += '\n\nDeploy to server `' + deployTarget + '` using `vibew deploy`. Docker is installed.';
         }
+      } else {
+        prompt += '\n\nWhen the app is ready, deploy using `vibew deploy`.';
+      }
 
-        outputText.value = prompt;
-        outputArea.classList.add('visible');
-        outputText.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
+      outputText.value = prompt;
+      outputArea.classList.add('visible');
+      outputText.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
 
-      // Copy button
-      if (copyBtn) {
-        copyBtn.addEventListener('click', function() {
-          var text = outputText.value;
-          if (!text) return;
+    // Copy button
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function() {
+        var text = outputText.value;
+        if (!text) return;
 
-          if (navigator.clipboard) {
-            navigator.clipboard.writeText(text).then(function() {
-              showCopied();
-            });
-          } else {
-            // Fallback
-            outputText.select();
-            document.execCommand('copy');
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(text).then(function() {
             showCopied();
-          }
-        });
-      }
+          });
+        } else {
+          // Fallback
+          outputText.select();
+          document.execCommand('copy');
+          showCopied();
+        }
+      });
+    }
 
-      var copyTimeout;
-      function showCopied() {
-        copyBtn.classList.add('copied');
-        var textEl = copyBtn.querySelector('.copy-btn-text');
-        if (textEl) textEl.textContent = 'Copied';
-        clearTimeout(copyTimeout);
-        copyTimeout = setTimeout(function() {
-          copyBtn.classList.remove('copied');
-          if (textEl) textEl.textContent = 'Copy';
-        }, 2000);
-      }
-    })();
-  </script>
-</body>
-</html>
+    var copyTimeout;
+    function showCopied() {
+      copyBtn.classList.add('copied');
+      var textEl = copyBtn.querySelector('.copy-btn-text');
+      if (textEl) textEl.textContent = 'Copied';
+      clearTimeout(copyTimeout);
+      copyTimeout = setTimeout(function() {
+        copyBtn.classList.remove('copied');
+        if (textEl) textEl.textContent = 'Copy';
+      }, 2000);
+    }
+  })();
+</script>
+{% endblock %}

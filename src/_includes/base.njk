@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ description }}">
+  <meta name="theme-color" content="{{ site.themeColor }}">
+  <link rel="canonical" href="{{ canonical }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="{{ ogType | default('website') }}">
+  <meta property="og:site_name" content="{{ site.ogSiteName }}">
+  <meta property="og:title" content="{{ ogTitle | default(title) }}">
+  <meta property="og:description" content="{{ ogDescription | default(description) }}">
+  <meta property="og:url" content="{{ canonical }}">
+  <meta property="og:image" content="{{ ogImage | default(site.ogImage) }}">
+  {%- if publishedDate %}
+  <meta property="article:published_time" content="{{ publishedDate }}">
+  {%- endif %}
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ twitterTitle | default(ogTitle) | default(title) }}">
+  <meta name="twitter:description" content="{{ twitterDescription | default(ogDescription) | default(description) }}">
+  <meta name="twitter:image" content="{{ twitterImage | default(ogImage) | default(site.ogImage) }}">
+
+  {% block structuredData %}{% endblock %}
+
+  <link rel="stylesheet" href="/static/styles.css">
+  {% block pageStyles %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  {% include "partials/header.njk" %}
+
+  <main id="main">
+    {% block content %}{{ content | safe }}{% endblock %}
+  </main>
+
+  {% include "partials/footer.njk" %}
+
+  <script>
+    {% include "partials/scripts/dark-mode.njk" %}
+  </script>
+  {%- if hasMobileNav %}
+  <script>
+    {% include "partials/scripts/hamburger.njk" %}
+  </script>
+  {%- endif %}
+  {% block pageScripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,136 @@
+---
+title: "Tools — VibeWarden Ecosystem"
+description: "Open-source developer tools from the VibeWarden ecosystem. HTTP debugging, traffic inspection, and more."
+canonical: "https://vibewarden.dev/tools/"
+navActiveId: tools
+hasMobileNav: true
+ogType: website
+ogTitle: "Tools — VibeWarden Ecosystem"
+ogDescription: "Open-source developer tools from the VibeWarden ecosystem."
+---
+{% extends "base.njk" %}
+
+
+{% block pageStyles %}
+<style>
+    .tools-hero {
+      text-align: center;
+      padding: 4rem 0 2rem;
+    }
+
+    .tools-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .tools-hero p {
+      color: var(--text-secondary);
+      font-size: 1.15rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      padding: 2rem 0 4rem;
+    }
+
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 2rem;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    .tool-card:hover {
+      border-color: var(--brand-purple);
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    .tool-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tool-card h2 a {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .tool-card h2 a:hover {
+      color: var(--brand-purple);
+    }
+
+    .tool-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .tool-desc {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .tool-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .tool-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--brand-purple);
+    }
+
+    .tool-links a:hover {
+      color: var(--brand-purple-light);
+    }
+
+    @media (max-width: 640px) {
+      .tools-hero h1 { font-size: 2rem; }
+      .tools-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <section class="tools-hero">
+        <h1><span class="gradient-text">Developer tools</span></h1>
+        <p>Open-source utilities from the VibeWarden ecosystem. Each is a standalone tool — use them with or without VibeWarden.</p>
+      </section>
+
+      <div class="tools-grid">
+        <article class="tool-card">
+          <h2><a href="https://github.com/vibewarden/httptape">httptape</a></h2>
+          <p class="tool-desc">Record and replay HTTP traffic. Capture requests and responses as tape files for debugging, testing, and building mocks. Lightweight CLI with zero dependencies.</p>
+          <div class="tool-links">
+            <a href="/docs/httptape/">Documentation</a>
+            <a href="https://github.com/vibewarden/httptape">GitHub</a>
+          </div>
+        </article>
+
+        <article class="tool-card">
+          <h2><a href="https://github.com/vibewarden/snitchproxy">snitchproxy</a></h2>
+          <p class="tool-desc">Transparent HTTP proxy that logs every outbound request your app makes. Catch unexpected API calls, data exfiltration, and SSRF attempts during development.</p>
+          <div class="tool-links">
+            <a href="/docs/snitchproxy/">Documentation</a>
+            <a href="https://github.com/vibewarden/snitchproxy">GitHub</a>
+          </div>
+        </article>
+      </div>
+    </div>
+{% endblock %}
