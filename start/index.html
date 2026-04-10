@@ -200,6 +200,14 @@
       color: var(--text-secondary);
     }
 
+    .field-hint {
+      display: block;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
     /* ===== Feature pills ===== */
     .feature-pills {
       display: flex;
@@ -672,14 +680,17 @@
                 <div class="form-group">
                   <label for="serverIp">Server IP</label>
                   <input class="form-input" type="text" id="serverIp" name="serverIp" placeholder="203.0.113.42">
+                  <small class="field-hint">The IP address of your VPS or cloud server (e.g. from DigitalOcean, Hetzner, AWS).</small>
                 </div>
                 <div class="form-group">
                   <label for="domainField">Domain</label>
                   <input class="form-input" type="text" id="domainField" name="domain" placeholder="myapp.example.com">
+                  <small class="field-hint">The domain you want your app to be available at. DNS should point to the server IP.</small>
                 </div>
                 <div class="form-group">
                   <label for="sshKeyField">SSH key path</label>
                   <input class="form-input" type="text" id="sshKeyField" name="sshKey" value="~/.ssh/id_rsa">
+                  <small class="field-hint">Path to your SSH private key for connecting to the server. The default works for most setups.</small>
                 </div>
               </fieldset>
             </div>
