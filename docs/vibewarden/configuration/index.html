@@ -2339,7 +2339,7 @@ VibeWarden falls back to <code>host.docker.internal</code>.</p>
 <td><code>tls.provider</code></td>
 <td>string</td>
 <td><code>""</code></td>
-<td>Certificate provider: <code>letsencrypt</code>, <code>self-signed</code>, or <code>external</code></td>
+<td>Certificate provider: <code>letsencrypt</code> (or <code>acme</code>), <code>self-signed</code>, or <code>external</code></td>
 </tr>
 <tr>
 <td><code>tls.cert_path</code></td>
@@ -2944,8 +2944,8 @@ VibeWarden falls back to <code>host.docker.internal</code>.</p>
 <tr>
 <td><code>security_headers.content_security_policy</code></td>
 <td>string</td>
-<td><code>""</code> (disabled)</td>
-<td><code>Content-Security-Policy</code> value — empty by default; set explicitly to opt in</td>
+<td><code>default-src 'self'; style-src 'self' 'unsafe-inline'</code></td>
+<td><code>Content-Security-Policy</code> value</td>
 </tr>
 <tr>
 <td><code>security_headers.referrer_policy</code></td>
@@ -3059,13 +3059,13 @@ for common attack patterns in-process, with no external dependencies.</p>
 <tr>
 <td><code>waf.enabled</code></td>
 <td>bool</td>
-<td><code>false</code></td>
+<td><code>true</code></td>
 <td>Enable the WAF middleware</td>
 </tr>
 <tr>
 <td><code>waf.mode</code></td>
 <td>string</td>
-<td><code>block</code></td>
+<td><code>detect</code></td>
 <td>Detection mode: <code>block</code> (reject with 400) or <code>detect</code> (pass through and log)</td>
 </tr>
 </tbody>

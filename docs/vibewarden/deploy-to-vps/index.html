@@ -1886,14 +1886,17 @@ takes up to 30 seconds.</p>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>myapp-vibewarden        Up (healthy)
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>myapp-app               Up (healthy)
 </span></code></pre></div>
-<p>Hit the health endpoint:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>curl<span class="w"> </span>-I<span class="w"> </span>https://demo.yourdomain.com/_vibewarden/healthz
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># HTTP/2 200</span>
+<p>Hit the health endpoint via SSH (the deploy command probes <code>localhost</code> on the remote, not the external domain):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;curl -sf http://localhost/_vibewarden/healthz &amp;&amp; echo OK&#39;</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># OK</span>
 </span></code></pre></div>
 <p>Open your browser and navigate to <code>https://demo.yourdomain.com</code>. You should see
 your app served over HTTPS with a valid Let's Encrypt certificate.</p>
-<p>Check logs if anything looks wrong:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;cd /opt/myapp &amp;&amp; docker compose logs -f --tail 50&#39;</span>
+<p>Stream logs in real-time with <code>--follow</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://root@&lt;server-ip&gt;<span class="w"> </span>--follow
+</span></code></pre></div>
+<p>Or check logs directly on the server:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;cd /opt/myapp &amp;&amp; docker compose logs -f --tail 50&#39;</span>
 </span></code></pre></div>
 <hr />
 <h2 id="step-8-subsequent-deploys">Step 8 — Subsequent deploys<a class="headerlink" href="#step-8-subsequent-deploys" title="Permanent link">&para;</a></h2>
@@ -1901,19 +1904,19 @@ your app served over HTTPS with a valid Let's Encrypt certificate.</p>
 <ol>
 <li>
 <p>Rebuild and push your app image:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>ghcr.io/your-org/myapp:latest<span class="w"> </span>.
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>docker<span class="w"> </span>push<span class="w"> </span>ghcr.io/your-org/myapp:latest
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>ghcr.io/your-org/myapp:latest<span class="w"> </span>.
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>docker<span class="w"> </span>push<span class="w"> </span>ghcr.io/your-org/myapp:latest
 </span></code></pre></div></p>
 </li>
 <li>
 <p>If <code>vibewarden.prod.yaml</code> changed, regenerate:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>./vibew<span class="w"> </span>generate<span class="w"> </span>--config<span class="w"> </span>vibewarden.prod.yaml
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>rsync<span class="w"> </span>-av<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>root@&lt;server-ip&gt;:/opt/myapp/
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>./vibew<span class="w"> </span>generate<span class="w"> </span>--config<span class="w"> </span>vibewarden.prod.yaml
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>rsync<span class="w"> </span>-av<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>root@&lt;server-ip&gt;:/opt/myapp/
 </span></code></pre></div></p>
 </li>
 <li>
 <p>Pull and restart on the server:
-   <div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;cd /opt/myapp &amp;&amp; docker compose pull &amp;&amp; docker compose up -d&#39;</span>
+   <div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;cd /opt/myapp &amp;&amp; docker compose pull &amp;&amp; docker compose up -d&#39;</span>
 </span></code></pre></div></p>
 </li>
 </ol>
@@ -1922,35 +1925,35 @@ health checks to pass before stopping the old container.</p>
 <hr />
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <h3 id="dns-not-propagated">DNS not propagated<a class="headerlink" href="#dns-not-propagated" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>Error: error obtaining certificate: ...no such host...
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Error: error obtaining certificate: ...no such host...
 </span></code></pre></div>
 <p>Run <code>dig +short demo.yourdomain.com</code> from your local machine. If it does not
 return <code>&lt;server-ip&gt;</code>, wait and try again. TTL of 300 seconds means propagation
 takes up to 5 minutes.</p>
 <h3 id="port-80-blocked-by-firewall">Port 80 blocked by firewall<a class="headerlink" href="#port-80-blocked-by-firewall" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>Error: failed to connect to the ACME server on port 80
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>Error: failed to connect to the ACME server on port 80
 </span></code></pre></div>
 <p>Check your Hetzner firewall rules: inbound TCP port 80 from <code>0.0.0.0/0</code> must be
 allowed. Even if your app only serves HTTPS, Let's Encrypt needs port 80 open
 for the HTTP-01 challenge.</p>
 <p>Verify from your local machine:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>curl<span class="w"> </span>-v<span class="w"> </span>http://demo.yourdomain.com/_vibewarden/healthz
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>curl<span class="w"> </span>-v<span class="w"> </span>http://demo.yourdomain.com/_vibewarden/healthz
 </span></code></pre></div>
 <p>If the connection is refused or times out, the firewall is blocking port 80.</p>
 <h3 id="docker-not-running">Docker not running<a class="headerlink" href="#docker-not-running" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;systemctl status docker&#39;</span>
-</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="c1"># if inactive:</span>
-</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;systemctl start docker &amp;&amp; systemctl enable docker&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;systemctl status docker&#39;</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="c1"># if inactive:</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;systemctl start docker &amp;&amp; systemctl enable docker&#39;</span>
 </span></code></pre></div>
 <h3 id="lets-encrypt-rate-limits">Let's Encrypt rate limits<a class="headerlink" href="#lets-encrypt-rate-limits" title="Permanent link">&para;</a></h3>
 <p>Let's Encrypt allows 5 failed certificate requests per hour per domain. If you
 exceeded this limit you will see:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Error: too many certificates already issued for ...
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>Error: too many certificates already issued for ...
 </span></code></pre></div>
 <p>Wait at least one hour before retrying. In the meantime, use
 <code>tls.provider: self-signed</code> to test the rest of the stack.</p>
 <h3 id="container-fails-to-start">Container fails to start<a class="headerlink" href="#container-fails-to-start" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;cd /opt/myapp &amp;&amp; docker compose logs vibewarden --tail 100&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;cd /opt/myapp &amp;&amp; docker compose logs vibewarden --tail 100&#39;</span>
 </span></code></pre></div>
 <p>Look for <code>level=error</code> lines. The most common causes are:</p>
 <table>
@@ -1976,10 +1979,10 @@ exceeded this limit you will see:</p>
 </tbody>
 </table>
 <h3 id="inspect-the-full-doctor-output">Inspect the full doctor output<a class="headerlink" href="#inspect-the-full-doctor-output" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;cd /opt/myapp &amp;&amp; docker run --rm \</span>
-</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="s1">  -v /opt/myapp/vibewarden.prod.yaml:/vibewarden.yaml:ro \</span>
-</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="s1">  ghcr.io/vibewarden/vibewarden:latest \</span>
-</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="s1">  vibew doctor --json&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>ssh<span class="w"> </span>root@&lt;server-ip&gt;<span class="w"> </span><span class="s1">&#39;cd /opt/myapp &amp;&amp; docker run --rm \</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="s1">  -v /opt/myapp/vibewarden.prod.yaml:/vibewarden.yaml:ro \</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="s1">  ghcr.io/vibewarden/vibewarden:latest \</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="s1">  vibew doctor --json&#39;</span>
 </span></code></pre></div>
 <hr />
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>

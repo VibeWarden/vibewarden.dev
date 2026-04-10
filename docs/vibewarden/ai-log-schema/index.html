@@ -1829,6 +1829,9 @@ what happened without needing to parse free-form text.</p>
 Changes to the schema are treated with the same care as a public API:
 backwards-incompatible changes increment the schema version and are documented
 in <a href="../schema-evolution/">Schema Evolution</a>.</p>
+<p>Each action produces exactly one structured event — there are no duplicate audit
+lines for the same request. Every middleware decision (auth, rate limiting, WAF,
+etc.) is captured in a single event per action with the relevant fields in <code>payload</code>.</p>
 <hr />
 <h2 id="why-ai-readable">Why "AI-readable"?<a class="headerlink" href="#why-ai-readable" title="Permanent link">&para;</a></h2>
 <p>Traditional application logs are optimised for grep and sed — plain text lines
@@ -2138,6 +2141,9 @@ single event.</p>
 <p>This section lists every event type. Use the MCP tool
 <code>vibewarden_schema_describe</code> with <code>event_type=&lt;type&gt;</code> for full field listings,
 or with no arguments to see a condensed version of this table.</p>
+<p>To stream events in real-time from a running sidecar, use the MCP tool
+<code>vibewarden_stream_logs</code>. Supports filtering by <code>severity</code>, <code>event_type</code>, and
+<code>since</code> (ISO 8601 timestamp).</p>
 <h3 id="proxy">Proxy<a class="headerlink" href="#proxy" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
