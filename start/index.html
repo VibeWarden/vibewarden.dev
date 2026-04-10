@@ -168,7 +168,7 @@
     }
 
     .deploy-fields.visible {
-      max-height: 320px;
+      max-height: 180px;
       opacity: 1;
       margin-top: 1rem;
     }
@@ -678,19 +678,9 @@
               <fieldset>
                 <legend>Server details</legend>
                 <div class="form-group">
-                  <label for="serverIp">Server IP</label>
-                  <input class="form-input" type="text" id="serverIp" name="serverIp" placeholder="203.0.113.42">
-                  <small class="field-hint">The IP address of your VPS or cloud server (e.g. from DigitalOcean, Hetzner, AWS).</small>
-                </div>
-                <div class="form-group">
                   <label for="domainField">Domain</label>
                   <input class="form-input" type="text" id="domainField" name="domain" placeholder="myapp.example.com">
-                  <small class="field-hint">The domain you want your app to be available at. DNS should point to the server IP.</small>
-                </div>
-                <div class="form-group">
-                  <label for="sshKeyField">SSH key path</label>
-                  <input class="form-input" type="text" id="sshKeyField" name="sshKey" value="~/.ssh/id_rsa">
-                  <small class="field-hint">Path to your SSH private key for connecting to the server. The default works for most setups.</small>
+                  <small class="field-hint">Your app's domain name. DNS should already point to your server.</small>
                 </div>
               </fieldset>
             </div>
@@ -967,8 +957,6 @@
         var deployToggle = document.getElementById('deployToggle');
         var deployEnabled = deployToggle && deployToggle.checked;
         var domain = deployEnabled ? document.getElementById('domainField').value.trim() : '';
-        var ip = deployEnabled ? document.getElementById('serverIp').value.trim() : '';
-        var sshKey = deployEnabled ? document.getElementById('sshKeyField').value.trim() : '';
 
         if (deployEnabled && domain) {
           initFlags.push('--tls --domain ' + domain);
@@ -1010,11 +998,8 @@
         }
 
         // Deploy
-        if (deployEnabled && (domain || ip)) {
-          prompt += '\n\nDeploy using vibew deploy.';
-          prompt += ' Server: ' + (ip || '[IP]') + ', SSH as root (key: ' + (sshKey || '~/.ssh/id_rsa') + '), Docker installed.';
-          if (domain) prompt += ' DNS for ' + domain + ' is configured.';
-          prompt += ' Run vibew deploy to push and start the app on the server.';
+        if (deployEnabled && domain) {
+          prompt += '\n\nDeploy to ' + domain + ' using vibew deploy. Docker is installed on the server and DNS is configured. Run vibew deploy to push and start the app.';
         }
 
         outputText.value = prompt;
