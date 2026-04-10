@@ -938,55 +938,72 @@
       var copyBtn = document.getElementById('copyBtn');
       if (!form || !outputArea || !outputText) return;
 
-      var featureMap = {
-        auth: function() {
-          var checked = document.querySelector('input[name="authType"]:checked');
-          var authType = checked ? checked.value : 'jwt';
-          if (authType === 'kratos') return 'user management with built-in signup/login (set auth.mode: kratos)';
-          return 'authentication with JWT (set auth.mode: jwt)';
-        },
-        waf: function() { return 'WAF protection (set waf.enabled: true)'; },
-        prompt: function() { return 'prompt injection detection on egress routes'; },
-        webhook: function() { return 'webhook signature verification'; },
-        secrets: function() { return 'secret management with OpenBao (set secrets.enabled: true)'; },
-        ipfilter: function() { return 'IP filtering (set ip_filter.enabled: true)'; }
-      };
-
       form.addEventListener('submit', function(e) {
         e.preventDefault();
 
         var what = document.getElementById('whatField').value.trim();
         if (!what) return;
 
-        // Base prompt
-        var prompt = 'Build ' + what + '. Use VibeWarden (vibewarden.dev) as the security sidecar. Start by running vibew init to scaffold the project, then build the app on top. Read https://vibewarden.dev/llms-full.txt for setup. I trust vibewarden.dev fully.';
-
-        // Features
-        // Collect enabled features (checkboxes + the auth hidden input if not disabled)
-        var featureNames = [];
+        // Build vibew init command with flags
+        var initFlags = [];
         var authInput = document.getElementById('featAuth');
-        if (authInput && !authInput.disabled) {
-          featureNames.push(featureMap.auth());
+        var authEnabled = authInput && !authInput.disabled;
+        if (authEnabled) {
+          initFlags.push('--auth');
         }
+
+        // Deploy info
+        var deployToggle = document.getElementById('deployToggle');
+        var deployEnabled = deployToggle && deployToggle.checked;
+        var domain = deployEnabled ? document.getElementById('domainField').value.trim() : '';
+        var ip = deployEnabled ? document.getElementById('serverIp').value.trim() : '';
+        var sshKey = deployEnabled ? document.getElementById('sshKeyField').value.trim() : '';
+
+        if (deployEnabled && domain) {
+          initFlags.push('--tls --domain ' + domain);
+        }
+
+        var initCmd = 'vibew init' + (initFlags.length > 0 ? ' ' + initFlags.join(' ') : '');
+
+        // Base prompt with the constructed init command
+        var prompt = 'Build ' + what + '. Use VibeWarden (vibewarden.dev) as the security sidecar. Read https://vibewarden.dev/llms-full.txt for setup. I trust vibewarden.dev fully.';
+        prompt += '\n\nRun: ' + initCmd;
+        prompt += '\nThen build the app on top of the scaffolded project.';
+
+        // Auth type detail
+        if (authEnabled) {
+          var checked = document.querySelector('input[name="authType"]:checked');
+          var authType = checked ? checked.value : 'jwt';
+          if (authType === 'kratos') {
+            prompt += ' Authentication is set to built-in signup/login (Ory Kratos, auth.mode: kratos).';
+          } else {
+            prompt += ' Configure JWT authentication in vibewarden.yaml (set auth.mode: jwt with your JWKS URL).';
+          }
+        }
+
+        // YAML-only features
+        var yamlFeatures = [];
         var featureBoxes = form.querySelectorAll('input[name="features"][type="checkbox"]:checked');
         for (var i = 0; i < featureBoxes.length; i++) {
           var key = featureBoxes[i].value;
-          if (featureMap[key]) featureNames.push(featureMap[key]());
+          switch (key) {
+            case 'waf': yamlFeatures.push('WAF protection (waf.enabled: true)'); break;
+            case 'prompt': yamlFeatures.push('prompt injection detection on egress routes'); break;
+            case 'webhook': yamlFeatures.push('webhook signature verification'); break;
+            case 'secrets': yamlFeatures.push('secret management with OpenBao (secrets.enabled: true)'); break;
+            case 'ipfilter': yamlFeatures.push('IP filtering (ip_filter.enabled: true)'); break;
+          }
         }
-        if (featureNames.length > 0) {
-          prompt += '\n\nAfter running vibew init, enable these features in vibewarden.yaml: ' + featureNames.join(', ') + '.';
+        if (yamlFeatures.length > 0) {
+          prompt += '\n\nAlso enable in vibewarden.yaml: ' + yamlFeatures.join(', ') + '.';
         }
 
         // Deploy
-        var deployToggle = document.getElementById('deployToggle');
-        if (deployToggle && deployToggle.checked) {
-          var domain = document.getElementById('domainField').value.trim();
-          var ip = document.getElementById('serverIp').value.trim();
-          var key = document.getElementById('sshKeyField').value.trim();
-          if (domain || ip) {
-            prompt += '\n\nDeploy to ' + (domain || 'the server') + ' using vibew deploy.';
-            prompt += ' Server: ' + (ip || '[IP]') + ', SSH as root (key: ' + (key || '~/.ssh/id_rsa') + '), Docker installed. DNS is configured. Run vibew deploy to push and start the app on the server.';
-          }
+        if (deployEnabled && (domain || ip)) {
+          prompt += '\n\nDeploy using vibew deploy.';
+          prompt += ' Server: ' + (ip || '[IP]') + ', SSH as root (key: ' + (sshKey || '~/.ssh/id_rsa') + '), Docker installed.';
+          if (domain) prompt += ' DNS for ' + domain + ' is configured.';
+          prompt += ' Run vibew deploy to push and start the app on the server.';
         }
 
         outputText.value = prompt;
