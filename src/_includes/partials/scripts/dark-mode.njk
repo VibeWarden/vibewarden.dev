@@ -1,0 +1,48 @@
+// Dark mode toggle — syncs with MkDocs Material __palette localStorage
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  if (!toggle) return;
+
+  var root = document.documentElement;
+  var DOCS_KEY = '{{ site.docsKey }}';
+
+  function getStored() {
+    try {
+      var own = localStorage.getItem('theme');
+      if (own === 'dark' || own === 'light') return own;
+      var mkdocs = JSON.parse(localStorage.getItem(DOCS_KEY));
+      if (mkdocs && mkdocs.color && mkdocs.color.scheme) {
+        return mkdocs.color.scheme === 'slate' ? 'dark' : 'light';
+      }
+    } catch(e) {}
+    return null;
+  }
+
+  function saveTheme(theme) {
+    try {
+      localStorage.setItem('theme', theme);
+      var scheme = theme === 'dark' ? 'slate' : 'default';
+      var palette = {
+        index: theme === 'dark' ? 1 : 0,
+        color: { scheme: scheme, primary: 'deep-purple', accent: 'cyan', media: '' }
+      };
+      localStorage.setItem(DOCS_KEY, JSON.stringify(palette));
+    } catch(e) {}
+  }
+
+  var stored = getStored();
+  if (stored) {
+    root.setAttribute('data-theme', stored);
+  }
+
+  toggle.addEventListener('click', function() {
+    var current = root.getAttribute('data-theme');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var next;
+    if (current === 'dark') next = 'light';
+    else if (current === 'light') next = 'dark';
+    else next = prefersDark ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    saveTheme(next);
+  });
+})();

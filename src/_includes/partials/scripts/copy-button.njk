@@ -1,0 +1,12 @@
+// Copy button
+(function() {
+  var buttons = document.querySelectorAll('[data-copy]');
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('click', function() {
+      var text = this.getAttribute('data-copy');
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      }
+    });
+  }
+})();

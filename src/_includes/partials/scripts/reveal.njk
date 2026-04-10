@@ -1,0 +1,23 @@
+// Scroll entrance animations (IntersectionObserver)
+(function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var els = document.querySelectorAll('.reveal');
+    for (var i = 0; i < els.length; i++) els[i].classList.add('revealed');
+    return;
+  }
+  if (!('IntersectionObserver' in window)) {
+    var els = document.querySelectorAll('.reveal');
+    for (var i = 0; i < els.length; i++) els[i].classList.add('revealed');
+    return;
+  }
+  var observer = new IntersectionObserver(function(entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) {
+        entries[i].target.classList.add('revealed');
+        observer.unobserve(entries[i].target);
+      }
+    }
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  var elements = document.querySelectorAll('.reveal');
+  for (var j = 0; j < elements.length; j++) observer.observe(elements[j]);
+})();

@@ -1,0 +1,8 @@
+[
+  { "label": "Home", "href": "/", "id": "home" },
+  { "label": "Blog", "href": "/blog/", "id": "blog" },
+  { "label": "Docs", "href": "/docs/vibewarden/", "id": "docs" },
+  { "label": "Tools", "href": "/tools/", "id": "tools" },
+  { "label": "Support", "href": "/support/", "id": "support" },
+  { "label": "GitHub", "href": "https://github.com/vibewarden/vibewarden", "id": "github", "external": true }
+]

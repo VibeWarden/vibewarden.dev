@@ -1,0 +1,11 @@
+// Hamburger menu
+(function() {
+  var btn = document.getElementById('hamburgerBtn');
+  var header = btn && btn.closest('.header-inner');
+  if (!btn || !header) return;
+  btn.addEventListener('click', function() {
+    var open = header.classList.toggle('mobile-nav-open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+})();
