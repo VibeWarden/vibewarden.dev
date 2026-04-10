@@ -27,7 +27,7 @@ cd my-app && vibew wrap --upstream 3000 && vibew dev
 - Hot config reload (file watcher + admin API)
 - AI-readable structured logs with schema
 - Prometheus metrics + OpenTelemetry export
-- MCP server for AI agent integration (vibew mcp)
+- MCP server for AI agent integration (vibew mcp) with vibewarden_stream_logs for real-time filtered event streaming
 - Config JSON schema for editor autocomplete
 
 ## Docs
