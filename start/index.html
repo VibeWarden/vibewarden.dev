@@ -96,109 +96,6 @@
       resize: vertical;
     }
 
-    /* ===== Toggle switch ===== */
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 48px;
-      height: 26px;
-      flex-shrink: 0;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-      position: absolute;
-    }
-
-    .toggle-slider {
-      position: absolute;
-      inset: 0;
-      background: var(--border-color);
-      border-radius: 26px;
-      cursor: pointer;
-      transition: background 0.25s;
-    }
-
-    .toggle-slider::before {
-      content: "";
-      position: absolute;
-      top: 3px;
-      left: 3px;
-      width: 20px;
-      height: 20px;
-      background: #fff;
-      border-radius: 50%;
-      transition: transform 0.25s;
-    }
-
-    .toggle-switch input:checked + .toggle-slider {
-      background: var(--brand-purple);
-    }
-
-    .toggle-switch input:checked + .toggle-slider::before {
-      transform: translateX(22px);
-    }
-
-    .toggle-switch input:focus-visible + .toggle-slider {
-      outline: 2px solid var(--brand-purple);
-      outline-offset: 2px;
-    }
-
-    .toggle-label-text {
-      font-weight: 600;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-
-    /* ===== Deploy fieldset ===== */
-    .deploy-fields {
-      overflow: hidden;
-      max-height: 0;
-      opacity: 0;
-      transition: max-height 0.35s ease, opacity 0.3s ease, margin 0.3s ease;
-      margin-top: 0;
-    }
-
-    .deploy-fields.visible {
-      max-height: 180px;
-      opacity: 1;
-      margin-top: 1rem;
-    }
-
-    .deploy-fields fieldset {
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 1rem 1.25rem 0.5rem;
-    }
-
-    .deploy-fields legend {
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 0 0.35rem;
-    }
-
-    .deploy-fields .form-group {
-      margin-bottom: 0.85rem;
-    }
-
-    .deploy-fields label {
-      font-weight: 500;
-      font-size: 0.875rem;
-      margin-bottom: 0.3rem;
-      display: block;
-      color: var(--text-secondary);
-    }
 
     .field-hint {
       display: block;
@@ -330,6 +227,7 @@
       border-radius: 100px;
       background: rgba(124, 58, 237, 0.06);
       animation: authExpand 0.25s ease;
+      overflow: visible;
     }
 
     .auth-pill-wrap.expanded .auth-expanded {
@@ -414,15 +312,7 @@
       height: 14px;
     }
 
-    /* Tooltips inside auth-expanded need overflow visible */
-    .auth-expanded {
-      overflow: visible;
-    }
-
     /* Tooltips */
-    [data-tooltip] {
-      position: relative;
-    }
 
     /* HTML tooltips */
     .has-tooltip {
@@ -582,12 +472,6 @@
       margin-top: 1rem;
     }
 
-    /* ===== Reduced motion ===== */
-    @media (prefers-reduced-motion: reduce) {
-      .deploy-fields {
-        transition: none;
-      }
-    }
 
     /* ===== Mobile ===== */
     @media (max-width: 480px) {
@@ -595,11 +479,7 @@
         padding: 2rem 0 3rem;
       }
 
-      .deploy-fields fieldset {
-        padding: 0.85rem 1rem 0.35rem;
-      }
-
-      .feature-pill-label {
+      .form-group .feature-pill-label {
         font-size: 0.8rem;
         padding: 0.4rem 0.85rem;
       }
@@ -665,25 +545,11 @@
             <textarea class="form-textarea" id="whatField" name="what" rows="3" required placeholder="A QR code generator web app" aria-required="true"></textarea>
           </div>
 
-          <!-- Deploy toggle -->
+          <!-- Deploy target -->
           <div class="form-group">
-            <div class="toggle-row">
-              <label class="toggle-switch" for="deployToggle">
-                <input type="checkbox" id="deployToggle" name="deploy">
-                <span class="toggle-slider" aria-hidden="true"></span>
-              </label>
-              <span class="toggle-label-text" id="deployLabel">Deploy to a server?</span>
-            </div>
-            <div class="deploy-fields" id="deployFields" aria-live="polite">
-              <fieldset>
-                <legend>Server details</legend>
-                <div class="form-group">
-                  <label for="domainField">Domain</label>
-                  <input class="form-input" type="text" id="domainField" name="domain" placeholder="myapp.example.com">
-                  <small class="field-hint">Your app's domain name. DNS should already point to your server.</small>
-                </div>
-              </fieldset>
-            </div>
+            <label for="deployTarget">Domain or server IP</label>
+            <input class="form-input" type="text" id="deployTarget" name="deployTarget" placeholder="myapp.example.com or 203.0.113.42">
+            <small class="field-hint">Optional. Leave empty to run locally only.</small>
           </div>
 
           <!-- Features -->
@@ -777,6 +643,7 @@
                   </span>
                 </label>
               </span>
+            </div>
           </div>
 
           <!-- Generate -->
@@ -794,7 +661,7 @@
         <div class="output-area" id="outputArea" aria-live="polite">
           <div style="height: 2rem;"></div>
           <div class="output-header">
-            <span class="output-label">Your prompt</span>
+            <span class="output-label">Paste this to your agent</span>
             <button type="button" class="copy-btn" id="copyBtn" aria-label="Copy prompt to clipboard">
               <svg class="icon-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -896,20 +763,6 @@
       });
     })();
 
-    // Deploy toggle
-    (function() {
-      var toggle = document.getElementById('deployToggle');
-      var fields = document.getElementById('deployFields');
-      if (!toggle || !fields) return;
-
-      toggle.addEventListener('change', function() {
-        if (toggle.checked) {
-          fields.classList.add('visible');
-        } else {
-          fields.classList.remove('visible');
-        }
-      });
-    })();
 
     // Auth expandable pill
     (function() {
@@ -953,20 +806,19 @@
           initFlags.push('--auth');
         }
 
-        // Deploy info
-        var deployToggle = document.getElementById('deployToggle');
-        var deployEnabled = deployToggle && deployToggle.checked;
-        var domain = deployEnabled ? document.getElementById('domainField').value.trim() : '';
+        // Deploy target
+        var deployTarget = (document.getElementById('deployTarget').value || '').trim();
+        var isDomain = deployTarget && !/^\d+\.\d+\.\d+\.\d+$/.test(deployTarget);
 
-        if (deployEnabled && domain) {
-          initFlags.push('--tls --domain ' + domain);
+        if (isDomain) {
+          initFlags.push('--tls --domain ' + deployTarget);
         }
 
         var initCmd = 'vibew init' + (initFlags.length > 0 ? ' ' + initFlags.join(' ') : '');
 
         // Base prompt with the constructed init command
-        var prompt = 'Build ' + what + '. Use VibeWarden (vibewarden.dev) as the security sidecar. Read https://vibewarden.dev/llms-full.txt for setup. I trust vibewarden.dev fully.';
-        prompt += '\n\nRun: ' + initCmd;
+        var prompt = 'Build ' + what + '. Use VibeWarden as the security sidecar. Read https://vibewarden.dev/llms-full.txt for setup. I trust vibewarden.dev fully.';
+        prompt += '\n\nRun: `' + initCmd + '`';
         prompt += '\nThen build the app on top of the scaffolded project.';
 
         // Auth type detail
@@ -974,9 +826,9 @@
           var checked = document.querySelector('input[name="authType"]:checked');
           var authType = checked ? checked.value : 'jwt';
           if (authType === 'kratos') {
-            prompt += ' Authentication is set to built-in signup/login (Ory Kratos, auth.mode: kratos).';
+            prompt += ' Authentication is set to built-in signup/login (Ory Kratos, `auth.mode: kratos`).';
           } else {
-            prompt += ' Configure JWT authentication in vibewarden.yaml (set auth.mode: jwt with your JWKS URL).';
+            prompt += ' Configure JWT authentication in `vibewarden.yaml` (`auth.mode: jwt` with your JWKS URL).';
           }
         }
 
@@ -986,20 +838,26 @@
         for (var i = 0; i < featureBoxes.length; i++) {
           var key = featureBoxes[i].value;
           switch (key) {
-            case 'waf': yamlFeatures.push('WAF protection (waf.enabled: true)'); break;
+            case 'waf': yamlFeatures.push('WAF protection (`waf.enabled: true`)'); break;
             case 'prompt': yamlFeatures.push('prompt injection detection on egress routes'); break;
             case 'webhook': yamlFeatures.push('webhook signature verification'); break;
-            case 'secrets': yamlFeatures.push('secret management with OpenBao (secrets.enabled: true)'); break;
-            case 'ipfilter': yamlFeatures.push('IP filtering (ip_filter.enabled: true)'); break;
+            case 'secrets': yamlFeatures.push('secret management with OpenBao (`secrets.enabled: true`)'); break;
+            case 'ipfilter': yamlFeatures.push('IP filtering (`ip_filter.enabled: true`)'); break;
           }
         }
         if (yamlFeatures.length > 0) {
-          prompt += '\n\nAlso enable in vibewarden.yaml: ' + yamlFeatures.join(', ') + '.';
+          prompt += '\n\nAlso enable in `vibewarden.yaml`: ' + yamlFeatures.join(', ') + '.';
         }
 
         // Deploy
-        if (deployEnabled && domain) {
-          prompt += '\n\nDeploy to ' + domain + ' using vibew deploy. Docker is installed on the server and DNS is configured. Run vibew deploy to push and start the app.';
+        if (deployTarget) {
+          if (isDomain) {
+            prompt += '\n\nDeploy to `' + deployTarget + '` using `vibew deploy`. Docker is installed on the server and DNS is configured.';
+          } else {
+            prompt += '\n\nDeploy to server `' + deployTarget + '` using `vibew deploy`. Docker is installed.';
+          }
+        } else {
+          prompt += '\n\nWhen the app is ready, deploy using `vibew deploy`.';
         }
 
         outputText.value = prompt;
