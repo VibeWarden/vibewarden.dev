@@ -303,7 +303,7 @@ main() {
     printf "\n"
     info "Get started:"
     printf "\n"
-    printf "  vibew init --upstream 3000 --auth --rate-limit\n"
+    printf "  vibew init\n"
     printf "  vibew dev\n"
     printf "\n"
     info "Docs: https://vibewarden.dev/docs/"

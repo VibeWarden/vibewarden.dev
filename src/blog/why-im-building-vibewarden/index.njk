@@ -1,0 +1,239 @@
+---
+title: "Why I'm Building VibeWarden — VibeWarden Blog"
+description: "I never wanted to maintain a vibe-coded app. Then a friend told me I'd have to. VibeWarden is what I built instead."
+canonical: "https://vibewarden.dev/blog/why-im-building-vibewarden/"
+navActiveId: blog
+hasMobileNav: false
+ogType: article
+ogTitle: "Why I'm Building VibeWarden"
+ogDescription: "I never wanted to maintain a vibe-coded app. Then a friend told me I'd have to. VibeWarden is what I built instead."
+publishedDate: "2026-04-16"
+---
+{% extends "base.njk" %}
+
+
+{% block structuredData %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Why I'm Building VibeWarden",
+    "description": "I never wanted to maintain a vibe-coded app. Then a friend told me I'd have to. VibeWarden is what I built instead.",
+    "datePublished": "2026-04-16",
+    "url": "https://vibewarden.dev/blog/why-im-building-vibewarden/",
+    "author": {
+      "@type": "Organization",
+      "name": "VibeWarden",
+      "url": "https://vibewarden.dev"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "VibeWarden",
+      "url": "https://vibewarden.dev",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://vibewarden.dev/static/logo.png"
+      }
+    }
+  }
+  </script>
+{% endblock %}
+
+{% block pageStyles %}
+<style>
+    /* ===== Article ===== */
+    .article-header {
+      padding: 3rem 0 2rem;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .article-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .article-back:hover { color: var(--brand-purple-light); }
+    .article-back svg { width: 16px; height: 16px; }
+
+    .article-header h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+
+    .article-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .article-body {
+      max-width: 720px;
+      margin: 0 auto;
+      padding-bottom: 4rem;
+    }
+
+    .article-body h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-top: 2.5rem;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .article-body h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .article-body p {
+      margin-bottom: 1.25rem;
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+      line-height: 1.75;
+    }
+
+    .article-body ul, .article-body ol {
+      margin-bottom: 1.25rem;
+      padding-left: 1.5rem;
+    }
+
+    .article-body li {
+      margin-bottom: 0.4rem;
+      color: var(--text-secondary);
+      font-size: 1.02rem;
+      line-height: 1.65;
+    }
+
+    .article-body strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .article-body code {
+      font-family: "SF Mono", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+      font-size: 0.88em;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 0.15em 0.35em;
+    }
+
+    .article-body pre {
+      background: var(--bg-code);
+      color: var(--text-code);
+      padding: 1.25rem 1.5rem;
+      border-radius: 10px;
+      font-family: "SF Mono", "Cascadia Code", "Fira Code", ui-monospace, monospace;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      overflow-x: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    .article-body pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    .article-body pre .comment { color: #6B7280; }
+    .article-body pre .cmd { color: #C084FC; }
+    .article-body pre .key { color: #A78BFA; }
+    .article-body pre .value { color: #67E8F9; }
+    .article-body pre .flag { color: #67E8F9; }
+
+    .article-body hr {
+      border: none;
+      border-top: 1px solid var(--border-color);
+      margin: 2.5rem 0;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 480px) {
+      .article-header { padding: 2rem 0 1.5rem; }
+      .article-body pre { padding: 1rem; font-size: 0.8rem; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <article>
+        <div class="article-header">
+          <a href="/blog/" class="article-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            All posts
+          </a>
+          <h1>Why I'm Building VibeWarden</h1>
+          <div class="article-meta">
+            <time datetime="2026-04-16">April 16, 2026</time>
+          </div>
+        </div>
+
+        <div class="article-body">
+          <p>
+            A few months ago I was having a conversation with a developer friend about the wave of vibe-coded apps coming our way. AI coding tools had gotten good enough that almost anyone could ship a full-stack app in a weekend. We were watching it happen in real time.
+          </p>
+          <p>
+            I said I never wanted to be the one maintaining a vibe-coded app. The code would be impossible to reason about, security would be an afterthought, and debugging an AI-generated codebase I didn't write sounded like a nightmare.
+          </p>
+          <p>
+            His reply stopped me: <em>we'll have to do it. It's the future.</em>
+          </p>
+          <p>
+            He wasn't wrong. The apps were already being built. My feelings about the code inside didn't matter — experienced developers would be asked to support them, secure them, and keep them running regardless.
+          </p>
+          <p>
+            So I started thinking differently. What if I didn't have to touch the code at all?
+          </p>
+          <p>
+            Every vibe-coded app has the same gaps. No TLS. No rate limiting. No WAF. No structured logs. Not because the developers are careless — because they were focused on shipping, and AI tools optimize for "works," not "survives production." The gaps are predictable, and predictable gaps can be solved once.
+          </p>
+          <p>
+            That's what VibeWarden is. A security sidecar that sits in front of any app and handles the entire security layer — TLS, auth, rate limiting, WAF, secrets, audit logs — without touching the app's code. It doesn't matter what's inside the box. VibeWarden secures the perimeter.
+          </p>
+          <p>Three commands:</p>
+          <pre><code><span class="cmd">curl</span> -sS https://vibewarden.dev/install.sh | sh
+<span class="cmd">vibew</span> init
+<span class="cmd">vibew</span> dev</code></pre>
+          <p>
+            Already have a project? Swap <code>init</code> for <code>wrap</code> — same outcome, your existing code untouched.
+          </p>
+          <p>
+            But it didn't stop at security.
+          </p>
+          <p>
+            If your app is vibe-coded, your agent should know about VibeWarden from the start — not discover it after deployment. So VibeWarden generates an <code>AGENTS.md</code> file for your coding assistant: what VibeWarden handles, what the app shouldn't duplicate, and how the rest of the code should be structured around that. Your app ends up better designed, not just more secure.
+          </p>
+          <p>
+            There's also a <a href="/start/">prompt generator</a> — pick your features in a browser, paste the result to your agent, and let it integrate VibeWarden for you. No commands to run first.
+          </p>
+          <p>
+            It started as a security tool. It became the layer vibe-coded apps need to survive production.
+          </p>
+          <p>
+            If you've vibe-coded something and haven't shipped it because the security part felt heavy — this is for you.
+          </p>
+          <p>
+            <a href="/">Get started →</a>
+          </p>
+
+          <hr>
+
+          <p>
+            <em>— Tibi, <abbr title="VibeWarden" aria-label="VibeWarden" style="font-style: normal; text-decoration: none;">\V/</abbr></em>
+          </p>
+        </div>
+      </article>
+    </div>
+{% endblock %}
