@@ -1,28 +1,38 @@
 # vibewarden.dev
 
-Source for the VibeWarden website, hosted via GitHub Pages.
+Source for the VibeWarden website at <https://vibewarden.dev>.
+Eleventy (11ty) build, deployed to GitHub Pages on every push to `main`.
 
 ## Structure
 
 ```
-docs/           # Product documentation (mirrors/extends repo docs)
-blog/           # Blog posts (security guides, comparisons, changelogs)
-static/         # Assets (logo, images, install script)
-schema/v1/      # Published JSON schemas (event.json, config.json)
-llms.txt        # AI-readable site summary
-llms-full.txt   # Complete AI-readable setup guide
-index.html      # Landing page
+src/                # Eleventy source (.njk templates) — authoritative
+docs/               # MkDocs output, passthrough-copied under /docs/
+static/             # Assets (logo, images, fonts)
+schema/v1/          # Published JSON schemas (event.json, config.json)
+install.sh          # curl | sh install script (passthrough)
+install.ps1         # PowerShell install script (passthrough)
+llms.txt            # AI-readable site summary (passthrough)
+llms-full.txt       # Complete AI-readable setup guide (passthrough)
+sitemap.xml         # Sitemap (passthrough)
+eleventy.config.ts  # Build config
 ```
+
+Only files under `src/` and those listed in `eleventyConfig.addPassthroughCopy(...)` reach production. Anything else at the repo root is an orphan and will not be deployed.
 
 ## Local development
 
 ```bash
-# If using a static site generator (TBD):
-npm run dev
+npm install
+npm run serve   # http://localhost:8080/ with hot reload
+```
 
-# Or just open index.html for now
+## Build
+
+```bash
+npm run build   # Outputs to ./dist/
 ```
 
 ## Deployment
 
-GitHub Pages from the `main` branch. Custom domain: `vibewarden.dev`.
+GitHub Pages via `.github/workflows/deploy.yml` — `dist/` is uploaded as the Pages artifact on every push to `main`. Custom domain configured via `CNAME`.
