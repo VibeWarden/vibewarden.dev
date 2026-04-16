@@ -26,8 +26,8 @@ PATH A — New project:
   This creates: vibewarden.yaml, Dockerfile, .gitignore, and importantly:
   - AGENTS-VIBEWARDEN.md — instructions for YOU (the AI agent) on what the
     sidecar handles, what NOT to implement in app code, and architectural rules
-  - CLAUDE.md — project-specific context
-  - .claude/commands/ — slash commands for common workflows
+  - AGENTS.md — conventional tool-agnostic context file read by Claude Code,
+    Cursor, Aider, Continue, and any other modern coding agent
   Read AGENTS-VIBEWARDEN.md after init — it tells you what security features
   to never reimplement. Edit cmd/myapp/main.go to build your app.
 
@@ -39,7 +39,8 @@ PATH B — Existing app (you already have source code):
   This adds: vibewarden.yaml, Dockerfile (if missing), and:
   - AGENTS-VIBEWARDEN.md — instructions for YOU (the AI agent) on what the
     sidecar handles and what NOT to implement in app code
-  - CLAUDE.md — project-specific context
+  - AGENTS.md — conventional tool-agnostic context file read by any modern
+    coding agent (Claude Code, Cursor, Aider, Continue, etc.)
   Your existing code is untouched. Read AGENTS-VIBEWARDEN.md — it tells you
   which security features are already handled (do not reimplement them).
   Your app MUST have a GET /health endpoint returning HTTP 200 — the sidecar
@@ -1417,11 +1418,3 @@ the security sidecar. It includes:
 
 This file is fully owned by vibew and regenerated on config changes. User
 customizations go in AGENTS.md (never overwritten).
-
-For Claude Code, .claude/commands/ provides discoverable slash commands:
-  /dev     Start dev environment
-  /test    Run tests (language-specific)
-  /build   Build the app
-  /lint    Run linter
-  /doctor  Run health checks
-  /token   Generate a dev JWT
