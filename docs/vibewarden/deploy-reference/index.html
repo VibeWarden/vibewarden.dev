@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://vibewarden.dev/docs/websockets/">
+        <link rel="canonical" href="https://vibewarden.dev/docs/deploy-reference/">
       
       
-        <link rel="prev" href="../production-hardening/">
+        <link rel="prev" href="../deploy-to-vps/">
       
       
-        <link rel="next" href="../examples/express/">
+        <link rel="next" href="../production-deployment/">
       
       
       <link rel="icon" href="../assets/logo.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>WebSockets - VibeWarden</title>
+        <title>Deploy Reference - VibeWarden</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#websocket-pass-through" class="md-skip">
+        <a href="#deploy-command-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              WebSockets
+              Deploy Reference
             
           </span>
         </div>
@@ -756,10 +756,30 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../deploy-reference/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Deploy Reference
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -768,6 +788,245 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vibew-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      vibew deploy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vibew deploy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-happens-on-first-deploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      What happens on first deploy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-happens-on-subsequent-deploys" class="md-nav__link">
+    <span class="md-ellipsis">
+      What happens on subsequent deploys
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vibew-deploy-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      vibew deploy status
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vibew deploy status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flags_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vibew-deploy-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      vibew deploy logs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vibew deploy logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flags_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#first-deploy-with-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      First deploy with secrets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subsequent-deploy-config-change-no-secret-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Subsequent deploy (config change, no secret rotation)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotate-secrets-on-redeploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rotate secrets on redeploy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-with-explicit-unseal-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy with explicit unseal key
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-via-non-standard-ssh-port-with-explicit-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy via non-standard SSH port with explicit key
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-service-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check service status
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tail-last-100-log-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tail last 100 log lines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stream-logs-in-real-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stream logs in real-time
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common errors
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -819,30 +1078,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    WebSockets
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../websockets/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -851,104 +1090,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
-    <span class="md-ellipsis">
-      How it works
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#security-checks-on-the-upgrade-request" class="md-nav__link">
-    <span class="md-ellipsis">
-      Security checks on the upgrade request
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Security checks on the upgrade request">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      Authentication
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#rate-limiting" class="md-nav__link">
-    <span class="md-ellipsis">
-      Rate limiting
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#timeouts" class="md-nav__link">
-    <span class="md-ellipsis">
-      Timeouts
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-config" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example config
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#structured-log-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      Structured log events
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Summary
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1251,37 +1392,196 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-it-works" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
-      How it works
+      Architecture
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#security-checks-on-the-upgrade-request" class="md-nav__link">
+  <a href="#commands" class="md-nav__link">
     <span class="md-ellipsis">
-      Security checks on the upgrade request
+      Commands
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Security checks on the upgrade request">
+    <nav class="md-nav" aria-label="Commands">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
+  <a href="#vibew-deploy" class="md-nav__link">
     <span class="md-ellipsis">
-      Authentication
+      vibew deploy
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vibew deploy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#rate-limiting" class="md-nav__link">
+  <a href="#what-happens-on-first-deploy" class="md-nav__link">
     <span class="md-ellipsis">
-      Rate limiting
+      What happens on first deploy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-happens-on-subsequent-deploys" class="md-nav__link">
+    <span class="md-ellipsis">
+      What happens on subsequent deploys
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vibew-deploy-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      vibew deploy status
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vibew deploy status">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flags_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vibew-deploy-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      vibew deploy logs
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vibew deploy logs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flags_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#first-deploy-with-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      First deploy with secrets
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subsequent-deploy-config-change-no-secret-rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Subsequent deploy (config change, no secret rotation)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotate-secrets-on-redeploy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Rotate secrets on redeploy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-with-explicit-unseal-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy with explicit unseal key
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-via-non-standard-ssh-port-with-explicit-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy via non-standard SSH port with explicit key
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-service-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check service status
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tail-last-100-log-lines" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tail last 100 log lines
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stream-logs-in-real-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      Stream logs in real-time
     </span>
   </a>
   
@@ -1293,36 +1593,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#timeouts" class="md-nav__link">
+  <a href="#common-errors" class="md-nav__link">
     <span class="md-ellipsis">
-      Timeouts
+      Common errors
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#example-config" class="md-nav__link">
+  <a href="#related" class="md-nav__link">
     <span class="md-ellipsis">
-      Example config
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#structured-log-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      Structured log events
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Summary
+      Related
     </span>
   </a>
   
@@ -1346,114 +1628,268 @@
   
 
 
-<h1 id="websocket-pass-through">WebSocket Pass-Through<a class="headerlink" href="#websocket-pass-through" title="Permanent link">&para;</a></h1>
-<p>VibeWarden proxies WebSocket connections transparently. No configuration is
-required — it just works.</p>
+<h1 id="deploy-command-reference">Deploy Command Reference<a class="headerlink" href="#deploy-command-reference" title="Permanent link">&para;</a></h1>
+<p><code>vibew deploy</code> deploys the VibeWarden stack to a remote server over SSH. It
+generates runtime configuration locally, transfers files via <code>rsync</code>, and starts
+Docker Compose on the remote host.</p>
+<p>For a full walkthrough of deploying to a VPS for the first time, see
+<a href="../deploy-to-vps/">Deploy to VPS</a>. This page is the command reference.</p>
 <hr />
-<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
-<p>Caddy, the embedded reverse proxy, handles the HTTP <code>Upgrade</code> mechanism
-automatically. When a client sends an HTTP request with:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Connection: Upgrade
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Upgrade: websocket
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<p>All operations use your system <code>ssh</code> and <code>rsync</code> binaries. Your SSH agent and
+<code>~/.ssh/config</code> settings (IdentityFile, ProxyJump, etc.) are honoured
+automatically. No SSH libraries are embedded in the binary.</p>
+<p>Remote directory layout: <code>~/vibewarden/&lt;project-name&gt;/</code></p>
+<p>The project name is derived from the absolute path of the <code>--config</code> file. When
+<code>--config</code> is omitted, the current directory name is used.</p>
+<hr />
+<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
+<h3 id="vibew-deploy"><code>vibew deploy</code><a class="headerlink" href="#vibew-deploy" title="Permanent link">&para;</a></h3>
+<p>Deploy (or redeploy) the stack to a remote server.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>--target<span class="w"> </span>ssh://user@host<span class="w"> </span>--config<span class="w"> </span>vibewarden.prod.yaml
 </span></code></pre></div>
-<p>Caddy forwards the upgrade handshake to the upstream application and then
-bridges the resulting TCP connection bi-directionally. VibeWarden does not
-inspect or buffer individual WebSocket frames.</p>
-<hr />
-<h2 id="security-checks-on-the-upgrade-request">Security checks on the upgrade request<a class="headerlink" href="#security-checks-on-the-upgrade-request" title="Permanent link">&para;</a></h2>
-<p>All security checks run on the <strong>initial HTTP upgrade request</strong> — the standard
-HTTP <code>GET</code> that initiates the handshake. Once the connection is established,
-the raw TCP stream is forwarded unchanged.</p>
-<h3 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h3>
-<p>Auth is enforced on the upgrade request using the same mechanism as any other
-request:</p>
-<ul>
-<li><strong>Kratos mode:</strong> the <code>ory_kratos_session</code> cookie must be present and valid.</li>
-<li><strong>JWT mode:</strong> <code>Authorization: Bearer &lt;token&gt;</code> must be present and pass JWKS
-  validation.</li>
-<li><strong>API key mode:</strong> the configured key header (default: <code>X-API-Key</code>) must
-  contain a valid key.</li>
-</ul>
-<p>If the upgrade request fails auth, VibeWarden returns <code>401 Unauthorized</code> and
-the WebSocket connection is never opened. The upstream application never sees
-the request.</p>
-<h3 id="rate-limiting">Rate limiting<a class="headerlink" href="#rate-limiting" title="Permanent link">&para;</a></h3>
-<p>Rate limiting applies to the upgrade request, not to individual WebSocket
-frames. Each new WebSocket connection consumes one token from the per-IP
-and per-user buckets. Messages sent over an already-established connection
-are not counted.</p>
-<p>This means a client that sends many messages over a single WebSocket
-connection will not be rate limited on those messages. Rate limiting
-remains effective at preventing a flood of new connection attempts.</p>
-<hr />
-<h2 id="timeouts">Timeouts<a class="headerlink" href="#timeouts" title="Permanent link">&para;</a></h2>
-<p>HTTP request timeouts configured in VibeWarden do <strong>not</strong> apply to established
-WebSocket connections. Caddy keeps the connection alive until either side
-closes it or a network error occurs. Your application controls the connection
-lifetime.</p>
-<p>The read/write timeout applies only to the upgrade handshake itself (the
-initial HTTP round-trip). If your app needs idle timeouts on WebSocket
-connections, implement them in the application layer (e.g. send periodic
-pings and close on missed pongs).</p>
-<hr />
-<h2 id="example-config">Example config<a class="headerlink" href="#example-config" title="Permanent link">&para;</a></h2>
-<p>No special configuration is needed. A standard reverse-proxy setup works:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">upstream</span><span class="p">:</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;http://localhost:3000&quot;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">plugins</span><span class="p">:</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">rate-limiting</span><span class="p">:</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="nt">user-management</span><span class="p">:</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span></code></pre></div>
-<p>With the config above, WebSocket connections to VibeWarden are automatically
-proxied to <code>http://localhost:3000</code>. The upgrade handshake is authenticated and
-rate-limited; individual frames are not.</p>
-<hr />
-<h2 id="structured-log-events">Structured log events<a class="headerlink" href="#structured-log-events" title="Permanent link">&para;</a></h2>
-<p>The upgrade request is logged like any other HTTP request
-(<code>event_type: request.proxied</code>). There is no separate event type for
-WebSocket frame activity because frames are not inspected.</p>
-<p>A failed upgrade due to auth is logged as <code>event_type: auth.denied</code>.
-A failed upgrade due to rate limiting is logged as
-<code>event_type: rate_limit.blocked</code>.</p>
-<hr />
-<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<h4 id="flags">Flags<a class="headerlink" href="#flags" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
-<th>Concern</th>
-<th>Behaviour</th>
+<th>Flag</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Upgrade handshake</td>
-<td>Caddy handles <code>Connection: Upgrade</code> automatically</td>
+<td><code>--target</code></td>
+<td>Yes</td>
+<td>--</td>
+<td>Remote target in <code>ssh://user@host[:port]</code> format</td>
 </tr>
 <tr>
-<td>Authentication</td>
-<td>Checked on the upgrade request; deny = <code>401</code>, connection never opened</td>
+<td><code>--config</code></td>
+<td>No</td>
+<td><code>./vibewarden.yaml</code></td>
+<td>Path to the vibewarden.yaml config file</td>
 </tr>
 <tr>
-<td>Rate limiting</td>
-<td>One token consumed per new connection, not per frame</td>
+<td><code>--ssh-key</code></td>
+<td>No</td>
+<td>SSH agent / <code>~/.ssh/config</code></td>
+<td>Path to the SSH private key file</td>
 </tr>
 <tr>
-<td>Timeouts</td>
-<td>Not applied to established connections; only to the upgrade handshake</td>
+<td><code>--secrets-from</code></td>
+<td>No</td>
+<td>--</td>
+<td>Path to a <code>.env</code>-format file whose KEY=VALUE pairs are seeded into OpenBao</td>
 </tr>
 <tr>
-<td>Frame inspection</td>
-<td>Not performed; Caddy bridges the raw TCP stream</td>
+<td><code>--rotate-secrets</code></td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Re-seed secrets from <code>--secrets-from</code> on subsequent deploys</td>
 </tr>
 <tr>
-<td>Config changes needed</td>
-<td>None</td>
+<td><code>--unseal-key</code></td>
+<td>No</td>
+<td>stored key</td>
+<td>OpenBao unseal key; overrides the key stored in <code>~/vibewarden/&lt;project&gt;/.openbao-credentials</code> on the remote</td>
 </tr>
 </tbody>
 </table>
+<h4 id="what-happens-on-first-deploy">What happens on first deploy<a class="headerlink" href="#what-happens-on-first-deploy" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Generates runtime config (Docker Compose files, Kratos config) locally.</li>
+<li>Transfers files to the remote via <code>rsync</code>.</li>
+<li>Runs <code>docker compose up -d</code> on the remote.</li>
+<li>When <code>secrets.enabled: true</code> in vibewarden.yaml, bootstraps OpenBao:
+   initialises, unseals, enables KV v2 and AppRole, creates the vibewarden
+   policy and role, and seeds secrets from <code>--secrets-from</code> if provided.</li>
+<li>Prints the unseal key, root token, role ID, and secret ID. Save the unseal
+   key -- it is not shown again.</li>
+</ol>
+<h4 id="what-happens-on-subsequent-deploys">What happens on subsequent deploys<a class="headerlink" href="#what-happens-on-subsequent-deploys" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Regenerates and transfers updated config.</li>
+<li>Restarts Docker Compose on the remote.</li>
+<li>Uses the stored unseal key from <code>~/vibewarden/&lt;project&gt;/.openbao-credentials</code>
+   unless <code>--unseal-key</code> is provided explicitly.</li>
+<li>Secrets are not re-seeded unless <code>--rotate-secrets</code> is passed.</li>
+</ol>
+<hr />
+<h3 id="vibew-deploy-status"><code>vibew deploy status</code><a class="headerlink" href="#vibew-deploy-status" title="Permanent link">&para;</a></h3>
+<p>Show Docker Compose service status on the remote.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+</span></code></pre></div>
+<h4 id="flags_1">Flags<a class="headerlink" href="#flags_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--target</code></td>
+<td>Yes</td>
+<td>--</td>
+<td>Remote target in <code>ssh://user@host[:port]</code> format</td>
+</tr>
+<tr>
+<td><code>--config</code></td>
+<td>No</td>
+<td><code>./vibewarden.yaml</code></td>
+<td>Path to vibewarden.yaml (used to derive the remote project directory)</td>
+</tr>
+<tr>
+<td><code>--ssh-key</code></td>
+<td>No</td>
+<td>SSH agent / <code>~/.ssh/config</code></td>
+<td>Path to the SSH private key file</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="vibew-deploy-logs"><code>vibew deploy logs</code><a class="headerlink" href="#vibew-deploy-logs" title="Permanent link">&para;</a></h3>
+<p>Fetch Docker Compose logs from the remote.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+</span></code></pre></div>
+<h4 id="flags_2">Flags<a class="headerlink" href="#flags_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--target</code></td>
+<td>Yes</td>
+<td>--</td>
+<td>Remote target in <code>ssh://user@host[:port]</code> format</td>
+</tr>
+<tr>
+<td><code>--config</code></td>
+<td>No</td>
+<td><code>./vibewarden.yaml</code></td>
+<td>Path to vibewarden.yaml (used to derive the remote project directory)</td>
+</tr>
+<tr>
+<td><code>--ssh-key</code></td>
+<td>No</td>
+<td>SSH agent / <code>~/.ssh/config</code></td>
+<td>Path to the SSH private key file</td>
+</tr>
+<tr>
+<td><code>--lines</code></td>
+<td>No</td>
+<td><code>50</code></td>
+<td>Number of log lines to fetch (<code>0</code> = all)</td>
+</tr>
+<tr>
+<td><code>--follow</code> / <code>-f</code></td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Stream log output continuously until cancelled (Ctrl-C)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
+<h3 id="first-deploy-with-secrets">First deploy with secrets<a class="headerlink" href="#first-deploy-with-secrets" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--secrets-from<span class="w"> </span>.env.prod
+</span></code></pre></div>
+<p>Save the unseal key from the output immediately.</p>
+<h3 id="subsequent-deploy-config-change-no-secret-rotation">Subsequent deploy (config change, no secret rotation)<a class="headerlink" href="#subsequent-deploy-config-change-no-secret-rotation" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
+</span></code></pre></div>
+<h3 id="rotate-secrets-on-redeploy">Rotate secrets on redeploy<a class="headerlink" href="#rotate-secrets-on-redeploy" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--rotate-secrets<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--secrets-from<span class="w"> </span>.env.prod
+</span></code></pre></div>
+<h3 id="deploy-with-explicit-unseal-key">Deploy with explicit unseal key<a class="headerlink" href="#deploy-with-explicit-unseal-key" title="Permanent link">&para;</a></h3>
+<p>Use this when redeploying to a sealed OpenBao instance (e.g. after a server
+restart) if the stored credentials file was lost:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--unseal-key<span class="w"> </span><span class="s2">&quot;YOUR_UNSEAL_KEY_HERE&quot;</span>
+</span></code></pre></div>
+<h3 id="deploy-via-non-standard-ssh-port-with-explicit-key">Deploy via non-standard SSH port with explicit key<a class="headerlink" href="#deploy-via-non-standard-ssh-port-with-explicit-key" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://deploy@myserver.example.com:2222<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--ssh-key<span class="w"> </span>~/.ssh/deploy_ed25519
+</span></code></pre></div>
+<h3 id="check-service-status">Check service status<a class="headerlink" href="#check-service-status" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
+</span></code></pre></div>
+<h3 id="tail-last-100-log-lines">Tail last 100 log lines<a class="headerlink" href="#tail-last-100-log-lines" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
+</span></code></pre></div>
+<h3 id="stream-logs-in-real-time">Stream logs in real-time<a class="headerlink" href="#stream-logs-in-real-time" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--follow
+</span></code></pre></div>
+<p>Press Ctrl-C to stop streaming.</p>
+<hr />
+<h2 id="common-errors">Common errors<a class="headerlink" href="#common-errors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--target is required (e.g. ssh://user@host)</code></td>
+<td>Missing <code>--target</code> flag</td>
+<td>Add <code>--target ssh://user@host</code></td>
+</tr>
+<tr>
+<td><code>invalid --target: scheme must be "ssh"</code></td>
+<td>Wrong URL scheme (e.g. <code>http://</code>)</td>
+<td>Use <code>ssh://user@host</code> format</td>
+</tr>
+<tr>
+<td><code>openbao bootstrap: ...</code></td>
+<td>OpenBao initialisation failed</td>
+<td>Check remote Docker logs; verify port 8200 is reachable on the remote</td>
+</tr>
+<tr>
+<td><code>loading config: ...</code></td>
+<td>Invalid or missing vibewarden.yaml</td>
+<td>Run <code>vibew validate --config &lt;path&gt;</code> locally</td>
+</tr>
+<tr>
+<td><code>rsync: connection refused</code></td>
+<td>SSH not reachable</td>
+<td>Verify <code>ssh user@host echo OK</code> works first</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../deploy-to-vps/">Deploy to VPS</a> -- full first-deploy walkthrough</li>
+<li><a href="../secret-management/">Secret Management</a> -- OpenBao configuration details</li>
+<li><a href="../production-hardening/">Production Hardening</a> -- post-deploy security checklist</li>
+</ul>
 
 
 

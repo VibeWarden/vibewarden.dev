@@ -922,6 +922,66 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#schema-migrations-with-vibew-migrate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schema migrations with vibew migrate
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Schema migrations with vibew migrate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common errors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ai-agent-notes" class="md-nav__link">
     <span class="md-ellipsis">
       AI-agent notes
@@ -1056,6 +1116,27 @@
   
   <span class="md-ellipsis">
     Deploy to VPS
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deploy Reference
   </span>
   
 
@@ -1689,6 +1770,66 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#schema-migrations-with-vibew-migrate" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schema migrations with vibew migrate
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Schema migrations with vibew migrate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common errors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ai-agent-notes" class="md-nav__link">
     <span class="md-ellipsis">
       AI-agent notes
@@ -2183,6 +2324,102 @@ minor-version security patches automatically. For local Docker Compose Postgres:
 <li>Consider adding a PgBouncer sidecar in Transaction mode.</li>
 <li>Upgrade to a larger database tier if the connection limit is the bottleneck.</li>
 </ol>
+<hr />
+<h2 id="schema-migrations-with-vibew-migrate">Schema migrations with <code>vibew migrate</code><a class="headerlink" href="#schema-migrations-with-vibew-migrate" title="Permanent link">&para;</a></h2>
+<p>VibeWarden ships database migrations managed by
+<a href="https://github.com/golang-migrate/migrate">golang-migrate</a>. The <code>vibew migrate</code>
+command applies, rolls back, or inspects the state of these migrations against
+the configured database.</p>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A database URL configured in <code>vibewarden.yaml</code> via <code>database.url</code> or
+  <code>database.external_url</code>, or the corresponding environment variable
+  <code>VIBEWARDEN_DATABASE_EXTERNAL_URL</code>.</li>
+</ul>
+<h3 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>vibew migrate</code></td>
+<td>Apply all pending migrations (same as <code>migrate up</code>)</td>
+</tr>
+<tr>
+<td><code>vibew migrate up</code></td>
+<td>Apply all pending migrations</td>
+</tr>
+<tr>
+<td><code>vibew migrate down</code></td>
+<td>Roll back the most recently applied migration</td>
+</tr>
+<tr>
+<td><code>vibew migrate status</code></td>
+<td>Show current migration version and state</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flags">Flags<a class="headerlink" href="#flags" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--config</code></td>
+<td>All subcommands (persistent)</td>
+<td><code>./vibewarden.yaml</code></td>
+<td>Path to the vibewarden.yaml config file</td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<p>Apply all pending migrations:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>vibew<span class="w"> </span>migrate<span class="w"> </span>up<span class="w"> </span>--config<span class="w"> </span>vibewarden.prod.yaml
+</span></code></pre></div>
+<p>Expected output on success:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Migrations applied successfully.
+</span></code></pre></div>
+<p>Check current migration version:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>vibew<span class="w"> </span>migrate<span class="w"> </span>status<span class="w"> </span>--config<span class="w"> </span>vibewarden.prod.yaml
+</span></code></pre></div>
+<p>Roll back the last migration:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>vibew<span class="w"> </span>migrate<span class="w"> </span>down<span class="w"> </span>--config<span class="w"> </span>vibewarden.prod.yaml
+</span></code></pre></div>
+<p>Expected output on success:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>Last migration rolled back successfully.
+</span></code></pre></div>
+<h3 id="common-errors">Common errors<a class="headerlink" href="#common-errors" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>no database URL configured; set database.url or database.external_url in vibewarden.yaml</code></td>
+<td>No database URL in config or environment</td>
+<td>Add <code>database.external_url</code> to vibewarden.yaml or set <code>VIBEWARDEN_DATABASE_EXTERNAL_URL</code></td>
+</tr>
+<tr>
+<td><code>creating migration runner: ...</code></td>
+<td>Database unreachable or invalid URL</td>
+<td>Verify the connection string and that the database server is running</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="ai-agent-notes">AI-agent notes<a class="headerlink" href="#ai-agent-notes" title="Permanent link">&para;</a></h2>
 <p>This section is machine-readable context for AI coding agents working on

@@ -756,6 +756,27 @@
   
   
     <li class="md-nav__item">
+      <a href="../deploy-reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deploy Reference
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../production-deployment/" class="md-nav__link">
         
   
@@ -1000,9 +1021,33 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#upgrading-to-the-latest-release" class="md-nav__link">
+  <a href="#upgrading-with-vibew-upgrade" class="md-nav__link">
     <span class="md-ellipsis">
-      Upgrading to the latest release
+      Upgrading with vibew upgrade
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Upgrading with vibew upgrade">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrading-to-the-latest-release-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Upgrading to the latest release (alternative)
     </span>
   </a>
   
@@ -1339,9 +1384,33 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#upgrading-to-the-latest-release" class="md-nav__link">
+  <a href="#upgrading-with-vibew-upgrade" class="md-nav__link">
     <span class="md-ellipsis">
-      Upgrading to the latest release
+      Upgrading with vibew upgrade
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Upgrading with vibew upgrade">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrading-to-the-latest-release-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      Upgrading to the latest release (alternative)
     </span>
   </a>
   
@@ -1526,8 +1595,50 @@ update <code>.vibewarden-version</code> to the desired version:</p>
 </span></code></pre></div>
 <p>Commit <code>.vibewarden-version</code> so everyone on your team, as well as your CI environment,
 uses the same version automatically.</p>
-<h3 id="upgrading-to-the-latest-release">Upgrading to the latest release<a class="headerlink" href="#upgrading-to-the-latest-release" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>./vibew<span class="w"> </span>self-update
+<h3 id="upgrading-with-vibew-upgrade">Upgrading with <code>vibew upgrade</code><a class="headerlink" href="#upgrading-with-vibew-upgrade" title="Permanent link">&para;</a></h3>
+<p><code>vibew upgrade</code> downloads and installs a new VibeWarden release, replacing the
+running binary in-place.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vibew<span class="w"> </span>upgrade<span class="w">            </span><span class="c1"># install the latest release</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vibew<span class="w"> </span>upgrade<span class="w"> </span>v0.4.0<span class="w">     </span><span class="c1"># install a specific version</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>vibew<span class="w"> </span>upgrade<span class="w"> </span>--dry-run<span class="w">  </span><span class="c1"># preview without writing files</span>
+</span></code></pre></div>
+<p>The command:</p>
+<ol>
+<li>Resolves the target version (latest from the GitHub API, or the tag you
+   supplied).</li>
+<li>Downloads the binary archive for the current OS and architecture.</li>
+<li>Verifies the SHA-256 checksum.</li>
+<li>Replaces the running binary in-place (resolved via <code>os.Executable</code> +
+   symlink evaluation). Falls back to <code>~/.vibewarden/bin</code> if resolution fails.</li>
+<li>Updates <code>.vibewarden-version</code> if found in the current or a parent directory.</li>
+<li>Touches <code>vibew</code>, <code>vibew.ps1</code>, <code>vibew.cmd</code> in the current directory when present.</li>
+</ol>
+<p>If the target directory is not writable (e.g. <code>/usr/local/bin</code> without sudo),
+the command automatically retries with <code>sudo</code>.</p>
+<h4 id="flags">Flags<a class="headerlink" href="#flags" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--dry-run</code></td>
+<td><code>false</code></td>
+<td>Print what would happen without writing any files</td>
+</tr>
+<tr>
+<td><code>--install-dir</code></td>
+<td>path of running binary</td>
+<td>Directory to install the binary into</td>
+</tr>
+</tbody>
+</table>
+<h3 id="upgrading-to-the-latest-release-alternative">Upgrading to the latest release (alternative)<a class="headerlink" href="#upgrading-to-the-latest-release-alternative" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>./vibew<span class="w"> </span>self-update
 </span></code></pre></div>
 <p>This fetches the latest stable release from
 <a href="https://github.com/vibewarden/vibewarden/releases">github.com/vibewarden/vibewarden/releases</a>,
@@ -1541,13 +1652,13 @@ Run <code>./vibew version</code> and compare it against the target version befor
 <h3 id="upgrading-the-docker-image">Upgrading the Docker image<a class="headerlink" href="#upgrading-the-docker-image" title="Permanent link">&para;</a></h3>
 <p>If you run VibeWarden via the Docker image directly, update the image tag in your
 <code>docker-compose.yml</code> (or generated file):</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">services</span><span class="p">:</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">vibewarden</span><span class="p">:</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/vibewarden/vibewarden:v0.13.0</span><span class="w">   </span><span class="c1"># change this line</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">vibewarden</span><span class="p">:</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/vibewarden/vibewarden:v0.13.0</span><span class="w">   </span><span class="c1"># change this line</span>
 </span></code></pre></div>
 <p>Then pull and restart:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>pull<span class="w"> </span>vibewarden
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>vibewarden
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>pull<span class="w"> </span>vibewarden
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>vibewarden
 </span></code></pre></div>
 <hr />
 <h2 id="breaking-change-policy">Breaking change policy<a class="headerlink" href="#breaking-change-policy" title="Permanent link">&para;</a></h2>
@@ -1586,27 +1697,27 @@ a <strong>two-release deprecation cycle</strong>:</p>
 OpenTelemetry as the unified telemetry foundation.</p>
 <p><strong>Automatic migration:</strong> VibeWarden auto-migrates <code>metrics:</code> settings to <code>telemetry:</code>
 at startup and logs a deprecation warning:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>[WARN] config: &quot;metrics&quot; block is deprecated and will be removed in the next major version. Migrate to &quot;telemetry:&quot;. See https://vibewarden.dev/docs/upgrading#metrics-telemetry
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>[WARN] config: &quot;metrics&quot; block is deprecated and will be removed in the next major version. Migrate to &quot;telemetry:&quot;. See https://vibewarden.dev/docs/upgrading#metrics-telemetry
 </span></code></pre></div>
 <p><strong>Manual migration:</strong> Update <code>vibewarden.yaml</code> before the next major release:</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Before (deprecated)</label><label for="__tabbed_1_2">After (current)</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">metrics</span><span class="p">:</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/_vibewarden/metrics</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-api</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">metrics</span><span class="p">:</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/_vibewarden/metrics</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-api</span>
 </span></code></pre></div>
 </div>
 <div class="tabbed-block">
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">telemetry</span><span class="p">:</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/_vibewarden/metrics</span>
-</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
-</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-api</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">telemetry</span><span class="p">:</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">prometheus</span><span class="p">:</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/_vibewarden/metrics</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="nt">labels</span><span class="p">:</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-api</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -1619,13 +1730,13 @@ at startup and logs a deprecation warning:</p>
 <li>
 <p><strong>Read the release notes</strong> for every version between your current version and the
    target. Look for entries marked <strong>Breaking</strong> or <strong>Deprecated</strong>.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>./vibew<span class="w"> </span>version<span class="w"> </span>--short<span class="w">   </span><span class="c1"># note your current version</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>./vibew<span class="w"> </span>version<span class="w"> </span>--short<span class="w">   </span><span class="c1"># note your current version</span>
 </span></code></pre></div>
 <p>Release notes: <a href="https://github.com/vibewarden/vibewarden/releases">github.com/vibewarden/vibewarden/releases</a></p>
 </li>
 <li>
 <p><strong>Back up your config</strong> (if you keep <code>vibewarden.yaml</code> outside version control):</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>cp<span class="w"> </span>vibewarden.yaml<span class="w"> </span>vibewarden.yaml.bak
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>cp<span class="w"> </span>vibewarden.yaml<span class="w"> </span>vibewarden.yaml.bak
 </span></code></pre></div>
 </li>
 <li>
@@ -1634,26 +1745,26 @@ at startup and logs a deprecation warning:</p>
 </li>
 <li>
 <p><strong>Update the pinned version:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;vX.Y.Z&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.vibewarden-version
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;vX.Y.Z&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.vibewarden-version
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>Validate the updated config:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>./vibew<span class="w"> </span>validate
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>./vibew<span class="w"> </span>validate
 </span></code></pre></div>
 <p>Fix any reported errors before proceeding.</p>
 </li>
 <li>
 <p><strong>Restart the stack:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>./vibew<span class="w"> </span>dev<span class="w">       </span><span class="c1"># development</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># or</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>vibewarden<span class="w">   </span><span class="c1"># production</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>./vibew<span class="w"> </span>dev<span class="w">       </span><span class="c1"># development</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># or</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>vibewarden<span class="w">   </span><span class="c1"># production</span>
 </span></code></pre></div>
 </li>
 <li>
 <p><strong>Verify:</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>./vibew<span class="w"> </span>version
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>./vibew<span class="w"> </span>doctor
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>./vibew<span class="w"> </span>version
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>./vibew<span class="w"> </span>doctor
 </span></code></pre></div>
 <p><code>vibew doctor</code> runs a full health check and surfaces any post-upgrade issues.</p>
 </li>
@@ -1661,8 +1772,8 @@ at startup and logs a deprecation warning:</p>
 <hr />
 <h2 id="rolling-back">Rolling back<a class="headerlink" href="#rolling-back" title="Permanent link">&para;</a></h2>
 <p>If an upgrade causes an unexpected issue, roll back by reverting <code>.vibewarden-version</code>:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;vX.Y.Z-previous&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.vibewarden-version
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>./vibew<span class="w"> </span>dev
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;vX.Y.Z-previous&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>.vibewarden-version
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>./vibew<span class="w"> </span>dev
 </span></code></pre></div>
 <p>Because the wrapper downloads a fresh binary matching <code>.vibewarden-version</code>, the rollback
 takes effect immediately on the next <code>vibew</code> invocation. No uninstall step is needed.</p>
