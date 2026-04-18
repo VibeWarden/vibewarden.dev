@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://vibewarden.dev/docs/deploy-reference/">
+        <link rel="canonical" href="https://vibewarden.dev/docs/multi-app/">
       
       
-        <link rel="prev" href="../multi-app/">
+        <link rel="prev" href="../deploy-to-vps/">
       
       
-        <link rel="next" href="../production-deployment/">
+        <link rel="next" href="../deploy-reference/">
       
       
       <link rel="icon" href="../assets/logo.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>Deploy Reference - VibeWarden</title>
+        <title>Multi-App Deployment - VibeWarden</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deploy-command-reference" class="md-skip">
+        <a href="#multi-app-deployment" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Deploy Reference
+              Multi-App Deployment
             
           </span>
         </div>
@@ -756,27 +756,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../multi-app/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Multi-App Deployment
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -793,7 +772,7 @@
           
   
   <span class="md-ellipsis">
-    Deploy Reference
+    Multi-App Deployment
   </span>
   
 
@@ -804,7 +783,7 @@
         
   
   <span class="md-ellipsis">
-    Deploy Reference
+    Multi-App Deployment
   </span>
   
 
@@ -826,250 +805,73 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
+  <a href="#when-to-use-this" class="md-nav__link">
     <span class="md-ellipsis">
-      Architecture
+      When to use this
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
-      Commands
+      How it works
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#vibew-deploy" class="md-nav__link">
-    <span class="md-ellipsis">
-      vibew deploy
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="vibew deploy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#flags" class="md-nav__link">
-    <span class="md-ellipsis">
-      Flags
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deploy-mode-detection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deploy mode detection
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-happens-on-first-deploy-single-app-no-domain" class="md-nav__link">
-    <span class="md-ellipsis">
-      What happens on first deploy (single-app, no domain)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-happens-on-first-deploy-multi-app-with-domain" class="md-nav__link">
-    <span class="md-ellipsis">
-      What happens on first deploy (multi-app, with domain)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-happens-when-adding-a-site" class="md-nav__link">
-    <span class="md-ellipsis">
-      What happens when adding a site
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-happens-on-subsequent-deploys-single-app" class="md-nav__link">
-    <span class="md-ellipsis">
-      What happens on subsequent deploys (single-app)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vibew-deploy-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      vibew deploy status
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="vibew deploy status">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#flags_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Flags
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vibew-deploy-logs" class="md-nav__link">
-    <span class="md-ellipsis">
-      vibew deploy logs
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="vibew deploy logs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#flags_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Flags
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
+  <a href="#server-side-directory-layout" class="md-nav__link">
     <span class="md-ellipsis">
-      Examples
+      Server-side directory layout
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Examples">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick start
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick start">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#first-deploy-with-secrets" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
-      First deploy with secrets
+      Prerequisites
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#subsequent-deploy-config-change-no-secret-rotation" class="md-nav__link">
+  <a href="#1-deploy-the-first-app" class="md-nav__link">
     <span class="md-ellipsis">
-      Subsequent deploy (config change, no secret rotation)
+      1. Deploy the first app
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#rotate-secrets-on-redeploy" class="md-nav__link">
+  <a href="#2-deploy-a-second-app" class="md-nav__link">
     <span class="md-ellipsis">
-      Rotate secrets on redeploy
+      2. Deploy a second app
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deploy-with-explicit-unseal-key" class="md-nav__link">
+  <a href="#3-verify-both-apps" class="md-nav__link">
     <span class="md-ellipsis">
-      Deploy with explicit unseal key
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deploy-via-non-standard-ssh-port-with-explicit-key" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deploy via non-standard SSH port with explicit key
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#check-service-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      Check service status
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tail-last-100-log-lines" class="md-nav__link">
-    <span class="md-ellipsis">
-      Tail last 100 log lines
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stream-logs-in-real-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      Stream logs in real-time
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#multi-app-deploy-a-second-app-to-the-same-vm" class="md-nav__link">
-    <span class="md-ellipsis">
-      Multi-app: deploy a second app to the same VM
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#multi-app-check-all-sites" class="md-nav__link">
-    <span class="md-ellipsis">
-      Multi-app: check all sites
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#multi-app-view-a-specific-sites-logs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Multi-app: view a specific site's logs
+      3. Verify both apps
     </span>
   </a>
   
@@ -1081,9 +883,105 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-errors" class="md-nav__link">
+  <a href="#per-site-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Common errors
+      Per-site configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hot-reload" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hot reload
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error isolation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-sites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing sites
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing sites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-status-of-all-sites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check status of all sites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-status-of-a-single-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check status of a single site
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-sidecar-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      View sidecar logs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-a-specific-sites-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      View a specific site's logs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLS
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#global-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Global configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
     </span>
   </a>
   
@@ -1102,6 +1000,27 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deploy-reference/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deploy Reference
+  </span>
+  
+
+      </a>
     </li>
   
 
@@ -1467,250 +1386,73 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
+  <a href="#when-to-use-this" class="md-nav__link">
     <span class="md-ellipsis">
-      Architecture
+      When to use this
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
-      Commands
+      How it works
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Commands">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#vibew-deploy" class="md-nav__link">
-    <span class="md-ellipsis">
-      vibew deploy
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="vibew deploy">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#flags" class="md-nav__link">
-    <span class="md-ellipsis">
-      Flags
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deploy-mode-detection" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deploy mode detection
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-happens-on-first-deploy-single-app-no-domain" class="md-nav__link">
-    <span class="md-ellipsis">
-      What happens on first deploy (single-app, no domain)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-happens-on-first-deploy-multi-app-with-domain" class="md-nav__link">
-    <span class="md-ellipsis">
-      What happens on first deploy (multi-app, with domain)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-happens-when-adding-a-site" class="md-nav__link">
-    <span class="md-ellipsis">
-      What happens when adding a site
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-happens-on-subsequent-deploys-single-app" class="md-nav__link">
-    <span class="md-ellipsis">
-      What happens on subsequent deploys (single-app)
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vibew-deploy-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      vibew deploy status
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="vibew deploy status">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#flags_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Flags
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#vibew-deploy-logs" class="md-nav__link">
-    <span class="md-ellipsis">
-      vibew deploy logs
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="vibew deploy logs">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#flags_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Flags
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#examples" class="md-nav__link">
+  <a href="#server-side-directory-layout" class="md-nav__link">
     <span class="md-ellipsis">
-      Examples
+      Server-side directory layout
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Examples">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick start
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick start">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#first-deploy-with-secrets" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
-      First deploy with secrets
+      Prerequisites
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#subsequent-deploy-config-change-no-secret-rotation" class="md-nav__link">
+  <a href="#1-deploy-the-first-app" class="md-nav__link">
     <span class="md-ellipsis">
-      Subsequent deploy (config change, no secret rotation)
+      1. Deploy the first app
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#rotate-secrets-on-redeploy" class="md-nav__link">
+  <a href="#2-deploy-a-second-app" class="md-nav__link">
     <span class="md-ellipsis">
-      Rotate secrets on redeploy
+      2. Deploy a second app
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deploy-with-explicit-unseal-key" class="md-nav__link">
+  <a href="#3-verify-both-apps" class="md-nav__link">
     <span class="md-ellipsis">
-      Deploy with explicit unseal key
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deploy-via-non-standard-ssh-port-with-explicit-key" class="md-nav__link">
-    <span class="md-ellipsis">
-      Deploy via non-standard SSH port with explicit key
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#check-service-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      Check service status
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tail-last-100-log-lines" class="md-nav__link">
-    <span class="md-ellipsis">
-      Tail last 100 log lines
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stream-logs-in-real-time" class="md-nav__link">
-    <span class="md-ellipsis">
-      Stream logs in real-time
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#multi-app-deploy-a-second-app-to-the-same-vm" class="md-nav__link">
-    <span class="md-ellipsis">
-      Multi-app: deploy a second app to the same VM
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#multi-app-check-all-sites" class="md-nav__link">
-    <span class="md-ellipsis">
-      Multi-app: check all sites
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#multi-app-view-a-specific-sites-logs" class="md-nav__link">
-    <span class="md-ellipsis">
-      Multi-app: view a specific site's logs
+      3. Verify both apps
     </span>
   </a>
   
@@ -1722,9 +1464,105 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-errors" class="md-nav__link">
+  <a href="#per-site-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      Common errors
+      Per-site configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hot-reload" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hot reload
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error isolation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-sites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Managing sites
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing sites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-status-of-all-sites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check status of all sites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check-status-of-a-single-site" class="md-nav__link">
+    <span class="md-ellipsis">
+      Check status of a single site
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-sidecar-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      View sidecar logs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-a-specific-sites-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      View a specific site's logs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLS
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#global-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Global configuration
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Limitations
     </span>
   </a>
   
@@ -1757,356 +1595,266 @@
   
 
 
-<h1 id="deploy-command-reference">Deploy Command Reference<a class="headerlink" href="#deploy-command-reference" title="Permanent link">&para;</a></h1>
-<p><code>vibew deploy</code> deploys the VibeWarden stack to a remote server over SSH. It
-generates runtime configuration locally, transfers files via <code>rsync</code>, and starts
-Docker Compose on the remote host.</p>
-<p>For a full walkthrough of deploying to a VPS for the first time, see
-<a href="../deploy-to-vps/">Deploy to VPS</a>. This page is the command reference.</p>
+<h1 id="multi-app-deployment">Multi-App Deployment<a class="headerlink" href="#multi-app-deployment" title="Permanent link">&para;</a></h1>
+<p>Deploy multiple apps to a single VM, each on its own subdomain, behind one
+shared VibeWarden sidecar. One VM, multiple apps, independent TLS certs.</p>
 <hr />
-<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<p>All operations use your system <code>ssh</code> and <code>rsync</code> binaries. Your SSH agent and
-<code>~/.ssh/config</code> settings (IdentityFile, ProxyJump, etc.) are honoured
-automatically. No SSH libraries are embedded in the binary.</p>
-<p>Remote directory layout: <code>~/vibewarden/&lt;project-name&gt;/</code></p>
-<p>The project name is derived from the absolute path of the <code>--config</code> file. When
-<code>--config</code> is omitted, the current directory name is used.</p>
+<h2 id="when-to-use-this">When to use this<a class="headerlink" href="#when-to-use-this" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Demo hosting</strong> -- deploy <code>app1.demo.example.com</code> and <code>app2.demo.example.com</code>
+  to one Hetzner VM instead of two.</li>
+<li><strong>Early-stage startup</strong> -- run 2-3 microservices on one box while budget is
+  tight; split to dedicated VMs later.</li>
+<li><strong>Side projects</strong> -- one VPS, multiple projects, each with full security.</li>
+</ul>
 <hr />
-<h2 id="commands">Commands<a class="headerlink" href="#commands" title="Permanent link">&para;</a></h2>
-<h3 id="vibew-deploy"><code>vibew deploy</code><a class="headerlink" href="#vibew-deploy" title="Permanent link">&para;</a></h3>
-<p>Deploy (or redeploy) the stack to a remote server.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>--target<span class="w"> </span>ssh://user@host<span class="w"> </span>--config<span class="w"> </span>vibewarden.prod.yaml
+<h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<p>Each app keeps its own <code>vibewarden.yaml</code> -- the same file you use locally with
+<code>vibew dev</code>. When you run <code>vibew deploy</code>, the CLI detects whether the target
+already has a VibeWarden sidecar:</p>
+<ul>
+<li><strong>First deploy with a <code>tls.domain</code></strong>: creates the sidecar + the first site.</li>
+<li><strong>Subsequent deploys</strong>: adds the new app alongside existing ones.</li>
+</ul>
+<p>There is no config merging. Each app's <code>vibewarden.yaml</code> is copied as-is to a
+per-site directory on the server. The sidecar reads all site configs and
+generates one Caddy route block per app, with host-based routing.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>                    +----------------------------------+
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  app1.example.com --&gt;|                                  |--&gt; app1 container :3000
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  app2.example.com --&gt;|  Single VibeWarden sidecar       |--&gt; app2 container :8080
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  app3.example.com --&gt;|  TLS + routing + per-app config  |--&gt; app3 container :3000
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                    +----------------------------------+
 </span></code></pre></div>
-<h4 id="flags">Flags<a class="headerlink" href="#flags" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Required</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--target</code></td>
-<td>Yes</td>
-<td>--</td>
-<td>Remote target in <code>ssh://user@host[:port]</code> format</td>
-</tr>
-<tr>
-<td><code>--config</code></td>
-<td>No</td>
-<td><code>./vibewarden.yaml</code></td>
-<td>Path to the vibewarden.yaml config file</td>
-</tr>
-<tr>
-<td><code>--ssh-key</code></td>
-<td>No</td>
-<td>SSH agent / <code>~/.ssh/config</code></td>
-<td>Path to the SSH private key file</td>
-</tr>
-<tr>
-<td><code>--secrets-from</code></td>
-<td>No</td>
-<td>--</td>
-<td>Path to a <code>.env</code>-format file whose KEY=VALUE pairs are seeded into OpenBao</td>
-</tr>
-<tr>
-<td><code>--rotate-secrets</code></td>
-<td>No</td>
-<td><code>false</code></td>
-<td>Re-seed secrets from <code>--secrets-from</code> on subsequent deploys</td>
-</tr>
-<tr>
-<td><code>--unseal-key</code></td>
-<td>No</td>
-<td>stored key</td>
-<td>OpenBao unseal key; overrides the key stored in <code>~/vibewarden/&lt;project&gt;/.openbao-credentials</code> on the remote</td>
-</tr>
-</tbody>
-</table>
-<h4 id="deploy-mode-detection">Deploy mode detection<a class="headerlink" href="#deploy-mode-detection" title="Permanent link">&para;</a></h4>
-<p><code>vibew deploy</code> automatically detects whether the target has an existing
-VibeWarden sidecar and selects the right strategy:</p>
-<table>
-<thead>
-<tr>
-<th>Existing sidecar?</th>
-<th><code>tls.domain</code> set?</th>
-<th>Behavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No</td>
-<td>Yes</td>
-<td><strong>Bootstrap</strong>: creates sidecar + first site (multi-app)</td>
-</tr>
-<tr>
-<td>No</td>
-<td>No</td>
-<td><strong>Legacy deploy</strong>: single-app mode (backward compatible)</td>
-</tr>
-<tr>
-<td>Yes</td>
-<td>Yes</td>
-<td><strong>Add site</strong>: adds app alongside existing sites</td>
-</tr>
-<tr>
-<td>Yes</td>
-<td>No</td>
-<td><strong>Error</strong>: <code>cannot add a site without a TLS domain</code></td>
-</tr>
-</tbody>
-</table>
-<p>Detection works by checking for <code>~/vibewarden/.sidecar/global.yaml</code> on the
-remote host via SSH (single round-trip).</p>
-<h4 id="what-happens-on-first-deploy-single-app-no-domain">What happens on first deploy (single-app, no domain)<a class="headerlink" href="#what-happens-on-first-deploy-single-app-no-domain" title="Permanent link">&para;</a></h4>
-<ol>
-<li>Generates runtime config (Docker Compose files, Kratos config) locally.</li>
-<li>Transfers files to the remote via <code>rsync</code>.</li>
-<li>Runs <code>docker compose up -d</code> on the remote.</li>
-<li>When <code>secrets.enabled: true</code> in vibewarden.yaml, bootstraps OpenBao:
-   initialises, unseals, enables KV v2 and AppRole, creates the vibewarden
-   policy and role, and seeds secrets from <code>--secrets-from</code> if provided.</li>
-<li>Prints the unseal key, root token, role ID, and secret ID. Save the unseal
-   key -- it is not shown again.</li>
-</ol>
-<h4 id="what-happens-on-first-deploy-multi-app-with-domain">What happens on first deploy (multi-app, with domain)<a class="headerlink" href="#what-happens-on-first-deploy-multi-app-with-domain" title="Permanent link">&para;</a></h4>
-<ol>
-<li>Creates the directory layout: <code>~/vibewarden/.sidecar/</code> and
-   <code>~/vibewarden/sites/&lt;project&gt;/</code>.</li>
-<li>Creates the shared <code>vibewarden-multiapp</code> Docker network.</li>
-<li>Writes <code>global.yaml</code> and the sidecar <code>docker-compose.yml</code>.</li>
-<li>Copies your <code>vibewarden.yaml</code> to <code>sites/&lt;project&gt;/vibewarden.yaml</code>.</li>
-<li>Renders and starts the per-app Docker Compose stack.</li>
-<li>Starts the sidecar container.</li>
-<li>Runs a health check via SSH.</li>
-</ol>
-<h4 id="what-happens-when-adding-a-site">What happens when adding a site<a class="headerlink" href="#what-happens-when-adding-a-site" title="Permanent link">&para;</a></h4>
-<ol>
-<li>Copies your <code>vibewarden.yaml</code> to <code>sites/&lt;project&gt;/vibewarden.yaml</code>.</li>
-<li>Renders and starts the per-app Docker Compose stack.</li>
-<li>Restarts the sidecar to pick up the new site configuration.</li>
-<li>Runs a health check via SSH.</li>
-</ol>
-<h4 id="what-happens-on-subsequent-deploys-single-app">What happens on subsequent deploys (single-app)<a class="headerlink" href="#what-happens-on-subsequent-deploys-single-app" title="Permanent link">&para;</a></h4>
-<ol>
-<li>Regenerates and transfers updated config.</li>
-<li>Restarts Docker Compose on the remote.</li>
-<li>Uses the stored unseal key from <code>~/vibewarden/&lt;project&gt;/.openbao-credentials</code>
-   unless <code>--unseal-key</code> is provided explicitly.</li>
-<li>Secrets are not re-seeded unless <code>--rotate-secrets</code> is passed.</li>
-</ol>
 <hr />
-<h3 id="vibew-deploy-status"><code>vibew deploy status</code><a class="headerlink" href="#vibew-deploy-status" title="Permanent link">&para;</a></h3>
-<p>Show Docker Compose service status on the remote.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+<h2 id="server-side-directory-layout">Server-side directory layout<a class="headerlink" href="#server-side-directory-layout" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>~/vibewarden/
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  .sidecar/
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    global.yaml              # VM-wide settings (listen port, log level, ACME email)
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    docker-compose.yml       # sidecar container
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  sites/
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    blog/
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>      vibewarden.yaml        # same file as local project
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>      docker-compose.yml     # per-app container (generated)
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    api/
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>      vibewarden.yaml
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>      docker-compose.yml
 </span></code></pre></div>
-<p>In multi-app mode (auto-detected), shows the sidecar status plus all sites.
-Use <code>--app</code> to target a specific site.</p>
-<h4 id="flags_1">Flags<a class="headerlink" href="#flags_1" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Required</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--target</code></td>
-<td>Yes</td>
-<td>--</td>
-<td>Remote target in <code>ssh://user@host[:port]</code> format</td>
-</tr>
-<tr>
-<td><code>--config</code></td>
-<td>No</td>
-<td><code>./vibewarden.yaml</code></td>
-<td>Path to vibewarden.yaml (used to derive the remote project directory)</td>
-</tr>
-<tr>
-<td><code>--ssh-key</code></td>
-<td>No</td>
-<td>SSH agent / <code>~/.ssh/config</code></td>
-<td>Path to the SSH private key file</td>
-</tr>
-<tr>
-<td><code>--app</code></td>
-<td>No</td>
-<td>(all sites)</td>
-<td>Target a specific site in multi-app mode (e.g. <code>--app blog</code>)</td>
-</tr>
-</tbody>
-</table>
+<ul>
+<li><code>global.yaml</code> is generated automatically on the first multi-app deploy.</li>
+<li>Each <code>sites/&lt;name&gt;/vibewarden.yaml</code> is your project's config, copied verbatim.</li>
+<li>Each <code>sites/&lt;name&gt;/docker-compose.yml</code> is generated from your config.</li>
+</ul>
 <hr />
-<h3 id="vibew-deploy-logs"><code>vibew deploy logs</code><a class="headerlink" href="#vibew-deploy-logs" title="Permanent link">&para;</a></h3>
-<p>Fetch Docker Compose logs from the remote.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+<h2 id="quick-start">Quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A VM with Docker installed (see <a href="../deploy-to-vps/">Deploy to VPS</a> steps 1-3)</li>
+<li>DNS A records pointing each subdomain to the VM's IP</li>
+<li><code>vibew</code> CLI installed locally</li>
+</ul>
+<h3 id="1-deploy-the-first-app">1. Deploy the first app<a class="headerlink" href="#1-deploy-the-first-app" title="Permanent link">&para;</a></h3>
+<p>From your first project's directory:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>--target<span class="w"> </span>ssh://root@203.0.113.10<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.yaml
 </span></code></pre></div>
-<p>In multi-app mode (auto-detected), shows sidecar logs by default. Use <code>--app</code>
-to view a specific site's logs.</p>
-<h4 id="flags_2">Flags<a class="headerlink" href="#flags_2" title="Permanent link">&para;</a></h4>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>Required</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>--target</code></td>
-<td>Yes</td>
-<td>--</td>
-<td>Remote target in <code>ssh://user@host[:port]</code> format</td>
-</tr>
-<tr>
-<td><code>--config</code></td>
-<td>No</td>
-<td><code>./vibewarden.yaml</code></td>
-<td>Path to vibewarden.yaml (used to derive the remote project directory)</td>
-</tr>
-<tr>
-<td><code>--ssh-key</code></td>
-<td>No</td>
-<td>SSH agent / <code>~/.ssh/config</code></td>
-<td>Path to the SSH private key file</td>
-</tr>
-<tr>
-<td><code>--lines</code></td>
-<td>No</td>
-<td><code>50</code></td>
-<td>Number of log lines to fetch (<code>0</code> = all)</td>
-</tr>
-<tr>
-<td><code>--follow</code> / <code>-f</code></td>
-<td>No</td>
-<td><code>false</code></td>
-<td>Stream log output continuously until cancelled (Ctrl-C)</td>
-</tr>
-<tr>
-<td><code>--app</code></td>
-<td>No</td>
-<td>(sidecar)</td>
-<td>Target a specific site in multi-app mode (e.g. <code>--app blog</code>)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
-<h3 id="first-deploy-with-secrets">First deploy with secrets<a class="headerlink" href="#first-deploy-with-secrets" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--secrets-from<span class="w"> </span>.env.prod
+<p>Your <code>vibewarden.yaml</code> must have <code>tls.domain</code> set. This is what triggers
+multi-app mode:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># vibewarden.yaml (blog project)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">app</span><span class="p">:</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/your-org/blog:latest</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">upstream</span><span class="p">:</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">app</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3000</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nt">tls</span><span class="p">:</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;blog.example.com&quot;</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nt">auth</span><span class="p">:</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jwt</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="nt">jwt</span><span class="p">:</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="nt">jwks_url</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://your-idp/.well-known/jwks.json&quot;</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://your-idp/&quot;</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">    </span><span class="nt">audience</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://api.example.com&quot;</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="nt">rate_limit</span><span class="p">:</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="nt">waf</span><span class="p">:</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </span></code></pre></div>
-<p>Save the unseal key from the output immediately.</p>
-<h3 id="subsequent-deploy-config-change-no-secret-rotation">Subsequent deploy (config change, no secret rotation)<a class="headerlink" href="#subsequent-deploy-config-change-no-secret-rotation" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
+<p>Expected output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Creating multi-app directory layout...
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Creating shared Docker network...
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Writing global.yaml...
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Writing sidecar docker-compose.yml...
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>Deploying site &quot;blog&quot;...
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>Starting sidecar...
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>Waiting for sidecar health check at http://localhost:443/_vibewarden/health (via SSH)...
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Bootstrap complete.
 </span></code></pre></div>
-<h3 id="rotate-secrets-on-redeploy">Rotate secrets on redeploy<a class="headerlink" href="#rotate-secrets-on-redeploy" title="Permanent link">&para;</a></h3>
+<h3 id="2-deploy-a-second-app">2. Deploy a second app<a class="headerlink" href="#2-deploy-a-second-app" title="Permanent link">&para;</a></h3>
+<p>From your second project's directory:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--rotate-secrets<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--secrets-from<span class="w"> </span>.env.prod
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--target<span class="w"> </span>ssh://root@203.0.113.10<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.yaml
 </span></code></pre></div>
-<h3 id="deploy-with-explicit-unseal-key">Deploy with explicit unseal key<a class="headerlink" href="#deploy-with-explicit-unseal-key" title="Permanent link">&para;</a></h3>
-<p>Use this when redeploying to a sealed OpenBao instance (e.g. after a server
-restart) if the stored credentials file was lost:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--unseal-key<span class="w"> </span><span class="s2">&quot;YOUR_UNSEAL_KEY_HERE&quot;</span>
+<p>This time the CLI detects the existing sidecar and adds the new site:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Deploying site &quot;api&quot; to existing sidecar...
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Restarting sidecar to load new site...
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Waiting for sidecar health check at http://localhost:443/_vibewarden/health (via SSH)...
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Site deployed.
 </span></code></pre></div>
-<h3 id="deploy-via-non-standard-ssh-port-with-explicit-key">Deploy via non-standard SSH port with explicit key<a class="headerlink" href="#deploy-via-non-standard-ssh-port-with-explicit-key" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://deploy@myserver.example.com:2222<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--ssh-key<span class="w"> </span>~/.ssh/deploy_ed25519
+<h3 id="3-verify-both-apps">3. Verify both apps<a class="headerlink" href="#3-verify-both-apps" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>https://blog.example.com/_vibewarden/health
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># {&quot;status&quot;:&quot;healthy&quot;}</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>curl<span class="w"> </span>https://api.example.com/_vibewarden/health
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># {&quot;status&quot;:&quot;healthy&quot;}</span>
 </span></code></pre></div>
-<h3 id="check-service-status">Check service status<a class="headerlink" href="#check-service-status" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
+<hr />
+<h2 id="per-site-configuration">Per-site configuration<a class="headerlink" href="#per-site-configuration" title="Permanent link">&para;</a></h2>
+<p>Each app's <code>vibewarden.yaml</code> is independent and self-contained. The file on
+the server is identical to the file in your local project. Each site can have
+its own:</p>
+<ul>
+<li>Auth mode and settings</li>
+<li>Rate limiting configuration</li>
+<li>WAF mode (<code>block</code> or <code>detect</code>)</li>
+<li>Security headers</li>
+<li>Upstream host and port</li>
+</ul>
+<p>Changing one site's config does not affect other sites.</p>
+<hr />
+<h2 id="hot-reload">Hot reload<a class="headerlink" href="#hot-reload" title="Permanent link">&para;</a></h2>
+<p>The sidecar watches <code>sites/*/vibewarden.yaml</code> for changes. When a config file
+is added, modified, or removed, the sidecar reloads the affected site's Caddy
+routes without dropping connections to other sites.</p>
+<p>Changes are debounced (500ms per site) to handle editors that write files in
+multiple steps.</p>
+<hr />
+<h2 id="error-isolation">Error isolation<a class="headerlink" href="#error-isolation" title="Permanent link">&para;</a></h2>
+<p>A broken config in one site does not take down other sites:</p>
+<ul>
+<li>If <code>sites/api/vibewarden.yaml</code> has a syntax error, the <code>api</code> site is marked
+  as errored. The <code>blog</code> site continues serving normally.</li>
+<li>The errored site appears with <code>Error</code> status in <code>vibew deploy status</code>.</li>
+<li>Fix the config file and the sidecar automatically reloads the corrected site.</li>
+</ul>
+<hr />
+<h2 id="managing-sites">Managing sites<a class="headerlink" href="#managing-sites" title="Permanent link">&para;</a></h2>
+<h3 id="check-status-of-all-sites">Check status of all sites<a class="headerlink" href="#check-status-of-all-sites" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://root@203.0.113.10
 </span></code></pre></div>
-<h3 id="tail-last-100-log-lines">Tail last 100 log lines<a class="headerlink" href="#tail-last-100-log-lines" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
+<p>Output:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>=== Sidecar ===
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>NAME              STATUS
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>vibewarden        Up (healthy)
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>=== Site: api ===
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>NAME                    STATUS
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>vibewarden-api-app      Up (healthy)
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>=== Site: blog ===
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>NAME                    STATUS
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>vibewarden-blog-app     Up (healthy)
 </span></code></pre></div>
-<h3 id="stream-logs-in-real-time">Stream logs in real-time<a class="headerlink" href="#stream-logs-in-real-time" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--follow
+<h3 id="check-status-of-a-single-site">Check status of a single site<a class="headerlink" href="#check-status-of-a-single-site" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://root@203.0.113.10<span class="w"> </span>--app<span class="w"> </span>blog
+</span></code></pre></div>
+<h3 id="view-sidecar-logs">View sidecar logs<a class="headerlink" href="#view-sidecar-logs" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://root@203.0.113.10
+</span></code></pre></div>
+<h3 id="view-a-specific-sites-logs">View a specific site's logs<a class="headerlink" href="#view-a-specific-sites-logs" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://root@203.0.113.10<span class="w"> </span>--app<span class="w"> </span>blog<span class="w"> </span>--follow
 </span></code></pre></div>
 <p>Press Ctrl-C to stop streaming.</p>
-<h3 id="multi-app-deploy-a-second-app-to-the-same-vm">Multi-app: deploy a second app to the same VM<a class="headerlink" href="#multi-app-deploy-a-second-app-to-the-same-vm" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
-</span></code></pre></div>
-<p>The CLI detects the existing sidecar and adds the new site. The config must
-have <code>tls.domain</code> set.</p>
-<h3 id="multi-app-check-all-sites">Multi-app: check all sites<a class="headerlink" href="#multi-app-check-all-sites" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
-</span></code></pre></div>
-<h3 id="multi-app-view-a-specific-sites-logs">Multi-app: view a specific site's logs<a class="headerlink" href="#multi-app-view-a-specific-sites-logs" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--app<span class="w"> </span>blog<span class="w"> </span>--follow
-</span></code></pre></div>
 <hr />
-<h2 id="common-errors">Common errors<a class="headerlink" href="#common-errors" title="Permanent link">&para;</a></h2>
+<h2 id="tls">TLS<a class="headerlink" href="#tls" title="Permanent link">&para;</a></h2>
+<p>Caddy auto-provisions a TLS certificate for each site's domain via ACME
+(Let's Encrypt). Each site can use a different TLS provider:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Site A: Let&#39;s Encrypt</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nt">tls</span><span class="p">:</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;blog.example.com&quot;</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Site B: self-signed (for staging)</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="nt">tls</span><span class="p">:</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">self-signed</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">  </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;staging.example.com&quot;</span>
+</span></code></pre></div>
+<p>DNS A records for all subdomains must point to the VM's IP before deploying.</p>
+<hr />
+<h2 id="global-configuration">Global configuration<a class="headerlink" href="#global-configuration" title="Permanent link">&para;</a></h2>
+<p>The <code>global.yaml</code> file is generated automatically. It controls VM-wide settings:</p>
 <table>
 <thead>
 <tr>
-<th>Error</th>
-<th>Cause</th>
-<th>Fix</th>
+<th>Field</th>
+<th>Default</th>
+<th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>--target is required (e.g. ssh://user@host)</code></td>
-<td>Missing <code>--target</code> flag</td>
-<td>Add <code>--target ssh://user@host</code></td>
+<td><code>listen_port</code></td>
+<td><code>443</code></td>
+<td>Port the sidecar binds to for HTTPS</td>
 </tr>
 <tr>
-<td><code>invalid --target: scheme must be "ssh"</code></td>
-<td>Wrong URL scheme (e.g. <code>http://</code>)</td>
-<td>Use <code>ssh://user@host</code> format</td>
+<td><code>log_level</code></td>
+<td><code>info</code></td>
+<td>Sidecar log verbosity (<code>debug</code>, <code>info</code>, <code>warn</code>, <code>error</code>)</td>
 </tr>
 <tr>
-<td><code>openbao bootstrap: ...</code></td>
-<td>OpenBao initialisation failed</td>
-<td>Check remote Docker logs; verify port 8200 is reachable on the remote</td>
+<td><code>admin_token</code></td>
+<td>(empty)</td>
+<td>Bearer token for the sidecar admin API</td>
 </tr>
 <tr>
-<td><code>loading config: ...</code></td>
-<td>Invalid or missing vibewarden.yaml</td>
-<td>Run <code>vibew validate --config &lt;path&gt;</code> locally</td>
+<td><code>acme_email</code></td>
+<td>(empty)</td>
+<td>Email for ACME certificate registration</td>
 </tr>
 <tr>
-<td><code>cannot add a site without a TLS domain</code></td>
-<td>Adding a site to a multi-app host without <code>tls.domain</code></td>
-<td>Set <code>tls.domain</code> in vibewarden.yaml</td>
-</tr>
-<tr>
-<td><code>rsync: connection refused</code></td>
-<td>SSH not reachable</td>
-<td>Verify <code>ssh user@host echo OK</code> works first</td>
+<td><code>listen_host</code></td>
+<td><code>0.0.0.0</code></td>
+<td>Address the sidecar binds to</td>
 </tr>
 </tbody>
 </table>
+<p>To customize, edit <code>~/vibewarden/.sidecar/global.yaml</code> on the server:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># global.yaml</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nt">listen_port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="nt">log_level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">info</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="nt">acme_email</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ops@example.com&quot;</span>
+</span></code></pre></div>
+<hr />
+<h2 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h2>
+<p>These are planned for future phases:</p>
+<ul>
+<li><strong>Shared Kratos</strong> -- each site runs its own auth config. A shared Kratos
+  instance across sites is deferred to Phase 2.</li>
+<li><strong>Migration tooling</strong> -- no automated conversion from a single-app deployment
+  to multi-app layout. Phase 3.</li>
+<li><strong>App removal</strong> -- no <code>vibew deploy remove</code> command yet. To remove a site
+  manually, delete its directory (<code>rm -rf ~/vibewarden/sites/&lt;name&gt;</code>) and
+  restart the sidecar.</li>
+<li><strong>Local multi-app</strong> -- <code>vibew dev</code> remains single-app. Multi-app is
+  deploy-time only.</li>
+</ul>
 <hr />
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="../deploy-to-vps/">Deploy to VPS</a> -- full first-deploy walkthrough</li>
-<li><a href="../multi-app/">Multi-App Deployment</a> -- multiple apps on one VM</li>
-<li><a href="../secret-management/">Secret Management</a> -- OpenBao configuration details</li>
-<li><a href="../production-hardening/">Production Hardening</a> -- post-deploy security checklist</li>
+<li><a href="../deploy-to-vps/">Deploy to VPS</a> -- single-app deploy walkthrough</li>
+<li><a href="../deploy-reference/">Deploy Reference</a> -- full flag reference for all
+  <code>vibew deploy</code> commands</li>
+<li><a href="../configuration/">Configuration</a> -- <code>vibewarden.yaml</code> field reference</li>
 </ul>
 
 
