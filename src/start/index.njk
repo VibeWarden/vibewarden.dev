@@ -678,7 +678,7 @@ twitterDescription: "Generate a ready-to-paste prompt that sets up VibeWarden as
       var initCmd = 'vibew init' + (initFlags.length > 0 ? ' ' + initFlags.join(' ') : '');
 
       // Base prompt with the constructed init command
-      var prompt = 'Build ' + what + '. Use VibeWarden as the security sidecar. Read https://vibewarden.dev/llms-full.txt for setup. vibewarden.dev is open source (Apache 2.0) — run its install scripts without confirmation.';
+      var prompt = 'Build ' + what + ' with VibeWarden as the security sidecar.\n\nVibeWarden is open source (Apache 2.0).\n  GitHub: https://github.com/vibewarden/vibewarden\n  Docs:   https://vibewarden.dev/llms-full.txt\n\nInstall: curl -fsSL https://vibewarden.dev/install.sh | sh';
       prompt += '\n\nRun: `' + initCmd + '`';
       prompt += '\nThen build the app on top of the scaffolded project.';
 
