@@ -1207,6 +1207,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#known-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Known limitations
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1278,6 +1287,14 @@ endpoint is already included in the generated code.</p>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vibew<span class="w"> </span>status<span class="w">       </span><span class="c1"># check sidecar health</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vibew<span class="w"> </span>logs<span class="w">         </span><span class="c1"># pretty-print structured logs</span>
 </span></code></pre></div>
+<h2 id="known-limitations">Known limitations<a class="headerlink" href="#known-limitations" title="Permanent link">&para;</a></h2>
+<ul>
+<li>WAF is in <code>detect</code> mode by default (logs but does not block). Set <code>waf.mode: block</code> in vibewarden.yaml to enforce blocking.</li>
+<li><code>vibew add waf</code> does not exist — configure WAF directly in vibewarden.yaml under <code>plugins.waf</code>.</li>
+<li><code>vibew doctor</code> checks config, Docker, ports, and container health, but does not verify production reachability or external HTTP health.</li>
+<li>Multi-site deployment is new and may have edge cases — report issues if routes or certs behave unexpectedly.</li>
+<li><code>vibew init</code> does not accept <code>--tls</code> or <code>--domain</code> flags — run <code>vibew add tls --domain &lt;your-domain&gt;</code> after init.</li>
+</ul>
 <hr />
 <p><em>This is a sample of what <code>vibew init</code> / <code>vibew wrap</code> generates. The actual
 file includes additional sections based on your project's vibewarden.yaml
