@@ -659,27 +659,31 @@ twitterDescription: "Generate a ready-to-paste prompt that sets up VibeWarden as
       var what = document.getElementById('whatField').value.trim();
       if (!what) return;
 
-      // Build vibew init command with flags
-      var initFlags = [];
+      // Auth config
       var authInput = document.getElementById('featAuth');
       var authEnabled = authInput && !authInput.disabled;
-      if (authEnabled) {
-        initFlags.push('--auth');
-      }
 
       // Deploy target
       var deployTarget = (document.getElementById('deployTarget').value || '').trim();
       var isDomain = deployTarget && !/^\d+\.\d+\.\d+\.\d+$/.test(deployTarget);
 
+      // Base prompt — vibew init scaffolds in cwd, no flags needed
+      var prompt = 'Build ' + what + ' with VibeWarden as the security sidecar.\n\nVibeWarden is open source (Apache 2.0).\n  GitHub: https://github.com/vibewarden/vibewarden\n  Docs:   https://vibewarden.dev/llms-full.txt\n\nInstall: curl -fsSL https://vibewarden.dev/install.sh | sh\n  (downloads a single Go binary)';
+      prompt += '\n\nSetup:\n  mkdir myapp && cd myapp\n  vibew init';
+
+      // Post-init feature commands (vibew add)
+      var addCmds = [];
+      if (authEnabled) {
+        addCmds.push('vibew add auth');
+      }
       if (isDomain) {
-        initFlags.push('--tls --domain ' + deployTarget);
+        addCmds.push('vibew add tls --domain ' + deployTarget);
+      }
+      for (var i = 0; i < addCmds.length; i++) {
+        prompt += '\n  ' + addCmds[i];
       }
 
-      var initCmd = 'vibew init' + (initFlags.length > 0 ? ' ' + initFlags.join(' ') : '');
-
-      // Base prompt with the constructed init command
-      var prompt = 'Build ' + what + ' with VibeWarden as the security sidecar.\n\nVibeWarden is open source (Apache 2.0).\n  GitHub: https://github.com/vibewarden/vibewarden\n  Docs:   https://vibewarden.dev/llms-full.txt\n\nInstall: curl -fsSL https://vibewarden.dev/install.sh | sh';
-      prompt += '\n\nRun: `' + initCmd + '`';
+      prompt += '\n\nRun: `vibew dev`';
       prompt += '\nThen build the app on top of the scaffolded project.';
 
       // Auth type detail
@@ -699,10 +703,10 @@ twitterDescription: "Generate a ready-to-paste prompt that sets up VibeWarden as
       for (var i = 0; i < featureBoxes.length; i++) {
         var key = featureBoxes[i].value;
         switch (key) {
-          case 'waf': yamlFeatures.push('WAF protection (`waf.enabled: true`)'); break;
+          case 'waf': yamlFeatures.push('WAF protection (`vibew add waf` or set `waf.enabled: true`)'); break;
           case 'prompt': yamlFeatures.push('prompt injection detection on egress routes'); break;
           case 'webhook': yamlFeatures.push('webhook signature verification'); break;
-          case 'secrets': yamlFeatures.push('secret management with OpenBao (`secrets.enabled: true`)'); break;
+          case 'secrets': yamlFeatures.push('secret management (`secrets.enabled: true` in vibewarden.yaml)'); break;
           case 'ipfilter': yamlFeatures.push('IP filtering (`ip_filter.enabled: true`)'); break;
         }
       }
@@ -713,9 +717,9 @@ twitterDescription: "Generate a ready-to-paste prompt that sets up VibeWarden as
       // Deploy
       if (deployTarget) {
         if (isDomain) {
-          prompt += '\n\nDeploy to `' + deployTarget + '` using `vibew deploy`. Docker is installed on the server and DNS is configured.';
+          prompt += '\n\nDeploy to `' + deployTarget + '` using `vibew deploy --target ssh://root@' + deployTarget + '`. Install Docker on the server if not already installed. DNS is configured.';
         } else {
-          prompt += '\n\nDeploy to server `' + deployTarget + '` using `vibew deploy`. Docker is installed.';
+          prompt += '\n\nDeploy to server `' + deployTarget + '` using `vibew deploy --target ssh://root@' + deployTarget + '`. Install Docker on the server if not already installed.';
         }
       } else {
         prompt += '\n\nWhen the app is ready, deploy using `vibew deploy`.';
