@@ -1959,15 +1959,23 @@ VibeWarden wired up before you write any app code. The typical flow:</p>
 </tbody>
 </table>
 <h3 id="what-init-generates">What <code>init</code> generates<a class="headerlink" href="#what-init-generates" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>./                           # current directory (you mkdir + cd first)
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  vibewarden.yaml            # Main config — TLS self-signed, rate limit enabled
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  .vibewarden-version        # Pinned VibeWarden version
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  Dockerfile                 # Placeholder with examples for common stacks
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  .gitignore
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  PROJECT.md                 # Project description (only when --describe is given)
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  AGENTS.md                  # AI agent context (tool-agnostic)
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  AGENTS-VIBEWARDEN.md       # VibeWarden-specific instructions for agents
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>./                                # current directory (you mkdir + cd first)
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  vibewarden.yaml                 # Local dev config (TLS self-signed, port 8443)
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  vibewarden.production.yaml      # Production overrides (letsencrypt, port 443)
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  .vibewarden-version             # Pinned VibeWarden version
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  Dockerfile                      # Placeholder with examples for common stacks
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>  .gitignore
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>  PROJECT.md                      # Project description (only when --describe is given)
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>  AGENTS.md                       # AI agent context (tool-agnostic)
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  AGENTS-VIBEWARDEN.md            # VibeWarden-specific instructions for agents
 </span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Environment separation</p>
+<p><code>vibewarden.yaml</code> is your local dev config. <code>vibewarden.production.yaml</code>
+contains production overrides. <code>vibew deploy</code> deep-merges the production
+overrides automatically. Never put production-only settings in
+<code>vibewarden.yaml</code>.</p>
+</div>
 <p><code>init</code> does <strong>not</strong> generate app source code. It sets up the sidecar
 and the agent context files so that your AI assistant can write the app
 code inside a project that already has TLS, rate limiting, and the
@@ -2206,9 +2214,9 @@ OIDC provider:</p>
 <h3 id="enable-tls-for-production">Enable TLS for production<a class="headerlink" href="#enable-tls-for-production" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>./vibew<span class="w"> </span>add<span class="w"> </span>tls<span class="w"> </span>--domain<span class="w"> </span>myapp.example.com
 </span></code></pre></div>
-<p>This sets <code>tls.provider: letsencrypt</code> and <code>tls.domain</code> in <code>vibewarden.yaml</code>.
-On the next <code>vibew generate</code> + <code>docker compose up</code>, Caddy obtains a certificate
-from Let's Encrypt automatically.</p>
+<p>This sets <code>tls.provider: letsencrypt</code> and <code>tls.domain</code> in <code>vibewarden.yaml</code> and
+writes the domain to <code>vibewarden.production.yaml</code>. When you run <code>vibew deploy</code>,
+the production overrides (letsencrypt, port 443) are merged automatically.</p>
 <p>See the <a href="../production-deployment/">Production Deployment guide</a> for the full
 production checklist.</p>
 <h3 id="validate-your-config">Validate your config<a class="headerlink" href="#validate-your-config" title="Permanent link">&para;</a></h3>
