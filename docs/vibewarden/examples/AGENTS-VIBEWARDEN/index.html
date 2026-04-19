@@ -1217,6 +1217,24 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#deploy-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploy model
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extra-services-database-cache-etc" class="md-nav__link">
+    <span class="md-ellipsis">
+      Extra services (database, cache, etc.)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#known-limitations" class="md-nav__link">
     <span class="md-ellipsis">
       Known limitations
@@ -1320,6 +1338,24 @@ endpoint is already included in the generated code.</p>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/app/server&quot;</span><span class="p">]</span>
 </span></code></pre></div></p>
+<h2 id="deploy-model">Deploy model<a class="headerlink" href="#deploy-model" title="Permanent link">&para;</a></h2>
+<p><code>vibew build</code> builds the Docker image locally from your Dockerfile. <code>vibew deploy</code>
+transfers the pre-built image to the server via <code>docker save | rsync | docker load</code>.
+No source code is ever copied to the production server -- the image must be
+production-ready (all dependencies installed, assets compiled, etc.).</p>
+<p>Use <code>app.environment</code> in vibewarden.yaml for runtime configuration:
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">app</span><span class="p">:</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;.&quot;</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgres://user:pass@db:5432/myapp&quot;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nt">REDIS_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;redis://redis:6379&quot;</span>
+</span></code></pre></div></p>
+<p>Do NOT bake secrets into the Docker image. Use environment variables or
+the secrets plugin (OpenBao) for sensitive values.</p>
+<h2 id="extra-services-database-cache-etc">Extra services (database, cache, etc.)<a class="headerlink" href="#extra-services-database-cache-etc" title="Permanent link">&para;</a></h2>
+<p>Create <code>docker-compose.override.yml</code> next to your <code>vibewarden.yaml</code> for additional
+services like PostgreSQL or Redis. Docker Compose auto-merges it with the
+generated compose. VibeWarden never overwrites this file.</p>
 <h2 id="known-limitations">Known limitations<a class="headerlink" href="#known-limitations" title="Permanent link">&para;</a></h2>
 <ul>
 <li>WAF is in <code>detect</code> mode by default (logs but does not block). Set <code>waf.mode: block</code> in vibewarden.yaml to enforce blocking.</li>
