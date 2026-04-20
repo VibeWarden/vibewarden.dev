@@ -1290,6 +1290,9 @@ endpoint is already included in the generated code.</p>
 <p>Role-based path restrictions can be configured in vibewarden.yaml via
 <code>auth.role_paths</code> (only when <code>auth.mode: kratos</code>). Requests to restricted
 paths by users without the required role receive HTTP 403.</p>
+<p>For frontend JS, use <code>GET /_vibewarden/me</code> instead of reading headers directly.
+Returns <code>{"id","email","verified","role"}</code> when authenticated, 401 when not.
+Available when <code>auth.mode: kratos</code> is enabled.</p>
 <p>On public paths (<code>auth.public_paths</code>), these headers are set when a valid session
 cookie is present but are absent for anonymous visitors. Your app code should
 treat them as optional on public paths and required on protected paths.</p>
