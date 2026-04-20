@@ -2375,13 +2375,13 @@ VibeWarden falls back to <code>host.docker.internal</code>.</p>
 <td><code>tls.domain</code></td>
 <td>string</td>
 <td><code>""</code></td>
-<td>Domain for the TLS certificate. Required when <code>provider</code> is <code>letsencrypt</code></td>
+<td>Domain for the TLS certificate. Required for all ACME providers</td>
 </tr>
 <tr>
 <td><code>tls.provider</code></td>
 <td>string</td>
 <td><code>""</code></td>
-<td>Certificate provider: <code>letsencrypt</code> (or <code>acme</code>), <code>self-signed</code>, or <code>external</code></td>
+<td>Certificate provider: <code>letsencrypt</code> (with LE→ZeroSSL→Buypass fallback), <code>zerossl</code>, <code>buypass</code>, <code>letsencrypt-staging</code>, <code>self-signed</code>, or <code>external</code></td>
 </tr>
 <tr>
 <td><code>tls.cert_path</code></td>
