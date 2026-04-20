@@ -1181,6 +1181,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#secrets-plugin-fails-to-start-missing-master-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Secrets plugin fails to start -- missing master key
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1513,6 +1522,15 @@
   <a href="#containers-stuck-in-a-restart-loop" class="md-nav__link">
     <span class="md-ellipsis">
       Containers stuck in a restart loop
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secrets-plugin-fails-to-start-missing-master-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      Secrets plugin fails to start -- missing master key
     </span>
   </a>
   
@@ -1866,6 +1884,27 @@ the project was cloned without the generated directory (it is gitignored by defa
 In production, investigate the log output before taking destructive action.</p>
 </div>
 <hr />
+<h3 id="secrets-plugin-fails-to-start-missing-master-key">Secrets plugin fails to start -- missing master key<a class="headerlink" href="#secrets-plugin-fails-to-start-missing-master-key" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>secrets plugin: builtin store: master key not configured
+</span></code></pre></div>
+<p><strong>Cause</strong></p>
+<p>The <code>VIBEWARDEN_SECRETS_MASTER_KEY</code> environment variable is not set and
+<code>secrets.builtin.key_file</code> is not configured in <code>vibewarden.yaml</code>. The built-in
+encrypted secret store requires a 32-byte master key to encrypt and decrypt secrets.</p>
+<p><strong>Fix</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VIBEWARDEN_SECRETS_MASTER_KEY</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="k">)</span>
+</span></code></pre></div>
+<p>Or set <code>secrets.builtin.key_file</code> in <code>vibewarden.yaml</code> pointing to a file that contains the
+hex-encoded 32-byte key:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nt">secrets</span><span class="p">:</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="nt">store</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">builtin</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="nt">builtin</span><span class="p">:</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">    </span><span class="nt">key_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/master.key</span>
+</span></code></pre></div>
+<p>Save the master key somewhere safe -- if you lose it, your secrets are unrecoverable.</p>
+<hr />
 <h2 id="exit-codes">Exit codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1886,7 +1925,7 @@ In production, investigate the log output before taking destructive action.</p>
 </tbody>
 </table>
 <p>This lets you gate a startup script on a clean doctor run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>vibew<span class="w"> </span>doctor<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vibew<span class="w"> </span>dev
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>vibew<span class="w"> </span>doctor<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vibew<span class="w"> </span>dev
 </span></code></pre></div>
 
 
