@@ -1188,6 +1188,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#unknown-configuration-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unknown configuration key(s)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#generated-files-missing" class="md-nav__link">
     <span class="md-ellipsis">
       Generated files missing
@@ -1579,6 +1588,15 @@
   <a href="#config-file-not-found-or-invalid" class="md-nav__link">
     <span class="md-ellipsis">
       Config file not found or invalid
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unknown-configuration-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unknown configuration key(s)
     </span>
   </a>
   
@@ -1990,23 +2008,43 @@ not exist or you are running the command from the wrong directory.</p>
 <p>Common mistakes: tabs instead of spaces, missing quotes around values that contain
 colons, or misaligned indentation.</p>
 <hr />
+<h3 id="unknown-configuration-keys">Unknown configuration key(s)<a class="headerlink" href="#unknown-configuration-keys" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Configuration invalid: config vibewarden.yaml: unknown key(s): tls.dmain
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Error: loading config: ...
+</span></code></pre></div>
+<p><strong>Cause</strong></p>
+<p><code>vibew validate</code> and <code>vibew deploy</code> run the strict loader (ADR-082): every key in
+your <code>vibewarden.yaml</code> and sibling <code>vibewarden.production.yaml</code> must map to a field
+in the schema. A typo, a removed key, or a rename — such as <code>docker_compose</code>
+(the old name) instead of <code>compose_file</code> — is reported instead of silently dropped.</p>
+<p><strong>Fix</strong></p>
+<p>Open the offending file and correct the key. The authoritative schema lives in
+<a href="https://github.com/vibewarden/vibewarden/blob/main/internal/config/config.go"><code>internal/config/config.go</code></a>;
+user-facing docs in <a href="../configuration/"><code>docs/configuration.md</code></a> and the fully
+annotated <code>vibewarden.reference.yaml</code> mirror it. Every <code>mapstructure:"..."</code> tag in
+<code>config.go</code> is a valid key.</p>
+<p>The runtime path (<code>vibewarden serve</code>) stays lenient per ADR-065 so existing
+deployments keep running across upgrades — strict rejection only fires at
+validate/deploy time.</p>
+<hr />
 <h3 id="generated-files-missing">Generated files missing<a class="headerlink" href="#generated-files-missing" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>[WARN]  Generated files  .vibewarden/generated/docker-compose.yml not found — run &#39;vibew generate&#39; first
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>[WARN]  Generated files  .vibewarden/generated/docker-compose.yml not found — run &#39;vibew generate&#39; first
 </span></code></pre></div>
 <p><strong>Cause</strong></p>
 <p>The <code>vibew generate</code> step has not been run, the <code>.vibewarden/</code> directory was deleted, or
 the project was cloned without the generated directory (it is gitignored by default).</p>
 <p><strong>Fix</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>vibew<span class="w"> </span>generate
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c1"># then start the stack</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>vibew<span class="w"> </span>dev
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>vibew<span class="w"> </span>generate
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># then start the stack</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>vibew<span class="w"> </span>dev
 </span></code></pre></div>
 <hr />
 <h3 id="kratos-unreachable">Kratos unreachable<a class="headerlink" href="#kratos-unreachable" title="Permanent link">&para;</a></h3>
 <p>Container health failures often manifest as a Kratos container in a non-healthy state:</p>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>[FAIL]  Container health  unhealthy containers: [kratos (running/unhealthy)]
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>[FAIL]  Container health  unhealthy containers: [kratos (running/unhealthy)]
 </span></code></pre></div>
 <p><strong>Possible causes and fixes</strong></p>
 <table>
@@ -2040,20 +2078,20 @@ the project was cloned without the generated directory (it is gitignored by defa
 </tbody>
 </table>
 <p>View Kratos logs directly:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>logs<span class="w"> </span>kratos<span class="w"> </span>--tail<span class="w"> </span><span class="m">50</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>logs<span class="w"> </span>kratos<span class="w"> </span>--tail<span class="w"> </span><span class="m">50</span>
 </span></code></pre></div>
 <hr />
 <h3 id="containers-stuck-in-a-restart-loop">Containers stuck in a restart loop<a class="headerlink" href="#containers-stuck-in-a-restart-loop" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>[FAIL]  Container health  unhealthy containers: [postgres (restarting/)]
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>[FAIL]  Container health  unhealthy containers: [postgres (restarting/)]
 </span></code></pre></div>
 <p><strong>Fix</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Check the logs for the failing container</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>logs<span class="w"> </span>postgres<span class="w"> </span>--tail<span class="w"> </span><span class="m">100</span>
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Common fix: wipe the volume and let Postgres reinitialise</span>
-</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>down<span class="w"> </span>-v
-</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>vibew<span class="w"> </span>dev
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Check the logs for the failing container</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>logs<span class="w"> </span>postgres<span class="w"> </span>--tail<span class="w"> </span><span class="m">100</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Common fix: wipe the volume and let Postgres reinitialise</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>down<span class="w"> </span>-v
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>vibew<span class="w"> </span>dev
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Data loss</p>
@@ -2063,54 +2101,54 @@ In production, investigate the log output before taking destructive action.</p>
 <hr />
 <h3 id="secrets-plugin-fails-to-start-missing-master-key">Secrets plugin fails to start -- missing master key<a class="headerlink" href="#secrets-plugin-fails-to-start-missing-master-key" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>secrets plugin: builtin store: master key not configured
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>secrets plugin: builtin store: master key not configured
 </span></code></pre></div>
 <p><strong>Cause</strong></p>
 <p>The <code>VIBEWARDEN_SECRETS_MASTER_KEY</code> environment variable is not set and
 <code>secrets.builtin.key_file</code> is not configured in <code>vibewarden.yaml</code>. The built-in
 encrypted secret store requires a 32-byte master key to encrypt and decrypt secrets.</p>
 <p><strong>Fix</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VIBEWARDEN_SECRETS_MASTER_KEY</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="k">)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VIBEWARDEN_SECRETS_MASTER_KEY</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="k">)</span>
 </span></code></pre></div>
 <p>Or set <code>secrets.builtin.key_file</code> in <code>vibewarden.yaml</code> pointing to a file that contains the
 hex-encoded 32-byte key:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nt">secrets</span><span class="p">:</span>
-</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="nt">store</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">builtin</span>
-</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="nt">builtin</span><span class="p">:</span>
-</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">    </span><span class="nt">key_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/master.key</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nt">secrets</span><span class="p">:</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="nt">store</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">builtin</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="nt">builtin</span><span class="p">:</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span><span class="nt">key_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/master.key</span>
 </span></code></pre></div>
 <p>Save the master key somewhere safe -- if you lose it, your secrets are unrecoverable.</p>
 <hr />
 <h3 id="architecture-mismatch-between-build-and-deploy-target">Architecture mismatch between build and deploy target<a class="headerlink" href="#architecture-mismatch-between-build-and-deploy-target" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>[WARN]  Arch compatibility  local build is arm64 but remote server is amd64
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>[WARN]  Arch compatibility  local build is arm64 but remote server is amd64
 </span></code></pre></div>
 <p><strong>Cause</strong></p>
 <p>You built the Docker image on Apple Silicon (arm64) without specifying the
 target platform. The remote server runs amd64 and cannot execute the image.</p>
 <p><strong>Fix</strong></p>
 <p>Rebuild with the correct platform:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>vibew<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>vibew<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64
 </span></code></pre></div>
 <p>Then redeploy:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
 </span></code></pre></div>
 <hr />
 <h3 id="remote-tls-certificate-expiring-or-invalid">Remote TLS certificate expiring or invalid<a class="headerlink" href="#remote-tls-certificate-expiring-or-invalid" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>[WARN]  Remote TLS cert  certificate expires in 12 days
-</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>[FAIL]  Remote TLS cert  certificate expired 2 days ago
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>[WARN]  Remote TLS cert  certificate expires in 12 days
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>[FAIL]  Remote TLS cert  certificate expired 2 days ago
 </span></code></pre></div>
 <p><strong>Cause</strong></p>
 <p>The TLS certificate on the remote host is nearing expiry or has already expired.
 If you are using <code>tls.provider: letsencrypt</code>, the ACME renewal may have failed.</p>
 <p><strong>Fix</strong></p>
 <p>Inspect the certificate details:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>vibew<span class="w"> </span>tls<span class="w"> </span>status<span class="w"> </span>--domain<span class="w"> </span>example.com<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>vibew<span class="w"> </span>tls<span class="w"> </span>status<span class="w"> </span>--domain<span class="w"> </span>example.com<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
 </span></code></pre></div>
 <p>If renewal failed, check the sidecar logs for ACME errors:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://user@host<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://user@host<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
 </span></code></pre></div>
 <p>Common causes: DNS not pointing to the server, port 80 blocked (HTTP-01 challenge
 requires it), or rate limits exhausted (switch to ZeroSSL via <code>tls.acme_ca</code>).</p>
@@ -2135,7 +2173,7 @@ requires it), or rate limits exhausted (switch to ZeroSSL via <code>tls.acme_ca<
 </tbody>
 </table>
 <p>This lets you gate a startup script on a clean doctor run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>vibew<span class="w"> </span>doctor<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vibew<span class="w"> </span>dev
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>vibew<span class="w"> </span>doctor<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vibew<span class="w"> </span>dev
 </span></code></pre></div>
 
 
