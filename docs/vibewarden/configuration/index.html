@@ -2396,6 +2396,18 @@ VibeWarden falls back to <code>host.docker.internal</code>.</p>
 <td>Path to PEM private key. Required when <code>provider</code> is <code>external</code></td>
 </tr>
 <tr>
+<td><code>tls.email</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>ACME account email. Required for ZeroSSL, recommended for Let's Encrypt (cert expiry notifications)</td>
+</tr>
+<tr>
+<td><code>tls.acme_ca</code></td>
+<td>string</td>
+<td><code>""</code></td>
+<td>Override ACME directory URL (e.g. ZeroSSL: <code>https://acme.zerossl.com/v2/DV90</code>)</td>
+</tr>
+<tr>
 <td><code>tls.storage_path</code></td>
 <td>string</td>
 <td><code>""</code></td>
