@@ -1050,6 +1050,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Checks performed (in order)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-config-and-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 1: Config and Docker
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-local-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 2: Local Runtime
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-production-only-with-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 3: Production (only with --target)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1185,6 +1218,24 @@
   <a href="#secrets-plugin-fails-to-start-missing-master-key" class="md-nav__link">
     <span class="md-ellipsis">
       Secrets plugin fails to start -- missing master key
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-mismatch-between-build-and-deploy-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture mismatch between build and deploy target
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-tls-certificate-expiring-or-invalid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remote TLS certificate expiring or invalid
     </span>
   </a>
   
@@ -1396,6 +1447,39 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Checks performed (in order)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-config-and-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 1: Config and Docker
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-local-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 2: Local Runtime
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-production-only-with-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      Layer 3: Production (only with --target)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1536,6 +1620,24 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#architecture-mismatch-between-build-and-deploy-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture mismatch between build and deploy target
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-tls-certificate-expiring-or-invalid" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remote TLS certificate expiring or invalid
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1601,9 +1703,15 @@ pre-flight scripts.</p>
 <td><code>false</code></td>
 <td>Emit results as a JSON array instead of the human-readable table</td>
 </tr>
+<tr>
+<td><code>--target &lt;ssh://...&gt;</code></td>
+<td>(none)</td>
+<td>Remote target for production checks; when omitted, only local checks run</td>
+</tr>
 </tbody>
 </table>
 <h3 id="checks-performed-in-order">Checks performed (in order)<a class="headerlink" href="#checks-performed-in-order" title="Permanent link">&para;</a></h3>
+<h4 id="layer-1-config-and-docker">Layer 1: Config and Docker<a class="headerlink" href="#layer-1-config-and-docker" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1642,6 +1750,75 @@ pre-flight scripts.</p>
 <td>6</td>
 <td><strong>Container health</strong></td>
 <td><code>docker compose ps</code> shows all containers in <code>running</code> / <code>healthy</code> state</td>
+</tr>
+<tr>
+<td>7</td>
+<td><strong>ACME email</strong></td>
+<td><code>tls.email</code> is set when <code>tls.acme_ca</code> contains "zerossl" (fails if missing)</td>
+</tr>
+<tr>
+<td>8</td>
+<td><strong>Image tag</strong></td>
+<td><code>app.image</code> matches a locally available Docker image (skipped when unset)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="layer-2-local-runtime">Layer 2: Local Runtime<a class="headerlink" href="#layer-2-local-runtime" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Check name</th>
+<th>What it tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9</td>
+<td><strong>Upstream reachable</strong></td>
+<td>The configured upstream port is listening locally</td>
+</tr>
+<tr>
+<td>10</td>
+<td><strong>TLS cert valid</strong></td>
+<td>Local TLS certificate (when using <code>self-signed</code>) is not expired or expiring within 7 days</td>
+</tr>
+</tbody>
+</table>
+<h4 id="layer-3-production-only-with-target">Layer 3: Production (only with <code>--target</code>)<a class="headerlink" href="#layer-3-production-only-with-target" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Check name</th>
+<th>What it tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>11</td>
+<td><strong>SSH connectivity</strong></td>
+<td>SSH connection to the remote host succeeds</td>
+</tr>
+<tr>
+<td>12</td>
+<td><strong>Arch compatibility</strong></td>
+<td>Local build architecture matches the remote server architecture</td>
+</tr>
+<tr>
+<td>13</td>
+<td><strong>Remote containers</strong></td>
+<td>Remote Docker Compose services are healthy</td>
+</tr>
+<tr>
+<td>14</td>
+<td><strong>Domain DNS</strong></td>
+<td><code>tls.domain</code> resolves to the target host IP (only when domain is set)</td>
+</tr>
+<tr>
+<td>15</td>
+<td><strong>Remote TLS cert</strong></td>
+<td>Remote certificate is valid and not expiring within 30 days (only when domain is set)</td>
 </tr>
 </tbody>
 </table>
@@ -1905,6 +2082,39 @@ hex-encoded 32-byte key:</p>
 </span></code></pre></div>
 <p>Save the master key somewhere safe -- if you lose it, your secrets are unrecoverable.</p>
 <hr />
+<h3 id="architecture-mismatch-between-build-and-deploy-target">Architecture mismatch between build and deploy target<a class="headerlink" href="#architecture-mismatch-between-build-and-deploy-target" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>[WARN]  Arch compatibility  local build is arm64 but remote server is amd64
+</span></code></pre></div>
+<p><strong>Cause</strong></p>
+<p>You built the Docker image on Apple Silicon (arm64) without specifying the
+target platform. The remote server runs amd64 and cannot execute the image.</p>
+<p><strong>Fix</strong></p>
+<p>Rebuild with the correct platform:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>vibew<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64
+</span></code></pre></div>
+<p>Then redeploy:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+</span></code></pre></div>
+<hr />
+<h3 id="remote-tls-certificate-expiring-or-invalid">Remote TLS certificate expiring or invalid<a class="headerlink" href="#remote-tls-certificate-expiring-or-invalid" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>[WARN]  Remote TLS cert  certificate expires in 12 days
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>[FAIL]  Remote TLS cert  certificate expired 2 days ago
+</span></code></pre></div>
+<p><strong>Cause</strong></p>
+<p>The TLS certificate on the remote host is nearing expiry or has already expired.
+If you are using <code>tls.provider: letsencrypt</code>, the ACME renewal may have failed.</p>
+<p><strong>Fix</strong></p>
+<p>Inspect the certificate details:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>vibew<span class="w"> </span>tls<span class="w"> </span>status<span class="w"> </span>--domain<span class="w"> </span>example.com<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+</span></code></pre></div>
+<p>If renewal failed, check the sidecar logs for ACME errors:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://user@host<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
+</span></code></pre></div>
+<p>Common causes: DNS not pointing to the server, port 80 blocked (HTTP-01 challenge
+requires it), or rate limits exhausted (switch to ZeroSSL via <code>tls.acme_ca</code>).</p>
+<hr />
 <h2 id="exit-codes">Exit codes<a class="headerlink" href="#exit-codes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1925,7 +2135,7 @@ hex-encoded 32-byte key:</p>
 </tbody>
 </table>
 <p>This lets you gate a startup script on a clean doctor run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>vibew<span class="w"> </span>doctor<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vibew<span class="w"> </span>dev
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>vibew<span class="w"> </span>doctor<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vibew<span class="w"> </span>dev
 </span></code></pre></div>
 
 

@@ -1217,11 +1217,62 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#image-tag-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Image tag convention
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls-configuration-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      TLS configuration keys
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#deploy-model" class="md-nav__link">
     <span class="md-ellipsis">
       Deploy model
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploying-to-a-vps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Deploying to a VPS
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploying to a VPS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#automated-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Automated (recommended)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual fallback
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1319,11 +1370,21 @@ treat them as optional on public paths and required on protected paths.</p>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vibew<span class="w"> </span>add<span class="w"> </span>tls<span class="w"> </span>--domain<span class="w"> </span>example.com
 </span></code></pre></div>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vibew<span class="w"> </span>doctor<span class="w">       </span><span class="c1"># diagnose common issues</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vibew<span class="w"> </span>doctor<span class="w"> </span>--json<span class="w">  </span><span class="c1"># machine-readable output for AI agents</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vibew<span class="w"> </span>status<span class="w">       </span><span class="c1"># check sidecar health</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vibew<span class="w"> </span>logs<span class="w">         </span><span class="c1"># pretty-print structured logs</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vibew<span class="w"> </span>doctor<span class="w">             </span><span class="c1"># diagnose common issues</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vibew<span class="w"> </span>doctor<span class="w"> </span>--json<span class="w">      </span><span class="c1"># machine-readable output for AI agents</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vibew<span class="w"> </span>doctor<span class="w"> </span>--target<span class="w"> </span>ssh://user@host<span class="w">  </span><span class="c1"># include production reachability checks</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vibew<span class="w"> </span>tls<span class="w"> </span>status<span class="w"> </span>--domain<span class="w"> </span>example.com<span class="w"> </span>--target<span class="w"> </span>ssh://user@host<span class="w">  </span><span class="c1"># inspect remote TLS cert</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vibew<span class="w"> </span>status<span class="w">             </span><span class="c1"># check sidecar health</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>vibew<span class="w"> </span>logs<span class="w">               </span><span class="c1"># pretty-print structured logs</span>
 </span></code></pre></div>
+<p><code>vibew doctor</code> checks (in order): config validity, Docker daemon, Docker Compose,
+proxy port availability, generated files, container health, ACME email, image tag
+consistency, upstream reachability, local TLS cert validity. When <code>--target</code> is
+provided it also checks SSH connectivity, architecture compatibility, remote
+container health, DNS resolution, and remote TLS certificate expiry.</p>
+<p><code>vibew tls status</code> connects to the remote host via SSH, inspects the TLS
+certificate with openssl, and reports subject, issuer, validity, SANs, and
+expiry status (OK / WARNING / CRITICAL / EXPIRED).</p>
 <h2 id="writing-your-dockerfile">Writing your Dockerfile<a class="headerlink" href="#writing-your-dockerfile" title="Permanent link">&para;</a></h2>
 <p>Your Dockerfile MUST:
 - Expose the port matching <code>upstream.port</code> in vibewarden.yaml (default: 3000)
@@ -1348,6 +1409,61 @@ treat them as optional on public paths and required on protected paths.</p>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">EXPOSE</span><span class="w"> </span><span class="s">3000</span>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/app/server&quot;</span><span class="p">]</span>
 </span></code></pre></div></p>
+<h2 id="image-tag-convention">Image tag convention<a class="headerlink" href="#image-tag-convention" title="Permanent link">&para;</a></h2>
+<p><code>vibew build</code> tags the image as <code>&lt;project&gt;-app:latest</code>. The project name is
+resolved in this order:</p>
+<ol>
+<li><code>name</code> field in vibewarden.yaml (explicit)</li>
+<li><code>app.image</code> with registry prefix and tag stripped (e.g. <code>ghcr.io/org/myapp:latest</code> → <code>myapp</code>)</li>
+<li>Directory name containing vibewarden.yaml (fallback)</li>
+</ol>
+<p>For example, a project in <code>~/code/mysite</code> with no explicit <code>name</code> produces the
+image <code>mysite-app:latest</code>. This tag must match what Docker Compose expects for
+the app service.</p>
+<h2 id="tls-configuration-keys">TLS configuration keys<a class="headerlink" href="#tls-configuration-keys" title="Permanent link">&para;</a></h2>
+<p>These keys live under the <code>tls</code> section in vibewarden.yaml (or
+vibewarden.production.yaml for prod-only values):</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Values</th>
+<th>What vibew does with it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tls.provider</code></td>
+<td><code>letsencrypt</code> (alias: <code>acme</code>), <code>self-signed</code>, <code>external</code></td>
+<td>Selects the TLS provisioning strategy. <code>letsencrypt</code> uses ACME automation; <code>self-signed</code> generates a dev cert; <code>external</code> expects you to supply cert files.</td>
+</tr>
+<tr>
+<td><code>tls.email</code></td>
+<td>ACME account email</td>
+<td>Registered with the CA for expiry warnings. Required by ZeroSSL; optional for Let's Encrypt.</td>
+</tr>
+<tr>
+<td><code>tls.acme_ca</code></td>
+<td>ACME directory URL</td>
+<td>Overrides the default Let's Encrypt production CA. Use <code>https://acme.zerossl.com/v2/DV90</code> for ZeroSSL or the LE staging URL for testing.</td>
+</tr>
+<tr>
+<td><code>tls.domain</code></td>
+<td>FQDN (e.g. <code>app.example.com</code>)</td>
+<td>The domain for the TLS certificate. Required when provider is <code>letsencrypt</code>. Used for DNS checks by <code>vibew doctor</code>.</td>
+</tr>
+<tr>
+<td><code>tls.cert_path</code></td>
+<td>File path to PEM certificate</td>
+<td>Only used when provider is <code>external</code>. The sidecar reads this file on startup.</td>
+</tr>
+<tr>
+<td><code>tls.key_path</code></td>
+<td>File path to PEM private key</td>
+<td>Only used when provider is <code>external</code>. Must match <code>cert_path</code>.</td>
+</tr>
+</tbody>
+</table>
 <h2 id="deploy-model">Deploy model<a class="headerlink" href="#deploy-model" title="Permanent link">&para;</a></h2>
 <p><code>vibew build</code> builds the Docker image locally from your Dockerfile. <code>vibew deploy</code>
 transfers the pre-built image to the server via <code>docker save | rsync | docker load</code>.
@@ -1356,22 +1472,45 @@ production-ready (all dependencies installed, assets compiled, etc.).</p>
 <p><strong>Cross-architecture builds:</strong> If deploying from Apple Silicon (arm64) to an amd64
 server, use <code>vibew build --platform linux/amd64</code>. Deploy auto-detects the mismatch
 and errors with a fix-it message if you forget.</p>
+<h2 id="deploying-to-a-vps">Deploying to a VPS<a class="headerlink" href="#deploying-to-a-vps" title="Permanent link">&para;</a></h2>
+<h3 id="automated-recommended">Automated (recommended)<a class="headerlink" href="#automated-recommended" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vibew<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64<span class="w">   </span><span class="c1"># build for the target architecture</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>--target<span class="w"> </span>ssh://user@host<span class="w"> </span>--config<span class="w"> </span>vibewarden.prod.yaml
+</span></code></pre></div>
+<p><code>vibew deploy</code> handles image transfer, config generation, and container startup
+in a single command.</p>
+<h3 id="manual-fallback">Manual fallback<a class="headerlink" href="#manual-fallback" title="Permanent link">&para;</a></h3>
+<p>When <code>vibew deploy</code> fails or you need more control, use standard commands:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Build for the target architecture</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vibew<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Transfer the image via SSH</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>docker<span class="w"> </span>save<span class="w"> </span>&lt;project&gt;-app:latest<span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span>user@host<span class="w"> </span>docker<span class="w"> </span>load
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 3. Copy the deploy bundle (config, compose files)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>rsync<span class="w"> </span>-az<span class="w"> </span>.vibewarden/deploy/production/<span class="w"> </span>user@host:~/vibewarden/&lt;project&gt;/
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 4. Start the stack on the remote</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ssh<span class="w"> </span>user@host<span class="w"> </span><span class="s1">&#39;cd ~/vibewarden/&lt;project&gt; &amp;&amp; docker compose up -d&#39;</span>
+</span></code></pre></div>
+<p>Each of these commands produces standard error messages that are searchable --
+use them as a plan B when debugging deploy issues.</p>
 <p>Use <code>app.environment</code> in vibewarden.yaml for runtime configuration:
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">app</span><span class="p">:</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;.&quot;</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgres://user:pass@db:5432/myapp&quot;</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nt">REDIS_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;redis://redis:6379&quot;</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">app</span><span class="p">:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;.&quot;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgres://user:pass@db:5432/myapp&quot;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">REDIS_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;redis://redis:6379&quot;</span>
 </span></code></pre></div></p>
 <p>Do NOT bake secrets into the Docker image. Use <code>secret://</code> URIs in
 vibewarden.yaml to reference secrets from the encrypted store:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">admin</span><span class="p">:</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret://admin/api/token</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">admin</span><span class="p">:</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret://admin/api/token</span>
 </span></code></pre></div>
 <p>For composite values (secrets embedded in larger strings), use <code>${secret://...}</code>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">app</span><span class="p">:</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgres://user:${secret://db/password}@host:5432/db&quot;</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nt">app</span><span class="p">:</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgres://user:${secret://db/password}@host:5432/db&quot;</span>
 </span></code></pre></div>
 <p>Store secrets with <code>vibew secret set &lt;path&gt; &lt;key&gt;=&lt;value&gt;</code>. The <code>secrets.inject</code>
 entries also support a <code>value_template</code> field for composite values. The <code>secrets.*</code>
