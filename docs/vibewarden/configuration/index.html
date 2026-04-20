@@ -2457,6 +2457,12 @@ VibeWarden falls back to <code>host.docker.internal</code>.</p>
 <td><code>email_password</code></td>
 <td>Identity schema: <code>email_password</code>, <code>email_only</code>, <code>username_password</code>, <code>social</code>, or a file path</td>
 </tr>
+<tr>
+<td><code>auth.role_paths</code></td>
+<td>map</td>
+<td><code>{}</code></td>
+<td>Maps role names (<code>user</code>, <code>admin</code>, <code>moderator</code>) to URL path patterns requiring that role. Users whose Kratos <code>role</code> trait does not match receive HTTP 403. Only valid when <code>auth.mode</code> is <code>kratos</code>. When empty, no role enforcement is performed but <code>X-User-Role</code> is still set</td>
+</tr>
 </tbody>
 </table>
 <h3 id="authjwt"><code>auth.jwt</code><a class="headerlink" href="#authjwt" title="Permanent link">&para;</a></h3>

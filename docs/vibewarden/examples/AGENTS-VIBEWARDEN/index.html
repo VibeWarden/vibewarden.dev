@@ -1285,7 +1285,11 @@ endpoint is already included in the generated code.</p>
 <p>When auth is enabled, read user identity from these headers:
 - <code>X-User-Id</code> — user identifier
 - <code>X-User-Email</code> — user email
-- <code>X-User-Verified</code> — email verification status ("true"/"false")</p>
+- <code>X-User-Verified</code> — email verification status ("true"/"false")
+- <code>X-User-Role</code> — user role from Kratos identity traits ("user", "admin", or "moderator"; defaults to "user")</p>
+<p>Role-based path restrictions can be configured in vibewarden.yaml via
+<code>auth.role_paths</code> (only when <code>auth.mode: kratos</code>). Requests to restricted
+paths by users without the required role receive HTTP 403.</p>
 <p>On public paths (<code>auth.public_paths</code>), these headers are set when a valid session
 cookie is present but are absent for anonymous visitors. Your app code should
 treat them as optional on public paths and required on protected paths.</p>

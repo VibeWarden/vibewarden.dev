@@ -1414,8 +1414,9 @@ full self-contained auth loop (registration, login, password reset — no
 internet required), and <code>auth.mode: jwt</code> in production to validate tokens from
 your cloud IAM (Cognito, Auth0, Azure AD, etc.).</p>
 <p>Your application code does not change between environments. VibeWarden injects
-the same <code>X-User-Id</code>, <code>X-User-Email</code>, and <code>X-User-Verified</code> headers in both
-modes. Only the VibeWarden config differs.</p>
+<code>X-User-Id</code>, <code>X-User-Email</code>, and <code>X-User-Verified</code> headers in both modes.
+Kratos mode additionally sets <code>X-User-Role</code> from the identity traits.
+Only the VibeWarden config differs.</p>
 <p>Switch between them with <code>vibewarden start --config vibewarden.dev.yaml</code> or
 via environment variable interpolation in a single shared config file.</p>
 <p>See the <a href="../identity-providers/#devprod-auth-split">Dev/Prod auth split</a> section
