@@ -1283,6 +1283,48 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="TLS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tlsacmechain_skipped" class="md-nav__link">
+    <span class="md-ellipsis">
+      tls.acme.chain_skipped
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlsacmechain_configured" class="md-nav__link">
+    <span class="md-ellipsis">
+      tls.acme.chain_configured
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlsacmeprovider_deprecated" class="md-nav__link">
+    <span class="md-ellipsis">
+      tls.acme.provider_deprecated
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlsacmechain_fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      tls.acme.chain_fallback
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1651,6 +1693,48 @@
       TLS
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="TLS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tlsacmechain_skipped" class="md-nav__link">
+    <span class="md-ellipsis">
+      tls.acme.chain_skipped
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlsacmechain_configured" class="md-nav__link">
+    <span class="md-ellipsis">
+      tls.acme.chain_configured
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlsacmeprovider_deprecated" class="md-nav__link">
+    <span class="md-ellipsis">
+      tls.acme.provider_deprecated
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tlsacmechain_fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      tls.acme.chain_fallback
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -2349,8 +2433,169 @@ or with no arguments to see a condensed version of this table.</p>
 <td><code>tls.cert_expiry_critical</code></td>
 <td>Certificate expires within 7 days.</td>
 </tr>
+<tr>
+<td><code>tls.acme.chain_skipped</code></td>
+<td>An ACME issuer was evaluated and excluded from the default fallback chain at plugin Init (see ADR-083).</td>
+</tr>
+<tr>
+<td><code>tls.acme.chain_configured</code></td>
+<td>Resolved ACME fallback chain for a domain, emitted once per plugin Init (see ADR-083).</td>
+</tr>
+<tr>
+<td><code>tls.acme.provider_deprecated</code></td>
+<td>An explicitly-selected ACME provider is known to be unhealthy (currently emitted for <code>provider: buypass</code>; see ADR-083).</td>
+</tr>
+<tr>
+<td><code>tls.acme.chain_fallback</code></td>
+<td>Caddy transitioned between issuers in an active fallback chain. Reserved in the v1 schema; emitted only once Caddy/certmagic exposes a stable issuer-transition hook.</td>
+</tr>
 </tbody>
 </table>
+<h4 id="tlsacmechain_skipped"><code>tls.acme.chain_skipped</code><a class="headerlink" href="#tlsacmechain_skipped" title="Permanent link">&para;</a></h4>
+<p>Emitted once at plugin Init for every issuer that was evaluated and excluded
+from the default chain.</p>
+<p><code>severity</code>: <code>info</code> · <code>category</code>: <code>network</code></p>
+<p><code>ai_summary</code> template:
+<code>"ACME issuer %s skipped in fallback chain for %s: %s — set tls.email in your config to enable it"</code></p>
+<table>
+<thead>
+<tr>
+<th>Payload field</th>
+<th>Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>provider</code></td>
+<td><code>string</code></td>
+<td><code>"zerossl"</code></td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td><code>string</code></td>
+<td><code>"email_not_configured"</code></td>
+</tr>
+<tr>
+<td><code>primary_provider</code></td>
+<td><code>string</code></td>
+<td><code>"letsencrypt"</code></td>
+</tr>
+</tbody>
+</table>
+<p>Allowed <code>reason</code> values (v1 frozen set; new values require an ADR):</p>
+<ul>
+<li><code>email_not_configured</code> — skipped because <code>tls.email</code> is empty.</li>
+</ul>
+<h4 id="tlsacmechain_configured"><code>tls.acme.chain_configured</code><a class="headerlink" href="#tlsacmechain_configured" title="Permanent link">&para;</a></h4>
+<p>Emitted once per plugin Init, regardless of whether any issuers were skipped.
+Captures the resolved chain so operators and log aggregators can see what was
+actually wired up.</p>
+<p><code>severity</code>: <code>info</code> · <code>category</code>: <code>network</code></p>
+<p><code>ai_summary</code> template:
+<code>"ACME fallback chain configured for %s (primary=%s): %s"</code></p>
+<table>
+<thead>
+<tr>
+<th>Payload field</th>
+<th>Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>primary_provider</code></td>
+<td><code>string</code></td>
+<td><code>"letsencrypt"</code></td>
+</tr>
+<tr>
+<td><code>resolved_chain</code></td>
+<td><code>[]string</code></td>
+<td><code>["letsencrypt","zerossl"]</code></td>
+</tr>
+<tr>
+<td><code>domain</code></td>
+<td><code>string</code></td>
+<td><code>"app.example.com"</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="tlsacmeprovider_deprecated"><code>tls.acme.provider_deprecated</code><a class="headerlink" href="#tlsacmeprovider_deprecated" title="Permanent link">&para;</a></h4>
+<p>Emitted once at plugin Init when an explicitly-selected ACME provider is known
+to be unhealthy. Currently only emitted for <code>provider: buypass</code> per ADR-083.</p>
+<p><code>severity</code>: <code>medium</code> · <code>category</code>: <code>network</code></p>
+<p><code>ai_summary</code> template:
+<code>"ACME provider %s is deprecated: %s — %s"</code></p>
+<table>
+<thead>
+<tr>
+<th>Payload field</th>
+<th>Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>provider</code></td>
+<td><code>string</code></td>
+<td><code>"buypass"</code></td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td><code>string</code></td>
+<td><code>"directory_returns_403"</code></td>
+</tr>
+<tr>
+<td><code>guidance</code></td>
+<td><code>string</code></td>
+<td><code>"consider provider: letsencrypt with tls.email"</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="tlsacmechain_fallback"><code>tls.acme.chain_fallback</code><a class="headerlink" href="#tlsacmechain_fallback" title="Permanent link">&para;</a></h4>
+<p>Emitted whenever Caddy transitions between issuers in an active fallback chain.
+Reserved in the v1 schema; emitted only once Caddy/certmagic exposes a stable
+issuer-transition hook (see ADR-083 §3b).</p>
+<p><code>severity</code>: <code>medium</code> · <code>category</code>: <code>network</code></p>
+<p><code>ai_summary</code> template:
+<code>"ACME issuer failover for %s: %s → %s (%s)"</code></p>
+<table>
+<thead>
+<tr>
+<th>Payload field</th>
+<th>Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>from_provider</code></td>
+<td><code>string</code></td>
+<td><code>"letsencrypt"</code></td>
+</tr>
+<tr>
+<td><code>to_provider</code></td>
+<td><code>string</code></td>
+<td><code>"zerossl"</code></td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td><code>string</code></td>
+<td><code>"upstream_unreachable"</code></td>
+</tr>
+<tr>
+<td><code>domain</code></td>
+<td><code>string</code></td>
+<td><code>"app.example.com"</code></td>
+</tr>
+</tbody>
+</table>
+<p>Allowed <code>reason</code> values (v1 frozen set):</p>
+<ul>
+<li><code>upstream_unreachable</code> — previous issuer's ACME directory could not be reached (DNS, TCP, TLS, HTTP 5xx).</li>
+<li><code>rate_limited</code> — previous issuer returned a rate-limit response (HTTP 429 or ACME <code>rateLimited</code> problem type).</li>
+<li><code>unknown</code> — Caddy signalled a transition but the cause was not classifiable.</li>
+</ul>
 <h3 id="user-management">User management<a class="headerlink" href="#user-management" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

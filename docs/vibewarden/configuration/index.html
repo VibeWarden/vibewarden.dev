@@ -2381,7 +2381,7 @@ VibeWarden falls back to <code>host.docker.internal</code>.</p>
 <td><code>tls.provider</code></td>
 <td>string</td>
 <td><code>""</code></td>
-<td>Certificate provider: <code>letsencrypt</code> (with LE→ZeroSSL→Buypass fallback), <code>zerossl</code>, <code>buypass</code>, <code>letsencrypt-staging</code>, <code>self-signed</code>, or <code>external</code></td>
+<td>Certificate provider: <code>letsencrypt</code> (falls back to ZeroSSL when <code>tls.email</code> is set; see ADR-083), <code>zerossl</code>, <code>buypass</code> (explicit opt-in only, upstream currently unhealthy), <code>letsencrypt-staging</code>, <code>self-signed</code>, or <code>external</code></td>
 </tr>
 <tr>
 <td><code>tls.cert_path</code></td>
