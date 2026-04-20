@@ -1362,7 +1362,13 @@ vibewarden.yaml to reference secrets from the encrypted store:</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">admin</span><span class="p">:</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret://admin/api/token</span>
 </span></code></pre></div>
-<p>Store secrets with <code>vibew secret set &lt;path&gt; &lt;key&gt;=&lt;value&gt;</code>. The <code>secrets.*</code>
+<p>For composite values (secrets embedded in larger strings), use <code>${secret://...}</code>:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">app</span><span class="p">:</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgres://user:${secret://db/password}@host:5432/db&quot;</span>
+</span></code></pre></div>
+<p>Store secrets with <code>vibew secret set &lt;path&gt; &lt;key&gt;=&lt;value&gt;</code>. The <code>secrets.inject</code>
+entries also support a <code>value_template</code> field for composite values. The <code>secrets.*</code>
 config section itself cannot use <code>secret://</code> URIs (bootstrap constraint).
 See docs/secret-management.md for details.</p>
 <h2 id="extra-services-database-cache-etc">Extra services (database, cache, etc.)<a class="headerlink" href="#extra-services-database-cache-etc" title="Permanent link">&para;</a></h2>
