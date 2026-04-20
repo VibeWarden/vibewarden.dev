@@ -1728,8 +1728,7 @@ to <code>req.user</code>:</p>
 </span></code></pre></div>
 <h3 id="health-check-route">Health check route<a class="headerlink" href="#health-check-route" title="Permanent link">&para;</a></h3>
 <p>Add a <code>/health</code> endpoint that does not require authentication. Register it in
-<code>auth.public_paths</code> in <code>vibewarden.yaml</code> so VibeWarden passes it through without a
-session check:</p>
+<code>auth.public_paths</code> in <code>vibewarden.yaml</code> so VibeWarden does not require authentication:</p>
 <div class="language-javascript highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/health&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">status</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="w"> </span><span class="p">});</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p">});</span>

@@ -2431,7 +2431,7 @@ VibeWarden falls back to <code>host.docker.internal</code>.</p>
 <td><code>auth.public_paths</code></td>
 <td>list</td>
 <td><code>[]</code></td>
-<td>Glob patterns that bypass auth. <code>/_vibewarden/*</code> is always public</td>
+<td>Paths that do not require authentication. If a valid session cookie is present, identity headers are still set (optional auth). <code>/_vibewarden/*</code> is always public</td>
 </tr>
 <tr>
 <td><code>auth.session_cookie_name</code></td>

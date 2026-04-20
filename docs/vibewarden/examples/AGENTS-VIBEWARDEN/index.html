@@ -1286,6 +1286,9 @@ endpoint is already included in the generated code.</p>
 - <code>X-User-Id</code> — user identifier
 - <code>X-User-Email</code> — user email
 - <code>X-User-Verified</code> — email verification status ("true"/"false")</p>
+<p>On public paths (<code>auth.public_paths</code>), these headers are set when a valid session
+cookie is present but are absent for anonymous visitors. Your app code should
+treat them as optional on public paths and required on protected paths.</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
 <p>This project follows hexagonal architecture (ports and adapters):</p>
 <ul>
