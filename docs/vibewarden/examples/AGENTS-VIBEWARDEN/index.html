@@ -1350,8 +1350,14 @@ production-ready (all dependencies installed, assets compiled, etc.).</p>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;postgres://user:pass@db:5432/myapp&quot;</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nt">REDIS_URL</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;redis://redis:6379&quot;</span>
 </span></code></pre></div></p>
-<p>Do NOT bake secrets into the Docker image. Use environment variables or
-the secrets plugin (OpenBao) for sensitive values.</p>
+<p>Do NOT bake secrets into the Docker image. Use <code>secret://</code> URIs in
+vibewarden.yaml to reference secrets from the encrypted store:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">admin</span><span class="p">:</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">secret://admin/api/token</span>
+</span></code></pre></div>
+<p>Store secrets with <code>vibew secret set &lt;path&gt; &lt;key&gt;=&lt;value&gt;</code>. The <code>secrets.*</code>
+config section itself cannot use <code>secret://</code> URIs (bootstrap constraint).
+See docs/secret-management.md for details.</p>
 <h2 id="extra-services-database-cache-etc">Extra services (database, cache, etc.)<a class="headerlink" href="#extra-services-database-cache-etc" title="Permanent link">&para;</a></h2>
 <p>Create <code>docker-compose.override.yml</code> next to your <code>vibewarden.yaml</code> for additional
 services like PostgreSQL or Redis. Docker Compose auto-merges it with the
