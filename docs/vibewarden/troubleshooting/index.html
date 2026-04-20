@@ -1128,9 +1128,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#port-conflict-docker-not-running" class="md-nav__link">
+  <a href="#proxy-port-already-owned-by-a-running-vibew-dev" class="md-nav__link">
     <span class="md-ellipsis">
-      Port conflict + Docker not running
+      Proxy port already owned by a running vibew dev
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-conflict-foreign-process-docker-not-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      Port conflict (foreign process) + Docker not running
     </span>
   </a>
   
@@ -1534,9 +1543,18 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#port-conflict-docker-not-running" class="md-nav__link">
+  <a href="#proxy-port-already-owned-by-a-running-vibew-dev" class="md-nav__link">
     <span class="md-ellipsis">
-      Port conflict + Docker not running
+      Proxy port already owned by a running vibew dev
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-conflict-foreign-process-docker-not-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      Port conflict (foreign process) + Docker not running
     </span>
   </a>
   
@@ -1799,7 +1817,7 @@ pre-flight scripts.</p>
 <tr>
 <td>10</td>
 <td><strong>TLS cert valid</strong></td>
-<td>Local TLS certificate (when using <code>self-signed</code>) is not expired or expiring within 7 days</td>
+<td>Performs a live TLS handshake against the sidecar, reads the leaf certificate from the handshake, and verifies it is not expired or expiring within 7 days. Reports WARN (<code>sidecar not reachable — start 'vibew dev'</code>) when the handshake fails, so the check no longer depends on a file-on-disk at a hardcoded path (ADR-084)</td>
 </tr>
 </tbody>
 </table>
@@ -1885,94 +1903,118 @@ pre-flight scripts.</p>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  [WARN]          Generated files        .vibewarden/generated/docker-compose.yml not found — run &#39;vibewarden generate&#39; first
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  [WARN]          Container health       no containers found — run &#39;vibewarden dev&#39; to start the stack
 </span></code></pre></div>
-<h3 id="port-conflict-docker-not-running">Port conflict + Docker not running<a class="headerlink" href="#port-conflict-docker-not-running" title="Permanent link">&para;</a></h3>
+<h3 id="proxy-port-already-owned-by-a-running-vibew-dev">Proxy port already owned by a running <code>vibew dev</code><a class="headerlink" href="#proxy-port-already-owned-by-a-running-vibew-dev" title="Permanent link">&para;</a></h3>
+<p>When <code>vibew dev</code> is already running locally, port 8443 is expected to be in use.
+<code>vibew doctor</code> probes <code>/_vibewarden/health</code> and recognises the sidecar as the owner,
+so the check is <code>[OK]</code> — not <code>[FAIL]</code> — per ADR-084.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>VibeWarden Doctor
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>─────────────────────────────────────────
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  [OK]            Config file            vibewarden.yaml — valid
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  [FAIL]          Docker daemon          not running — start Docker Desktop or the Docker service
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  [FAIL]          Docker Compose         not available — install Docker Compose v2
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  [FAIL]          Proxy port             port 8443 is already in use
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  [WARN]          Generated files        .vibewarden/generated/docker-compose.yml not found — run &#39;vibewarden generate&#39; first
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  [WARN]          Container health       could not query containers — stack may not be running
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  [OK]            Docker daemon          running
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  [OK]            Docker Compose         Docker Compose version v2.27.0
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  [OK]            Proxy port             in use by local vibew dev (expected)
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  [OK]            Generated files        .vibewarden/generated/docker-compose.yml
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  [OK]            Container health       4 container(s) running
+</span></code></pre></div>
+<h3 id="port-conflict-foreign-process-docker-not-running">Port conflict (foreign process) + Docker not running<a class="headerlink" href="#port-conflict-foreign-process-docker-not-running" title="Permanent link">&para;</a></h3>
+<p>The <code>[FAIL] Proxy port</code> line only fires when the port is owned by a <strong>non-VibeWarden</strong>
+process (i.e., the health probe does not find a <code>vibewarden</code> signature on the port).
+A running <code>vibew dev</code> never triggers this FAIL — see the sample above.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>VibeWarden Doctor
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>─────────────────────────────────────────
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  [OK]            Config file            vibewarden.yaml — valid
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  [FAIL]          Docker daemon          not running — start Docker Desktop or the Docker service
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  [FAIL]          Docker Compose         not available — install Docker Compose v2
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  [FAIL]          Proxy port             port 8443 is already in use
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  [WARN]          Generated files        .vibewarden/generated/docker-compose.yml not found — run &#39;vibewarden generate&#39; first
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  [WARN]          Container health       could not query containers — stack may not be running
 </span></code></pre></div>
 <h3 id="json-output">JSON output<a class="headerlink" href="#json-output" title="Permanent link">&para;</a></h3>
 <p><code>vibew doctor --json</code> is useful when another tool (a script, a CI step, or an AI agent)
 needs to consume the results programmatically:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">[</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Config file&quot;</span><span class="p">,</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vibewarden.yaml — valid&quot;</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Docker daemon&quot;</span><span class="p">,</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
-</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;running&quot;</span>
-</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Docker Compose&quot;</span><span class="p">,</span>
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
-</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Docker Compose version v2.27.0&quot;</span>
-</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Proxy port&quot;</span><span class="p">,</span>
-</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
-</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;port 8443 is available&quot;</span>
-</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Generated files&quot;</span><span class="p">,</span>
-</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
-</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.vibewarden/generated/docker-compose.yml&quot;</span>
-</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">  </span><span class="p">},</span>
-</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span><span class="p">{</span>
-</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Container health&quot;</span><span class="p">,</span>
-</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
-</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4 container(s) running&quot;</span>
-</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="p">]</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">[</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Config file&quot;</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;vibewarden.yaml — valid&quot;</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Docker daemon&quot;</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;running&quot;</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Docker Compose&quot;</span><span class="p">,</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Docker Compose version v2.27.0&quot;</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Proxy port&quot;</span><span class="p">,</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;port 8443 is available&quot;</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Generated files&quot;</span><span class="p">,</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;.vibewarden/generated/docker-compose.yml&quot;</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Container health&quot;</span><span class="p">,</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">    </span><span class="nt">&quot;severity&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="p">,</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">    </span><span class="nt">&quot;detail&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4 container(s) running&quot;</span>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="p">]</span>
 </span></code></pre></div>
 <hr />
 <h2 id="common-issues-and-fixes">Common issues and fixes<a class="headerlink" href="#common-issues-and-fixes" title="Permanent link">&para;</a></h2>
 <h3 id="port-conflict-proxy-port-already-in-use">Port conflict — proxy port already in use<a class="headerlink" href="#port-conflict-proxy-port-already-in-use" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>[FAIL]  Proxy port  port 8443 is already in use
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>[FAIL]  Proxy port  port 8443 is already in use
 </span></code></pre></div>
+<blockquote>
+<p>This <code>[FAIL]</code> no longer fires for a running <code>vibew dev</code>. Since ADR-084 the doctor
+probes <code>/_vibewarden/health</code> and reports
+<code>[OK] Proxy port  in use by local vibew dev (expected)</code> when the owner is the
+local sidecar. The FAIL below only applies when a <strong>foreign</strong> process owns the
+port.</p>
+</blockquote>
 <p><strong>Cause</strong></p>
-<p>Another process is listening on the port configured in <code>server.port</code> (default <code>8443</code>).</p>
+<p>A non-VibeWarden process is listening on the port configured in <code>server.port</code>
+(default <code>8443</code>).</p>
 <p><strong>Fix — option 1: change VibeWarden's port</strong></p>
 <p>In <code>vibewarden.yaml</code>:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">server</span><span class="p">:</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9443</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">server</span><span class="p">:</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9443</span>
 </span></code></pre></div>
 <p><strong>Fix — option 2: stop the conflicting process</strong></p>
 <p>Find the PID that owns the port and stop it:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># macOS / Linux</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:8443
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># or</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">8443</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># then kill the process</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nb">kill</span><span class="w"> </span>&lt;PID&gt;
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># macOS / Linux</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:8443
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># or</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">8443</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># then kill the process</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nb">kill</span><span class="w"> </span>&lt;PID&gt;
 </span></code></pre></div>
 <hr />
 <h3 id="docker-not-running">Docker not running<a class="headerlink" href="#docker-not-running" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>[FAIL]  Docker daemon  not running — start Docker Desktop or the Docker service
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>[FAIL]  Docker Compose  not available — install Docker Compose v2
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[FAIL]  Docker daemon  not running — start Docker Desktop or the Docker service
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>[FAIL]  Docker Compose  not available — install Docker Compose v2
 </span></code></pre></div>
 <p><strong>Cause</strong></p>
 <p>The Docker daemon is not reachable. VibeWarden needs Docker to manage the Kratos,
 Postgres, and other sidecar containers.</p>
 <p><strong>Fix — macOS</strong></p>
 <p>Open Docker Desktop from the Applications folder, or:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>open<span class="w"> </span>-a<span class="w"> </span>Docker
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># wait for the whale icon in the menu bar to stop animating</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>docker<span class="w"> </span>info
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>open<span class="w"> </span>-a<span class="w"> </span>Docker
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># wait for the whale icon in the menu bar to stop animating</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>docker<span class="w"> </span>info
 </span></code></pre></div>
 <p><strong>Fix — Linux (systemd)</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>docker
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>docker<span class="w">   </span><span class="c1"># make it start on boot</span>
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>docker<span class="w"> </span>info
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>docker
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>docker<span class="w">   </span><span class="c1"># make it start on boot</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>docker<span class="w"> </span>info
 </span></code></pre></div>
 <p><strong>Fix — Docker not installed</strong></p>
 <p>Follow the official Docker Engine install guide for your OS:
@@ -1983,35 +2025,35 @@ On Linux you may need to install the <code>docker-compose-plugin</code> package 
 <hr />
 <h3 id="config-file-not-found-or-invalid">Config file not found or invalid<a class="headerlink" href="#config-file-not-found-or-invalid" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>[FAIL]  Config file  vibewarden.yaml not found or invalid
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>[FAIL]  Config file  vibewarden.yaml not found or invalid
 </span></code></pre></div>
 <p><strong>Cause — file missing</strong></p>
 <p><code>vibew doctor</code> looks for <code>vibewarden.yaml</code> in the current directory. Either the file does
 not exist or you are running the command from the wrong directory.</p>
 <p><strong>Fix</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Run from the directory that contains vibewarden.yaml</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">cd</span><span class="w"> </span>/path/to/your/project
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>vibew<span class="w"> </span>doctor
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Or point directly at the file</span>
-</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>vibew<span class="w"> </span>doctor<span class="w"> </span>--config<span class="w"> </span>/path/to/vibewarden.yaml
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Run from the directory that contains vibewarden.yaml</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">cd</span><span class="w"> </span>/path/to/your/project
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>vibew<span class="w"> </span>doctor
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Or point directly at the file</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>vibew<span class="w"> </span>doctor<span class="w"> </span>--config<span class="w"> </span>/path/to/vibewarden.yaml
 </span></code></pre></div>
 <p>If you have not created a config file yet, scaffold one:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>vibew<span class="w"> </span>wrap<span class="w"> </span>--upstream<span class="w"> </span><span class="m">3000</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vibew<span class="w"> </span>wrap<span class="w"> </span>--upstream<span class="w"> </span><span class="m">3000</span>
 </span></code></pre></div>
 <p><strong>Cause — YAML parse error</strong></p>
 <p>The config file exists but contains a syntax error.</p>
 <p><strong>Fix</strong></p>
 <p>Validate the YAML with a linter:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys, yaml; yaml.safe_load(open(&#39;vibewarden.yaml&#39;))&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>OK
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys, yaml; yaml.safe_load(open(&#39;vibewarden.yaml&#39;))&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>OK
 </span></code></pre></div>
 <p>Common mistakes: tabs instead of spaces, missing quotes around values that contain
 colons, or misaligned indentation.</p>
 <hr />
 <h3 id="unknown-configuration-keys">Unknown configuration key(s)<a class="headerlink" href="#unknown-configuration-keys" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Configuration invalid: config vibewarden.yaml: unknown key(s): tls.dmain
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>Error: loading config: ...
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Configuration invalid: config vibewarden.yaml: unknown key(s): tls.dmain
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Error: loading config: ...
 </span></code></pre></div>
 <p><strong>Cause</strong></p>
 <p><code>vibew validate</code> and <code>vibew deploy</code> run the strict loader (ADR-082): every key in
@@ -2030,21 +2072,21 @@ validate/deploy time.</p>
 <hr />
 <h3 id="generated-files-missing">Generated files missing<a class="headerlink" href="#generated-files-missing" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>[WARN]  Generated files  .vibewarden/generated/docker-compose.yml not found — run &#39;vibew generate&#39; first
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>[WARN]  Generated files  .vibewarden/generated/docker-compose.yml not found — run &#39;vibew generate&#39; first
 </span></code></pre></div>
 <p><strong>Cause</strong></p>
 <p>The <code>vibew generate</code> step has not been run, the <code>.vibewarden/</code> directory was deleted, or
 the project was cloned without the generated directory (it is gitignored by default).</p>
 <p><strong>Fix</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>vibew<span class="w"> </span>generate
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># then start the stack</span>
-</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>vibew<span class="w"> </span>dev
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>vibew<span class="w"> </span>generate
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># then start the stack</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>vibew<span class="w"> </span>dev
 </span></code></pre></div>
 <hr />
 <h3 id="kratos-unreachable">Kratos unreachable<a class="headerlink" href="#kratos-unreachable" title="Permanent link">&para;</a></h3>
 <p>Container health failures often manifest as a Kratos container in a non-healthy state:</p>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>[FAIL]  Container health  unhealthy containers: [kratos (running/unhealthy)]
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>[FAIL]  Container health  unhealthy containers: [kratos (running/unhealthy)]
 </span></code></pre></div>
 <p><strong>Possible causes and fixes</strong></p>
 <table>
@@ -2078,20 +2120,20 @@ the project was cloned without the generated directory (it is gitignored by defa
 </tbody>
 </table>
 <p>View Kratos logs directly:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>logs<span class="w"> </span>kratos<span class="w"> </span>--tail<span class="w"> </span><span class="m">50</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>logs<span class="w"> </span>kratos<span class="w"> </span>--tail<span class="w"> </span><span class="m">50</span>
 </span></code></pre></div>
 <hr />
 <h3 id="containers-stuck-in-a-restart-loop">Containers stuck in a restart loop<a class="headerlink" href="#containers-stuck-in-a-restart-loop" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>[FAIL]  Container health  unhealthy containers: [postgres (restarting/)]
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>[FAIL]  Container health  unhealthy containers: [postgres (restarting/)]
 </span></code></pre></div>
 <p><strong>Fix</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Check the logs for the failing container</span>
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>logs<span class="w"> </span>postgres<span class="w"> </span>--tail<span class="w"> </span><span class="m">100</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
-</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Common fix: wipe the volume and let Postgres reinitialise</span>
-</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>down<span class="w"> </span>-v
-</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>vibew<span class="w"> </span>dev
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Check the logs for the failing container</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>logs<span class="w"> </span>postgres<span class="w"> </span>--tail<span class="w"> </span><span class="m">100</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Common fix: wipe the volume and let Postgres reinitialise</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>.vibewarden/generated/docker-compose.yml<span class="w"> </span>down<span class="w"> </span>-v
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>vibew<span class="w"> </span>dev
 </span></code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Data loss</p>
@@ -2101,54 +2143,54 @@ In production, investigate the log output before taking destructive action.</p>
 <hr />
 <h3 id="secrets-plugin-fails-to-start-missing-master-key">Secrets plugin fails to start -- missing master key<a class="headerlink" href="#secrets-plugin-fails-to-start-missing-master-key" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>secrets plugin: builtin store: master key not configured
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>secrets plugin: builtin store: master key not configured
 </span></code></pre></div>
 <p><strong>Cause</strong></p>
 <p>The <code>VIBEWARDEN_SECRETS_MASTER_KEY</code> environment variable is not set and
 <code>secrets.builtin.key_file</code> is not configured in <code>vibewarden.yaml</code>. The built-in
 encrypted secret store requires a 32-byte master key to encrypt and decrypt secrets.</p>
 <p><strong>Fix</strong></p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VIBEWARDEN_SECRETS_MASTER_KEY</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="k">)</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">VIBEWARDEN_SECRETS_MASTER_KEY</span><span class="o">=</span><span class="k">$(</span>openssl<span class="w"> </span>rand<span class="w"> </span>-hex<span class="w"> </span><span class="m">32</span><span class="k">)</span>
 </span></code></pre></div>
 <p>Or set <code>secrets.builtin.key_file</code> in <code>vibewarden.yaml</code> pointing to a file that contains the
 hex-encoded 32-byte key:</p>
-<div class="language-yaml highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nt">secrets</span><span class="p">:</span>
-</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="nt">store</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">builtin</span>
-</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="nt">builtin</span><span class="p">:</span>
-</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span><span class="nt">key_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/master.key</span>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nt">secrets</span><span class="p">:</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span><span class="nt">store</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">builtin</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">  </span><span class="nt">builtin</span><span class="p">:</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">    </span><span class="nt">key_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/path/to/master.key</span>
 </span></code></pre></div>
 <p>Save the master key somewhere safe -- if you lose it, your secrets are unrecoverable.</p>
 <hr />
 <h3 id="architecture-mismatch-between-build-and-deploy-target">Architecture mismatch between build and deploy target<a class="headerlink" href="#architecture-mismatch-between-build-and-deploy-target" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>[WARN]  Arch compatibility  local build is arm64 but remote server is amd64
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>[WARN]  Arch compatibility  local build is arm64 but remote server is amd64
 </span></code></pre></div>
 <p><strong>Cause</strong></p>
 <p>You built the Docker image on Apple Silicon (arm64) without specifying the
 target platform. The remote server runs amd64 and cannot execute the image.</p>
 <p><strong>Fix</strong></p>
 <p>Rebuild with the correct platform:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>vibew<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>vibew<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64
 </span></code></pre></div>
 <p>Then redeploy:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
 </span></code></pre></div>
 <hr />
 <h3 id="remote-tls-certificate-expiring-or-invalid">Remote TLS certificate expiring or invalid<a class="headerlink" href="#remote-tls-certificate-expiring-or-invalid" title="Permanent link">&para;</a></h3>
 <p><strong>Symptom</strong></p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>[WARN]  Remote TLS cert  certificate expires in 12 days
-</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>[FAIL]  Remote TLS cert  certificate expired 2 days ago
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>[WARN]  Remote TLS cert  certificate expires in 12 days
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>[FAIL]  Remote TLS cert  certificate expired 2 days ago
 </span></code></pre></div>
 <p><strong>Cause</strong></p>
 <p>The TLS certificate on the remote host is nearing expiry or has already expired.
 If you are using <code>tls.provider: letsencrypt</code>, the ACME renewal may have failed.</p>
 <p><strong>Fix</strong></p>
 <p>Inspect the certificate details:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>vibew<span class="w"> </span>tls<span class="w"> </span>status<span class="w"> </span>--domain<span class="w"> </span>example.com<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>vibew<span class="w"> </span>tls<span class="w"> </span>status<span class="w"> </span>--domain<span class="w"> </span>example.com<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
 </span></code></pre></div>
 <p>If renewal failed, check the sidecar logs for ACME errors:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://user@host<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://user@host<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
 </span></code></pre></div>
 <p>Common causes: DNS not pointing to the server, port 80 blocked (HTTP-01 challenge
 requires it), or rate limits exhausted (switch to ZeroSSL via <code>tls.acme_ca</code>).</p>
@@ -2173,7 +2215,7 @@ requires it), or rate limits exhausted (switch to ZeroSSL via <code>tls.acme_ca<
 </tbody>
 </table>
 <p>This lets you gate a startup script on a clean doctor run:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>vibew<span class="w"> </span>doctor<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vibew<span class="w"> </span>dev
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>vibew<span class="w"> </span>doctor<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>vibew<span class="w"> </span>dev
 </span></code></pre></div>
 
 
