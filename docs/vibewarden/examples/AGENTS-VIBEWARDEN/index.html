@@ -1353,6 +1353,9 @@ treat them as optional on public paths and required on protected paths.</p>
 transfers the pre-built image to the server via <code>docker save | rsync | docker load</code>.
 No source code is ever copied to the production server -- the image must be
 production-ready (all dependencies installed, assets compiled, etc.).</p>
+<p><strong>Cross-architecture builds:</strong> If deploying from Apple Silicon (arm64) to an amd64
+server, use <code>vibew build --platform linux/amd64</code>. Deploy auto-detects the mismatch
+and errors with a fix-it message if you forget.</p>
 <p>Use <code>app.environment</code> in vibewarden.yaml for runtime configuration:
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">app</span><span class="p">:</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;.&quot;</span>
