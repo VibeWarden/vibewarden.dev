@@ -714,15 +714,12 @@ twitterDescription: "Generate a ready-to-paste prompt that sets up VibeWarden as
         prompt += '\n\nAlso enable in `vibewarden.yaml`: ' + yamlFeatures.join(', ') + '.';
       }
 
-      // Deploy
+      // Deploy — bundle + manual deploy.sh (vibew deploy was removed in ADR-086)
       if (deployTarget) {
-        if (isDomain) {
-          prompt += '\n\nDeploy to `' + deployTarget + '` using `vibew deploy --target ssh://root@' + deployTarget + '`. Install Docker on the server if not already installed. DNS is configured.';
-        } else {
-          prompt += '\n\nDeploy to server `' + deployTarget + '` using `vibew deploy --target ssh://root@' + deployTarget + '`. Install Docker on the server if not already installed.';
-        }
+        var dnsNote = isDomain ? ' DNS is configured.' : '';
+        prompt += '\n\nDeploy to `' + deployTarget + '`:\n  vibew bundle                                     # packages .vibewarden/bundle/\n  scp -r .vibewarden/bundle/ root@' + deployTarget + ':/opt/myapp/\n  ssh root@' + deployTarget + ' "cd /opt/myapp/bundle && bash deploy.sh"\nInstall Docker on the server if not already installed.' + dnsNote;
       } else {
-        prompt += '\n\nWhen the app is ready, deploy using `vibew deploy`.';
+        prompt += '\n\nWhen the app is ready, run `vibew bundle` to produce a self-contained deploy bundle under `.vibewarden/bundle/`, then scp it to the server and run `bash deploy.sh` there.';
       }
 
       outputText.value = prompt;
