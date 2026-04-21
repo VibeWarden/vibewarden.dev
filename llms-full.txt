@@ -13,7 +13,7 @@ Install vibew first:
 IMPORTANT — always use vibew init or vibew wrap. Do NOT create vibewarden.yaml,
 Dockerfile, or docker-compose files by hand. These commands generate internal
 state (.vibewarden/, health check config, compose wiring) that vibew dev and
-vibew deploy depend on. Manually created configs will fail.
+vibew bundle depend on. Manually created configs will fail.
 
 PATH A — New project:
 
@@ -1074,31 +1074,35 @@ See examples/vibewarden.prod.yaml in the repo for a complete reference.
       enabled: true
       mode: block
 
-  Generate compose file:
-    ./vibew generate --config vibewarden.prod.yaml
+Step 6 — Produce a deploy bundle locally:
+    vibew bundle --config vibewarden.prod.yaml
+    # Writes .vibewarden/bundle/ containing:
+    #   image.tar                 — docker-saved app image
+    #   docker-compose.yml        — pinned tag, deterministic
+    #   vibewarden.yaml           — merged base + prod override, strict-validated
+    #   sample.env                — template for operators
+    #   .env                      — first-run only (use --overwrite to regenerate)
+    #   deploy.sh                 — 10-line reference script (mode 0o750)
+    #   README.md                 — 3-paragraph manual-deploy guide
 
-Step 6 — Deploy:
-    rsync -av vibewarden.prod.yaml \
-      .vibewarden/generated/docker-compose.yml \
-      root@<server-ip>:/opt/myapp/
-    ssh root@<server-ip> bash -s <<'EOF'
-    mkdir -p /opt/myapp
-    echo "VIBEWARDEN_ADMIN_TOKEN=$(openssl rand -hex 32)" > /opt/myapp/.env
-    chmod 600 /opt/myapp/.env
-    EOF
-    ssh root@<server-ip> 'cd /opt/myapp && docker compose -f docker-compose.yml up -d'
+Step 7 — Ship and start:
+    scp -r .vibewarden/bundle/ root@<server-ip>:/opt/myapp/
+    ssh root@<server-ip> 'cd /opt/myapp/bundle && bash deploy.sh'
+    # deploy.sh: docker load < image.tar && docker compose up -d
 
-Step 7 — Verify:
-    ssh root@<server-ip> 'cd /opt/myapp && docker compose ps'
+Step 8 — Verify:
+    ssh root@<server-ip> 'cd /opt/myapp/bundle && docker compose ps'
     # Health check probes localhost on the remote via SSH (not the external domain):
     ssh root@<server-ip> 'curl -sf http://localhost/_vibewarden/healthz && echo OK'
     # OK
 
-Step 8 — Subsequent deploys (after code or config changes):
-    docker build -t ghcr.io/your-org/myapp:latest . && docker push ...
-    ./vibew generate --config vibewarden.prod.yaml
-    rsync -av .vibewarden/generated/docker-compose.yml root@<server-ip>:/opt/myapp/
-    ssh root@<server-ip> 'cd /opt/myapp && docker compose pull && docker compose up -d'
+Step 9 — Subsequent deploys (after code or config changes):
+    vibew bundle --config vibewarden.prod.yaml
+    scp -r .vibewarden/bundle/ root@<server-ip>:/opt/myapp/
+    ssh root@<server-ip> 'cd /opt/myapp/bundle && bash deploy.sh'
+
+Note: the legacy `vibew deploy` command (one-shot SSH orchestration) was removed
+in ADR-086. The bundle pipeline above is the only supported remote workflow.
 
 ### Troubleshooting VPS deployments
 
@@ -1217,9 +1221,12 @@ CLI commands:
   vibew build              Build Docker image for your app
   vibew restart            Restart containers without full recreate
 
-  vibew deploy --config <file> --target ssh://user@host   Deploy to remote server
-  vibew deploy status --target ssh://...                   Check remote health
-  vibew deploy logs --target ssh://... [--lines N] [--follow]  Tail (or stream) remote logs
+  vibew bundle             Produce a self-contained deploy bundle under .vibewarden/bundle/
+                           (image.tar + docker-compose.yml + merged vibewarden.yaml + deploy.sh).
+                           Ship with `scp` + `bash deploy.sh` on the server.
+
+  Note: `vibew deploy` was removed in ADR-086. The command still exists for one
+  release as a deprecation shim (prints a message and exits 2); do not use it.
 
   vibew doctor exit codes:
     0 — all checks passed (OK or WARN only)
