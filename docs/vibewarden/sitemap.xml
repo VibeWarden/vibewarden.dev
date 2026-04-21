@@ -25,10 +25,6 @@
          <lastmod>2026-04-21</lastmod>
     </url>
     <url>
-         <loc>https://vibewarden.dev/docs/deploy-to-vps/</loc>
-         <lastmod>2026-04-21</lastmod>
-    </url>
-    <url>
          <loc>https://vibewarden.dev/docs/egress/</loc>
          <lastmod>2026-04-21</lastmod>
     </url>
@@ -114,6 +110,10 @@
     </url>
     <url>
          <loc>https://vibewarden.dev/docs/examples/rails/</loc>
+         <lastmod>2026-04-21</lastmod>
+    </url>
+    <url>
+         <loc>https://vibewarden.dev/docs/guide/bundle-to-vps/</loc>
          <lastmod>2026-04-21</lastmod>
     </url>
 </urlset>
