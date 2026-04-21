@@ -1480,21 +1480,25 @@ and errors with a fix-it message if you forget.</p>
 <p><code>vibew deploy</code> handles image transfer, config generation, and container startup
 in a single command.</p>
 <h3 id="manual-fallback">Manual fallback<a class="headerlink" href="#manual-fallback" title="Permanent link">&para;</a></h3>
-<p>When <code>vibew deploy</code> fails or you need more control, use standard commands:</p>
+<p>When <code>vibew deploy</code> fails or you need more control, produce a bundle
+locally and drive the transfer yourself:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Build for the target architecture</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vibew<span class="w"> </span>build<span class="w"> </span>--platform<span class="w"> </span>linux/amd64
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Transfer the image via SSH</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>docker<span class="w"> </span>save<span class="w"> </span>&lt;project&gt;-app:latest<span class="w"> </span><span class="p">|</span><span class="w"> </span>ssh<span class="w"> </span>user@host<span class="w"> </span>docker<span class="w"> </span>load
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 3. Copy the deploy bundle (config, compose files)</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>rsync<span class="w"> </span>-az<span class="w"> </span>.vibewarden/deploy/production/<span class="w"> </span>user@host:~/vibewarden/&lt;project&gt;/
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 4. Start the stack on the remote</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>ssh<span class="w"> </span>user@host<span class="w"> </span><span class="s1">&#39;cd ~/vibewarden/&lt;project&gt; &amp;&amp; docker compose up -d&#39;</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Generate a self-contained deploy bundle (no SSH).</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1">#    Produces docker-compose.yml, vibewarden.yaml, .env, sample.env,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">#    deploy.sh, README.md, and image.tar under .vibewarden/bundle/.</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>vibew<span class="w"> </span>bundle
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># 3. Copy the bundle and start the stack on the remote.</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>./.vibewarden/bundle/deploy.sh<span class="w"> </span>user@host
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># or, if you prefer explicit commands:</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1">#   scp -r .vibewarden/bundle/* user@host:~/&lt;project&gt;/</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1">#   ssh user@host &#39;cd ~/&lt;project&gt; &amp;&amp; docker load -i image.tar &amp;&amp; docker compose up -d&#39;</span>
 </span></code></pre></div>
-<p>Each of these commands produces standard error messages that are searchable --
-use them as a plan B when debugging deploy issues.</p>
+<p><code>vibew bundle</code> is byte-identical to <code>vibew deploy --dry-run</code> on the core
+files (<code>docker-compose.yml</code>, <code>vibewarden.yaml</code>) per ADR-085. Use it as
+the starting point for any custom CI/CD pipeline.</p>
 <p>Use <code>app.environment</code> in vibewarden.yaml for runtime configuration:
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">app</span><span class="p">:</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;.&quot;</span>

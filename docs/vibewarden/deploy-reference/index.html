@@ -914,6 +914,48 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#vibew-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      vibew bundle
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vibew bundle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flags_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output layout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common errors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#vibew-deploy-status" class="md-nav__link">
     <span class="md-ellipsis">
       vibew deploy status
@@ -924,7 +966,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#flags_1" class="md-nav__link">
+  <a href="#flags_2" class="md-nav__link">
     <span class="md-ellipsis">
       Flags
     </span>
@@ -948,7 +990,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#flags_2" class="md-nav__link">
+  <a href="#flags_3" class="md-nav__link">
     <span class="md-ellipsis">
       Flags
     </span>
@@ -1081,7 +1123,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-errors" class="md-nav__link">
+  <a href="#common-errors_1" class="md-nav__link">
     <span class="md-ellipsis">
       Common errors
     </span>
@@ -1555,6 +1597,48 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#vibew-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      vibew bundle
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vibew bundle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#flags_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#output-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Output layout
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common errors
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#vibew-deploy-status" class="md-nav__link">
     <span class="md-ellipsis">
       vibew deploy status
@@ -1565,7 +1649,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#flags_1" class="md-nav__link">
+  <a href="#flags_2" class="md-nav__link">
     <span class="md-ellipsis">
       Flags
     </span>
@@ -1589,7 +1673,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#flags_2" class="md-nav__link">
+  <a href="#flags_3" class="md-nav__link">
     <span class="md-ellipsis">
       Flags
     </span>
@@ -1722,7 +1806,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-errors" class="md-nav__link">
+  <a href="#common-errors_1" class="md-nav__link">
     <span class="md-ellipsis">
       Common errors
     </span>
@@ -1918,13 +2002,116 @@ remote host via SSH (single round-trip).</p>
 <li>Secrets are not re-seeded unless <code>--rotate-secrets</code> is passed.</li>
 </ol>
 <hr />
+<h3 id="vibew-bundle"><code>vibew bundle</code><a class="headerlink" href="#vibew-bundle" title="Permanent link">&para;</a></h3>
+<p>Produce a self-contained Docker Compose deployment bundle under
+<code>--output</code> without opening an SSH connection. The command writes
+every file needed to deploy on a VPS (merged docker-compose.yml with
+<code>image:</code> pinned, merged vibewarden.yaml, a <code>.env</code> preserved across
+runs, a reference <code>deploy.sh</code>, a README, and optionally an
+<code>image.tar</code>) and lists them on stdout.</p>
+<p>Use this when you want to run the deploy manually (your own <code>scp</code> /
+<code>rsync</code> / CI pipeline) instead of letting <code>vibew deploy</code> drive SSH.
+The bundle is local-only — no network calls, no changes outside
+<code>--output</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vibew<span class="w"> </span>bundle
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>vibew<span class="w"> </span>bundle<span class="w"> </span>--output<span class="w"> </span>build/deploy
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vibew<span class="w"> </span>bundle<span class="w"> </span>--skip-image
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vibew<span class="w"> </span>bundle<span class="w"> </span>--image<span class="w"> </span>ghcr.io/acme/myapp:v1.2.3
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vibew<span class="w"> </span>bundle<span class="w"> </span>--overwrite
+</span></code></pre></div>
+<h4 id="flags_1">Flags<a class="headerlink" href="#flags_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--output</code></td>
+<td>No</td>
+<td><code>.vibewarden/bundle</code></td>
+<td>Output directory for all bundle files</td>
+</tr>
+<tr>
+<td><code>--overwrite</code></td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Replace an existing <code>.env</code> in <code>--output</code> (otherwise preserved across runs)</td>
+</tr>
+<tr>
+<td><code>--image</code></td>
+<td>No</td>
+<td><code>&lt;project&gt;-app:latest</code></td>
+<td>Docker image tag to package via <code>docker save</code></td>
+</tr>
+<tr>
+<td><code>--skip-image</code></td>
+<td>No</td>
+<td><code>false</code></td>
+<td>Do not package <code>image.tar</code> (use this when pulling from a registry)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="output-layout">Output layout<a class="headerlink" href="#output-layout" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>.vibewarden/bundle/
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  docker-compose.yml     # image: pinned, never build:
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  vibewarden.yaml        # merged base + prod override, strict-validated
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  sample.env             # regenerated every run; template for operators
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  .env                   # first-run only; --overwrite to replace
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  deploy.sh              # mode 0o750, 10-line reference script
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  image.tar              # omitted with --skip-image
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  README.md              # 3-paragraph manual-deploy guide
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  kratos/, .credentials  # whatever the generator produces
+</span></code></pre></div>
+<p>Five of those files (<code>sample.env</code>, <code>.env</code>, <code>deploy.sh</code>, <code>README.md</code>,
+<code>image.tar</code>) are unique to <code>vibew bundle</code>. The rest are the same
+artifacts <code>vibew deploy</code> produces internally; ADR-085 §4 guarantees
+<code>docker-compose.yml</code> and <code>vibewarden.yaml</code> are byte-identical between
+the two commands for the same input.</p>
+<h4 id="common-errors">Common errors<a class="headerlink" href="#common-errors" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>multi-site bundle is not yet supported; use vibew deploy</code></td>
+<td>Project has <code>sites/&lt;name&gt;/vibewarden.yaml</code></td>
+<td>Use <code>vibew deploy</code> until multi-site bundling lands (tracked under ADR-085 follow-ups)</td>
+</tr>
+<tr>
+<td><code>Configuration invalid: unknown key ...</code></td>
+<td>Typo in <code>vibewarden.yaml</code> or <code>vibewarden.production.yaml</code></td>
+<td>Remove the unknown key; see ADR-082</td>
+</tr>
+<tr>
+<td><code>creating output directory: ...</code></td>
+<td><code>--output</code> points at a read-only path</td>
+<td>Choose a writable directory</td>
+</tr>
+<tr>
+<td><code>saving image ... : no such image</code></td>
+<td>Image not yet built</td>
+<td>Run <code>vibew build</code> (or pass <code>--skip-image</code> for registry-pull)</td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h3 id="vibew-deploy-status"><code>vibew deploy status</code><a class="headerlink" href="#vibew-deploy-status" title="Permanent link">&para;</a></h3>
 <p>Show Docker Compose service status on the remote.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
 </span></code></pre></div>
 <p>In multi-app mode (auto-detected), shows the sidecar status plus all sites.
 Use <code>--app</code> to target a specific site.</p>
-<h4 id="flags_1">Flags<a class="headerlink" href="#flags_1" title="Permanent link">&para;</a></h4>
+<h4 id="flags_2">Flags<a class="headerlink" href="#flags_2" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -1964,11 +2151,11 @@ Use <code>--app</code> to target a specific site.</p>
 <hr />
 <h3 id="vibew-deploy-logs"><code>vibew deploy logs</code><a class="headerlink" href="#vibew-deploy-logs" title="Permanent link">&para;</a></h3>
 <p>Fetch Docker Compose logs from the remote.</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://user@host
 </span></code></pre></div>
 <p>In multi-app mode (auto-detected), shows sidecar logs by default. Use <code>--app</code>
 to view a specific site's logs.</p>
-<h4 id="flags_2">Flags<a class="headerlink" href="#flags_2" title="Permanent link">&para;</a></h4>
+<h4 id="flags_3">Flags<a class="headerlink" href="#flags_3" title="Permanent link">&para;</a></h4>
 <table>
 <thead>
 <tr>
@@ -2020,63 +2207,63 @@ to view a specific site's logs.</p>
 <hr />
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h2>
 <h3 id="first-deploy-with-secrets">First deploy with secrets<a class="headerlink" href="#first-deploy-with-secrets" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--secrets-from<span class="w"> </span>.env.prod
-</span></code></pre></div>
-<p>Save the unseal key from the output immediately.</p>
-<h3 id="subsequent-deploy-config-change-no-secret-rotation">Subsequent deploy (config change, no secret rotation)<a class="headerlink" href="#subsequent-deploy-config-change-no-secret-rotation" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
-</span></code></pre></div>
-<h3 id="rotate-secrets-on-redeploy">Rotate secrets on redeploy<a class="headerlink" href="#rotate-secrets-on-redeploy" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--rotate-secrets<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--secrets-from<span class="w"> </span>.env.prod
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--secrets-from<span class="w"> </span>.env.prod
+</span></code></pre></div>
+<p>Save the unseal key from the output immediately.</p>
+<h3 id="subsequent-deploy-config-change-no-secret-rotation">Subsequent deploy (config change, no secret rotation)<a class="headerlink" href="#subsequent-deploy-config-change-no-secret-rotation" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
+</span></code></pre></div>
+<h3 id="rotate-secrets-on-redeploy">Rotate secrets on redeploy<a class="headerlink" href="#rotate-secrets-on-redeploy" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--rotate-secrets<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--secrets-from<span class="w"> </span>.env.prod
 </span></code></pre></div>
 <h3 id="deploy-with-explicit-unseal-key">Deploy with explicit unseal key<a class="headerlink" href="#deploy-with-explicit-unseal-key" title="Permanent link">&para;</a></h3>
 <p>Use this when redeploying to a sealed OpenBao instance (e.g. after a server
 restart) if the stored credentials file was lost:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--unseal-key<span class="w"> </span><span class="s2">&quot;YOUR_UNSEAL_KEY_HERE&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--unseal-key<span class="w"> </span><span class="s2">&quot;YOUR_UNSEAL_KEY_HERE&quot;</span>
 </span></code></pre></div>
 <h3 id="deploy-via-non-standard-ssh-port-with-explicit-key">Deploy via non-standard SSH port with explicit key<a class="headerlink" href="#deploy-via-non-standard-ssh-port-with-explicit-key" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://deploy@myserver.example.com:2222<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--ssh-key<span class="w"> </span>~/.ssh/deploy_ed25519
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.prod.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://deploy@myserver.example.com:2222<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>--ssh-key<span class="w"> </span>~/.ssh/deploy_ed25519
 </span></code></pre></div>
 <h3 id="check-service-status">Check service status<a class="headerlink" href="#check-service-status" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
 </span></code></pre></div>
 <h3 id="tail-last-100-log-lines">Tail last 100 log lines<a class="headerlink" href="#tail-last-100-log-lines" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--lines<span class="w"> </span><span class="m">100</span>
 </span></code></pre></div>
 <h3 id="stream-logs-in-real-time">Stream logs in real-time<a class="headerlink" href="#stream-logs-in-real-time" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--follow
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--follow
 </span></code></pre></div>
 <p>Press Ctrl-C to stop streaming.</p>
 <h3 id="multi-app-deploy-a-second-app-to-the-same-vm">Multi-app: deploy a second app to the same VM<a class="headerlink" href="#multi-app-deploy-a-second-app-to-the-same-vm" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.yaml<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--config<span class="w"> </span>vibewarden.yaml<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
 </span></code></pre></div>
 <p>The CLI detects the existing sidecar and adds the new site. The config must
 have <code>tls.domain</code> set.</p>
 <h3 id="multi-app-check-all-sites">Multi-app: check all sites<a class="headerlink" href="#multi-app-check-all-sites" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>status<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10
 </span></code></pre></div>
 <h3 id="multi-app-view-a-specific-sites-logs">Multi-app: view a specific site's logs<a class="headerlink" href="#multi-app-view-a-specific-sites-logs" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--app<span class="w"> </span>blog<span class="w"> </span>--follow
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>vibew<span class="w"> </span>deploy<span class="w"> </span>logs<span class="w"> </span>--target<span class="w"> </span>ssh://ubuntu@203.0.113.10<span class="w"> </span>--app<span class="w"> </span>blog<span class="w"> </span>--follow
 </span></code></pre></div>
 <hr />
-<h2 id="common-errors">Common errors<a class="headerlink" href="#common-errors" title="Permanent link">&para;</a></h2>
+<h2 id="common-errors_1">Common errors<a class="headerlink" href="#common-errors_1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
