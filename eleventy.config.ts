@@ -1,6 +1,16 @@
 import type { UserConfig } from "@11ty/eleventy";
 
 export default function (eleventyConfig: UserConfig) {
+  // Filter: safely embed a string as a JSON literal inside a <script> tag.
+  // Usage in nunjucks: {{ someString | jsonStringify | safe }}
+  // JSON.stringify escapes quotes and backslashes but NOT the literal string
+  // "</script>". Replace it post-stringify so the embedded JS string can't
+  // accidentally close the surrounding <script> tag if a future artifact ever
+  // contains that substring (current artifacts are clean; this is defensive).
+  eleventyConfig.addFilter("jsonStringify", (value: unknown) =>
+    JSON.stringify(value).replace(/<\/script>/gi, "<\\/script>"),
+  );
+
   // Passthrough copies — files outside src/ that go to dist/ as-is
   eleventyConfig.addPassthroughCopy({ "static": "static" });
   eleventyConfig.addPassthroughCopy({ "docs": "docs" });

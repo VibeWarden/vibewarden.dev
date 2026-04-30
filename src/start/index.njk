@@ -482,6 +482,13 @@ twitterDescription: "Generate a ready-to-paste prompt that sets up VibeWarden as
 
         <form class="start-form" id="startForm" aria-label="Prompt generator">
 
+          <!-- Project name -->
+          <div class="form-group">
+            <label for="prjnameField">Project name</label>
+            <input class="form-input" type="text" id="prjnameField" name="prjname" placeholder="myapp">
+            <small class="field-hint">Lowercase, hyphenated, no spaces. Defaults to <code>myapp</code>.</small>
+          </div>
+
           <!-- What are you building? -->
           <div class="form-group">
             <label for="whatField">What are you building?</label>
@@ -625,6 +632,43 @@ twitterDescription: "Generate a ready-to-paste prompt that sets up VibeWarden as
 
 {% block pageScripts %}
 <script>
+  // Artifact templates fetched from the main repo's latest release at build time.
+  // Placeholders: {{prjname}}, {{description}}, {{domain}}
+  var KICKOFF_DEV = {{ agentKickoffDev | jsonStringify | safe }};
+  var KICKOFF_DEPLOY = {{ agentKickoffDeploy | jsonStringify | safe }};
+
+  /**
+   * Strip the comment header block that appears after the # ----- divider.
+   * The divider pattern is one or more `# ` lines, then a blank line, then the body.
+   * We already strip everything before the divider in the JS data files, so what
+   * remains may still start with a `# VibeWarden Agent Kickoff Prompt` header block.
+   * Strip those leading `#`-prefixed lines (and one following blank line) so the
+   * body that reaches the user is clean prose.
+   */
+  function stripLeadingComments(text) {
+    var lines = text.split('\n');
+    var i = 0;
+    // Skip lines starting with '#'
+    while (i < lines.length && lines[i].trimStart().startsWith('#')) {
+      i++;
+    }
+    // Skip one blank line after the comment block
+    if (i < lines.length && lines[i].trim() === '') {
+      i++;
+    }
+    return lines.slice(i).join('\n');
+  }
+
+  /**
+   * Substitute two-brace placeholders in a template string.
+   */
+  function fillTemplate(template, prjname, description, domain) {
+    return template
+      .replace(/\{\{prjname\}\}/g, prjname)
+      .replace(/\{\{description\}\}/g, description)
+      .replace(/\{\{domain\}\}/g, domain || '');
+  }
+
   // Auth expandable pill
   (function() {
     var wrap = document.getElementById('authPill');
@@ -656,71 +700,17 @@ twitterDescription: "Generate a ready-to-paste prompt that sets up VibeWarden as
     form.addEventListener('submit', function(e) {
       e.preventDefault();
 
-      var what = document.getElementById('whatField').value.trim();
-      if (!what) return;
-
-      // Auth config
-      var authInput = document.getElementById('featAuth');
-      var authEnabled = authInput && !authInput.disabled;
+      var prjname = (document.getElementById('prjnameField').value || '').trim() || 'myapp';
+      var description = document.getElementById('whatField').value.trim();
+      if (!description) return;
 
       // Deploy target
       var deployTarget = (document.getElementById('deployTarget').value || '').trim();
-      var isDomain = deployTarget && !/^\d+\.\d+\.\d+\.\d+$/.test(deployTarget);
 
-      // Base prompt — vibew init scaffolds in cwd, no flags needed
-      var prompt = 'Build ' + what + ' with VibeWarden as the security sidecar.\n\nVibeWarden is open source (Apache 2.0).\n  GitHub: https://github.com/vibewarden/vibewarden\n  Docs:   https://vibewarden.dev/llms-full.txt\n\nInstall: curl -fsSL https://vibewarden.dev/install.sh | sh\n  (downloads a single Go binary)';
-      prompt += '\n\nSetup:\n  mkdir myapp && cd myapp\n  vibew init';
-
-      // Post-init feature commands (vibew add)
-      var addCmds = [];
-      if (authEnabled) {
-        addCmds.push('vibew add auth');
-      }
-      if (isDomain) {
-        addCmds.push('vibew add tls --domain ' + deployTarget);
-      }
-      for (var i = 0; i < addCmds.length; i++) {
-        prompt += '\n  ' + addCmds[i];
-      }
-
-      prompt += '\n\nRun: `vibew dev`';
-      prompt += '\nThen build the app on top of the scaffolded project.';
-
-      // Auth type detail
-      if (authEnabled) {
-        var checked = document.querySelector('input[name="authType"]:checked');
-        var authType = checked ? checked.value : 'jwt';
-        if (authType === 'kratos') {
-          prompt += ' Authentication is set to built-in signup/login (Ory Kratos, `auth.mode: kratos`).';
-        } else {
-          prompt += ' Configure JWT authentication in `vibewarden.yaml` (`auth.mode: jwt` with your JWKS URL).';
-        }
-      }
-
-      // YAML-only features
-      var yamlFeatures = [];
-      var featureBoxes = form.querySelectorAll('input[name="features"][type="checkbox"]:checked');
-      for (var i = 0; i < featureBoxes.length; i++) {
-        var key = featureBoxes[i].value;
-        switch (key) {
-          case 'waf': yamlFeatures.push('WAF protection (`vibew add waf` or set `waf.enabled: true`)'); break;
-          case 'prompt': yamlFeatures.push('prompt injection detection on egress routes'); break;
-          case 'webhook': yamlFeatures.push('webhook signature verification'); break;
-          case 'secrets': yamlFeatures.push('secret management (`secrets.enabled: true` in vibewarden.yaml)'); break;
-          case 'ipfilter': yamlFeatures.push('IP filtering (`ip_filter.enabled: true`)'); break;
-        }
-      }
-      if (yamlFeatures.length > 0) {
-        prompt += '\n\nAlso enable in `vibewarden.yaml`: ' + yamlFeatures.join(', ') + '.';
-      }
-
-      // Deploy — bundle + manual deploy.sh (vibew deploy was removed in ADR-086)
-      if (deployTarget) {
-        var dnsNote = isDomain ? ' DNS is configured.' : '';
-        prompt += '\n\nDeploy to `' + deployTarget + '`:\n  vibew bundle                                     # packages .vibewarden/bundle/\n  scp -r .vibewarden/bundle/ root@' + deployTarget + ':/opt/myapp/\n  ssh root@' + deployTarget + ' "cd /opt/myapp/bundle && bash deploy.sh"\nInstall Docker on the server if not already installed.' + dnsNote;
-      } else {
-        prompt += '\n\nWhen the app is ready, run `vibew bundle` to produce a self-contained deploy bundle under `.vibewarden/bundle/`, then scp it to the server and run `bash deploy.sh` there.';
-      }
+      // Pick the right canonical template
+      var rawTemplate = deployTarget ? KICKOFF_DEPLOY : KICKOFF_DEV;
+      var body = stripLeadingComments(rawTemplate);
+      var prompt = fillTemplate(body, prjname, description, deployTarget);
 
       outputText.value = prompt;
       outputArea.classList.add('visible');
