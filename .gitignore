@@ -4,3 +4,6 @@ dist/
 .DS_Store
 Thumbs.db
 .playwright-mcp/
+
+# Fetched at build time from the main repo's latest release (run `npm run prepare` locally)
+src/_data/agent-kickoff-*.txt

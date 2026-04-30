@@ -24,6 +24,12 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
+      - name: Fetch kickoff artifacts from main repo's latest release
+        run: |
+          set -euo pipefail
+          mkdir -p src/_data
+          curl -fsSL -o src/_data/agent-kickoff-dev.txt https://github.com/vibewarden/vibewarden/releases/latest/download/agent-kickoff-dev.txt
+          curl -fsSL -o src/_data/agent-kickoff-deploy.txt https://github.com/vibewarden/vibewarden/releases/latest/download/agent-kickoff-deploy.txt
       - run: npm run build
       - uses: actions/upload-pages-artifact@v5
         with:

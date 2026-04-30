@@ -22,15 +22,24 @@ Only files under `src/` and those listed in `eleventyConfig.addPassthroughCopy(.
 
 ## Local development
 
+The `/start/` page uses prompt templates fetched at build time from the main
+repo's latest release. These files are `.gitignore`'d. Fetch them before serving:
+
 ```bash
+npm run prepare  # downloads src/_data/agent-kickoff-{dev,deploy}.txt
 npm install
-npm run serve   # http://localhost:8080/ with hot reload
+npm run serve    # http://localhost:8080/ with hot reload
 ```
+
+`npm run prepare` can be re-run any time to refresh the templates to the latest
+release. Without it, the build still completes but the `/start/` page emits an
+obvious error placeholder instead of a real prompt.
 
 ## Build
 
 ```bash
-npm run build   # Outputs to ./dist/
+npm run prepare  # fetch kickoff artifacts (required)
+npm run build    # Outputs to ./dist/
 ```
 
 ## Deployment

@@ -1,6 +1,12 @@
 import type { UserConfig } from "@11ty/eleventy";
 
 export default function (eleventyConfig: UserConfig) {
+  // Filter: safely embed a string as a JSON literal inside a <script> tag.
+  // Usage in nunjucks: {{ someString | jsonStringify | safe }}
+  eleventyConfig.addFilter("jsonStringify", (value: unknown) =>
+    JSON.stringify(value)
+  );
+
   // Passthrough copies — files outside src/ that go to dist/ as-is
   eleventyConfig.addPassthroughCopy({ "static": "static" });
   eleventyConfig.addPassthroughCopy({ "docs": "docs" });
