@@ -20,6 +20,7 @@ export default function (eleventyConfig: UserConfig) {
   eleventyConfig.addPassthroughCopy({ "sitemap.xml": "sitemap.xml" });
   eleventyConfig.addPassthroughCopy({ "llms.txt": "llms.txt" });
   eleventyConfig.addPassthroughCopy({ "llms-full.txt": "llms-full.txt" });
+  eleventyConfig.addPassthroughCopy({ "vibewarden.reference.yaml": "vibewarden.reference.yaml" });
   eleventyConfig.addPassthroughCopy({ ".nojekyll": ".nojekyll" });
   eleventyConfig.addPassthroughCopy({ "install.sh": "install.sh" });
   eleventyConfig.addPassthroughCopy({ "install.ps1": "install.ps1" });
