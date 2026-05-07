@@ -7,3 +7,9 @@ Thumbs.db
 
 # Fetched at build time from the main repo's latest release (run `npm run prepare` locally)
 src/_data/agent-kickoff-*.txt
+
+# Content-authority files — fetched from the main repo's latest GitHub Release at build time.
+# Do not check these in; edit the source files in vibewarden/vibewarden and cut a release.
+llms-full.txt
+llms.txt
+vibewarden.reference.yaml

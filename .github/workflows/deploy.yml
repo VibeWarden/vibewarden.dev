@@ -30,6 +30,12 @@ jobs:
           mkdir -p src/_data
           curl -fsSL -o src/_data/agent-kickoff-dev.txt https://github.com/vibewarden/vibewarden/releases/latest/download/agent-kickoff-dev.txt
           curl -fsSL -o src/_data/agent-kickoff-deploy.txt https://github.com/vibewarden/vibewarden/releases/latest/download/agent-kickoff-deploy.txt
+      - name: Fetch content-authority files from main repo's latest release
+        run: |
+          set -euo pipefail
+          curl -fsSL -o llms-full.txt https://github.com/vibewarden/vibewarden/releases/latest/download/llms-full.txt
+          curl -fsSL -o llms.txt https://github.com/vibewarden/vibewarden/releases/latest/download/llms.txt
+          curl -fsSL -o vibewarden.reference.yaml https://github.com/vibewarden/vibewarden/releases/latest/download/vibewarden.reference.yaml
       - run: npm run build
       - uses: actions/upload-pages-artifact@v5
         with:
