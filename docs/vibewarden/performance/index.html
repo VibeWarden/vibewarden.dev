@@ -1409,23 +1409,39 @@ network round-trip time.</p>
 </span></code></pre></div>
 <p>Benchmarks live in <code>test/benchmarks/proxy_bench_test.go</code>. They use
 <code>net/http/httptest</code> so no network stack is involved. The numbers measure pure
-middleware CPU and allocation cost against a benign <code>GET /api/resource</code> request
-with no matching WAF rules.</p>
+middleware CPU and allocation cost against a benign request with no matching
+WAF rules.</p>
+<p>Benchmarks come in two shapes. Both carry two query parameters
+(<code>?page=2&amp;sort=created_at</code>) and a 117-byte browser <code>User-Agent</code>, because those
+are what the WAF actually inspects on a bodyless request:</p>
+<ul>
+<li><strong>No-body</strong> (<code>GET /api/resource?page=2&amp;sort=created_at</code>) — a browser-style GET.
+  Baseline: <code>BenchmarkProxy_DirectPassthrough</code>.</li>
+<li><strong>With body</strong> (the same request as a <code>POST</code> with a 37-byte JSON payload) — the
+  only shape that exercises the WAF body scan.
+  Baseline: <code>BenchmarkProxy_DirectPassthrough_WithBody</code>.</li>
+</ul>
+<p>Always compare a <code>_WithBody</code> benchmark against the <code>_WithBody</code> baseline. A POST
+with a body costs more to construct than a bodyless GET, and that construction
+cost must not be attributed to the middleware.</p>
 <hr />
 <h2 id="benchmark-results">Benchmark results<a class="headerlink" href="#benchmark-results" title="Permanent link">&para;</a></h2>
-<p>Machine: <code>darwin/amd64</code>, VirtualApple @ 2.50 GHz (Apple M-series, Rosetta),
-Go 1.26.</p>
+<p>Machine: <code>darwin/arm64</code>, Apple M1 Max, Go 1.27. Median of <code>-count=3</code>,
+<code>-benchtime=3s</code>.</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>goos: darwin
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>goarch: amd64
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>goarch: arm64
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pkg: github.com/vibewarden/vibewarden/test/benchmarks
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>cpu: VirtualApple @ 2.50GHz
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>BenchmarkProxy_DirectPassthrough-10      2159046    1672 ns/op    5394 B/op    14 allocs/op
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>BenchmarkProxy_WithSecurityHeaders-10    1521925    2350 ns/op    6226 B/op    21 allocs/op
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>BenchmarkProxy_WithRateLimiting-10       1916719    1851 ns/op    5402 B/op    15 allocs/op
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>BenchmarkProxy_WithWAF-10               1000000    3572 ns/op   13638 B/op    16 allocs/op
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>BenchmarkProxy_AllMiddleware-10          808497    4416 ns/op   14478 B/op    24 allocs/op
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>cpu: Apple M1 Max
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>BenchmarkProxy_DirectPassthrough-10           2584827    1394 ns/op    5827 B/op    16 allocs/op
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>BenchmarkProxy_DirectPassthrough_WithBody-10  2489506    1448 ns/op    5891 B/op    19 allocs/op
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>BenchmarkProxy_WithSecurityHeaders-10         1994570    1798 ns/op    6627 B/op    22 allocs/op
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>BenchmarkProxy_WithRateLimiting-10            2298481    1560 ns/op    5835 B/op    17 allocs/op
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>BenchmarkProxy_WithWAF-10                      128472   27929 ns/op   14523 B/op    21 allocs/op
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>BenchmarkProxy_WithWAF_WithBody-10             101457   35348 ns/op   14730 B/op    29 allocs/op
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>BenchmarkProxy_AllMiddleware-10                125074   28715 ns/op   15346 B/op    28 allocs/op
 </span></code></pre></div>
 <h3 id="interpretation">Interpretation<a class="headerlink" href="#interpretation" title="Permanent link">&para;</a></h3>
+<p>No-body requests, measured against <code>DirectPassthrough</code>:</p>
 <table>
 <thead>
 <tr>
@@ -1439,46 +1455,76 @@ Go 1.26.</p>
 <tbody>
 <tr>
 <td>DirectPassthrough</td>
-<td>1 672</td>
+<td>1 394</td>
 <td>— (baseline)</td>
-<td>5 394</td>
-<td>14</td>
-</tr>
-<tr>
-<td>WithSecurityHeaders</td>
-<td>2 350</td>
-<td>+678 ns (+0.7 µs)</td>
-<td>6 226</td>
-<td>21</td>
-</tr>
-<tr>
-<td>WithRateLimiting</td>
-<td>1 851</td>
-<td>+179 ns (+0.2 µs)</td>
-<td>5 402</td>
-<td>15</td>
-</tr>
-<tr>
-<td>WithWAF</td>
-<td>3 572</td>
-<td>+1 900 ns (+1.9 µs)</td>
-<td>13 638</td>
+<td>5 827</td>
 <td>16</td>
 </tr>
 <tr>
+<td>WithSecurityHeaders</td>
+<td>1 798</td>
+<td>+404 ns (+0.4 µs)</td>
+<td>6 627</td>
+<td>22</td>
+</tr>
+<tr>
+<td>WithRateLimiting</td>
+<td>1 560</td>
+<td>+166 ns (+0.2 µs)</td>
+<td>5 835</td>
+<td>17</td>
+</tr>
+<tr>
+<td>WithWAF</td>
+<td>27 929</td>
+<td>+26 535 ns (+26.5 µs)</td>
+<td>14 523</td>
+<td>21</td>
+</tr>
+<tr>
 <td>AllMiddleware</td>
-<td>4 416</td>
-<td>+2 744 ns (+2.7 µs)</td>
-<td>14 478</td>
-<td>24</td>
+<td>28 715</td>
+<td>+27 321 ns (+27.3 µs)</td>
+<td>15 346</td>
+<td>28</td>
 </tr>
 </tbody>
 </table>
-<p>All values are well below their respective latency budget targets.</p>
+<p>Body-bearing requests, measured against <code>DirectPassthrough_WithBody</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Benchmark</th>
+<th>ns/op</th>
+<th>Overhead vs baseline</th>
+<th>B/op</th>
+<th>allocs/op</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DirectPassthrough_WithBody</td>
+<td>1 448</td>
+<td>— (baseline)</td>
+<td>5 891</td>
+<td>19</td>
+</tr>
+<tr>
+<td>WithWAF_WithBody</td>
+<td>35 348</td>
+<td>+33 900 ns (+33.9 µs)</td>
+<td>14 730</td>
+<td>29</td>
+</tr>
+</tbody>
+</table>
+<p>All values are well below their respective latency budget targets. The WAF is
+the only layer whose cost varies by more than a rounding error with the request,
+and it is the one to size against your own traffic — see below.</p>
 <h3 id="key-observations">Key observations<a class="headerlink" href="#key-observations" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
-<p><strong>SecurityHeaders</strong> adds ~0.7 µs per request. The cost comes from constructing
+<p><strong>SecurityHeaders</strong> adds ~0.4 µs per request. The cost comes from constructing
   and setting six HTTP response header strings. There is headroom to add more
   headers without approaching the 1 ms P50 budget.</p>
 </li>
@@ -1490,17 +1536,35 @@ Go 1.26.</p>
   1–5 ms over LAN).</p>
 </li>
 <li>
-<p><strong>WAF</strong> is the most expensive single middleware at ~1.9 µs overhead per
-  request. This cost is dominated by the regular-expression scan over query
-  parameters, selected headers, and the first 8 KB of the request body.
-  Requests with long bodies or many query parameters will see higher values;
-  static assets and API calls with small payloads sit near the benchmark figure.</p>
+<p><strong>WAF</strong> is by far the most expensive middleware, roughly two orders of
+  magnitude above the other two layers. Its cost is driven by <strong>how many bytes
+  it inspects</strong>, not by which part of the request they came from. <code>ScanRequest</code>
+  evaluates the entire default ruleset once per query-parameter value, once for
+  each of the three inspected headers that is present (<code>Cookie</code>, <code>Referer</code>,
+  <code>User-Agent</code>), and once over the first 8 KB of the body.</p>
 </li>
-<li>
-<p><strong>AllMiddleware</strong> stacks all three layers and adds ~2.7 µs total. The
-  aggregate is sub-additive because of CPU cache effects when the chain runs
-  sequentially on the same goroutine.</p>
-</li>
+</ul>
+<p>The two benchmarks make the byte cost readable. They differ only by the
+  37-byte body, and that body costs +7.4 µs, so on this hardware a full ruleset
+  sweep runs at roughly <strong>0.2 µs per inspected byte</strong>. The bodyless GET inspects
+  128 bytes (two short query values plus a 117-byte browser <code>User-Agent</code>) for
+  +26.5 µs, which is consistent with the same rate.</p>
+<p><strong>Size the WAF against the bytes your requests carry, not against the presence
+  or absence of a body.</strong> The body is not automatically the dominant term: at
+  that rate the 117-byte <code>User-Agent</code> accounts for most of the +26.5 µs bodyless
+  number, several times what the 37-byte payload costs. A bodyless GET with a
+  long <code>User-Agent</code> or a handful of query parameters can easily cost more than a
+  small <code>POST</code>. At 1 000 RPS of the body-bearing shape above the WAF consumes
+  about 34 ms of CPU per wall-clock second (~3.4% of one core).</p>
+<p>Extrapolating the per-byte rate, a request that fills the 8 KB body-scan limit
+  lands in the low milliseconds — the same order as the &lt; 2 ms P50 WAF budget.
+  That extrapolation is not benchmarked here; measure it against your own payload
+  sizes if you accept large request bodies.</p>
+<ul>
+<li><strong>AllMiddleware</strong> stacks all three layers for +27.3 µs on the bodyless shape:
+  the WAF number plus the ~0.6 µs the other two layers cost in isolation. It uses
+  <code>newBenchRequest</code>, so add roughly the body-scan increment above for a JSON
+  <code>POST</code>.</li>
 </ul>
 <hr />
 <h2 id="benchmark-scope-and-limitations">Benchmark scope and limitations<a class="headerlink" href="#benchmark-scope-and-limitations" title="Permanent link">&para;</a></h2>
@@ -1514,9 +1578,17 @@ Go 1.26.</p>
   contention. A Redis-backed limiter adds a network round-trip per request.</li>
 <li><strong>No-op metrics collector</strong>: the Prometheus registry write path is omitted
   so the WAF and rate-limit numbers isolate the middleware logic only.</li>
-<li><strong>Benign requests only</strong>: benchmarks send clean GET requests. WAF rule
-  matching on malicious inputs (many regex matches before a block) is more
-  expensive than the benign-request path shown here.</li>
+<li><strong>Benign requests only</strong>: benchmarks send clean requests. WAF rule matching on
+  malicious inputs (many regex matches before a block) is more expensive than
+  the benign-request path shown here.</li>
+<li><strong>One request shape only</strong>: the benchmarks use two short query parameters, one
+  inspected header, and (for <code>_WithBody</code>) a 37-byte JSON payload. WAF cost scales
+  with the total inspected bytes, so a request with more query parameters, a
+  <code>Cookie</code>, or a payload approaching the 8 KB scan limit costs proportionally
+  more regex work.</li>
+<li><strong>Upstream does not drain the body</strong>: the benchmark upstream handler never
+  reads the request body, so the cost of reading back the body the WAF restored
+  is not included. It is a few hundred nanoseconds for small payloads.</li>
 </ul>
 <hr />
 <h2 id="regression-tracking">Regression tracking<a class="headerlink" href="#regression-tracking" title="Permanent link">&para;</a></h2>
