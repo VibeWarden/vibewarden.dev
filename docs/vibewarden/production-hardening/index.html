@@ -893,6 +893,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Admin token rotation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#failed-attempt-lockout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Failed-attempt lockout
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1522,6 +1537,21 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Admin token rotation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#failed-attempt-lockout" class="md-nav__link">
+    <span class="md-ellipsis">
+      Failed-attempt lockout
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -1854,6 +1884,63 @@ Each item is a concrete action, not a vague recommendation.</p>
   the internet. If you use a firewall allow-list, restrict this path to your internal
   management network.</li>
 </ul>
+<h4 id="failed-attempt-lockout">Failed-attempt lockout<a class="headerlink" href="#failed-attempt-lockout" title="Permanent link">&para;</a></h4>
+<p>Admin-token authentication throttles brute-force probing per client IP. The
+defaults are fixed and need no configuration:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Failure threshold</td>
+<td>10 consecutive failed attempts</td>
+</tr>
+<tr>
+<td>Failure window</td>
+<td>1 minute (measured from the first failure of the streak)</td>
+</tr>
+<tr>
+<td>Cooldown</td>
+<td>1 minute</td>
+</tr>
+</tbody>
+</table>
+<p>Behaviour:</p>
+<ul>
+<li>Failures 1–9 return <code>401 Unauthorized</code> and emit one <code>audit.auth.failure</code>
+  event each, exactly as before.</li>
+<li>The 10th failure within the window still returns <code>401</code>, but emits a single
+  <code>audit.auth.lockout</code> audit event <strong>instead of</strong> <code>audit.auth.failure</code>. Its
+  <code>details</code> carry <code>failures</code>, <code>threshold</code>, <code>window_seconds</code>, <code>cooldown_seconds</code>
+  and <code>retry_after_seconds</code>.</li>
+<li>While the cooldown is active, every request from that IP returns
+  <code>429 Too Many Requests</code> with a <code>Retry-After</code> header and the body error code
+  <code>too_many_failed_attempts</code>. The token is never compared and <strong>no</strong> audit event
+  is emitted, so one probing episode produces one audit record rather than
+  hundreds.</li>
+<li>A successful authentication clears the counter immediately, and the counter
+  resets to zero once the cooldown elapses. There is no permanent lockout.</li>
+<li>The embedded admin UI (<code>/_vibewarden/admin/ui/*</code>) is tokenless, so it never
+  feeds the counter and is never throttled. A locked-out browser still loads the
+  console shell; its data calls get <code>429</code>.</li>
+</ul>
+<p>Operational notes:</p>
+<ul>
+<li>Tracking is per process and in memory, capped at 10 000 client IPs. It is not
+  shared across sidecar instances (the sidecar is always local, per instance).</li>
+<li><code>X-Forwarded-For</code> is not honoured for this counter. If VibeWarden sits behind
+  a proxy that terminates connections, all admin requests present the proxy's IP
+  and the lockout degrades to a single global counter for admin traffic: it
+  throttles harder, never less.</li>
+<li>A team sharing one egress IP can lock itself out for a minute by fat-fingering
+  the token ten times. It is self-healing; wait out the <code>Retry-After</code>.</li>
+</ul>
+<p>Alert on <code>audit.auth.lockout</code> — a lockout on a production sidecar means someone
+is guessing your admin token.</p>
 <h3 id="rate-limits">Rate limits<a class="headerlink" href="#rate-limits" title="Permanent link">&para;</a></h3>
 <ul>
 <li>[ ] <code>rate_limit.enabled: true</code>.</li>

@@ -4458,6 +4458,16 @@ order; the first matching route wins.</p>
 </tr>
 </tbody>
 </table>
+<p>Admin-token authentication has a built-in, non-configurable brute-force
+lockout: 10 consecutive failed attempts from one client IP within 1 minute lock
+that IP out for 1 minute. During the lockout the token is not compared and
+requests get <code>429 Too Many Requests</code> with a <code>Retry-After</code> header and the error
+code <code>too_many_failed_attempts</code>. The attempt that trips the lockout emits a
+single <code>audit.auth.lockout</code> audit event in place of the usual
+<code>audit.auth.failure</code>; requests received during the cooldown emit no audit event
+at all. A successful authentication resets the counter. See
+<a href="../production-hardening/#failed-attempt-lockout">Production hardening</a> for the
+full behaviour.</p>
 <hr />
 <h2 id="overrides"><code>overrides</code><a class="headerlink" href="#overrides" title="Permanent link">&para;</a></h2>
 <p>Escape hatches for advanced users. All fields are optional.</p>
