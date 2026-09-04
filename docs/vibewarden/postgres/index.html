@@ -908,6 +908,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#why-the-generated-stack-pins-postgres-17-not-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why the generated stack pins Postgres 17, not 18
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#connection-exhaustion" class="md-nav__link">
     <span class="md-ellipsis">
       Connection exhaustion
@@ -1777,6 +1786,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#why-the-generated-stack-pins-postgres-17-not-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why the generated stack pins Postgres 17, not 18
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#connection-exhaustion" class="md-nav__link">
     <span class="md-ellipsis">
       Connection exhaustion
@@ -2337,6 +2355,18 @@ minor-version security patches automatically. For local Docker Compose Postgres:
   update deliberately.</li>
 <li>Monitor disk usage: <code>SELECT pg_size_pretty(pg_database_size('vibewarden'));</code></li>
 </ul>
+<h3 id="why-the-generated-stack-pins-postgres-17-not-18">Why the generated stack pins Postgres 17, not 18<a class="headerlink" href="#why-the-generated-stack-pins-postgres-17-not-18" title="Permanent link">&para;</a></h3>
+<p>Both the dev <code>docker-compose.yml</code> and the compose file <code>vibew generate</code> emits pin
+<code>postgres:17-alpine</code> deliberately, and Dependabot is configured to ignore the major
+bump. Every Postgres major changes the catalog version, so an existing <code>kratos-db</code>
+or <code>postgres_data</code> volume refuses to start under an 18 image, and PostgreSQL 18's
+<code>initdb</code> enables data checksums by default, which means <code>pg_upgrade</code> also needs
+<code>--no-data-checksums</code> on the new cluster. No PostgreSQL 18 feature is reachable from
+anything VibeWarden does. Minor and patch updates inside 17.x still flow normally, so
+security patching is unaffected. See
+<a href="https://github.com/vibewarden/vibewarden/blob/main/decisions/adr-113-deliberate-major-version-pins-postgres-17-redis-7.md">ADR-113</a>.</p>
+<p>If you run your own Postgres (Strategy 2 or 3), this pin does not apply to you — use
+whichever major your provider offers.</p>
 <h3 id="connection-exhaustion">Connection exhaustion<a class="headerlink" href="#connection-exhaustion" title="Permanent link">&para;</a></h3>
 <p>If you see <code>sorry, too many clients already</code> errors:</p>
 <ol>
