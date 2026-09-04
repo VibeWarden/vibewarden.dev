@@ -1253,6 +1253,9 @@ The stub at that path remains stable; existing PR / commit references continue t
 <h2 id="background">Background<a class="headerlink" href="#background" title="Permanent link">&para;</a></h2>
 <p>The project scaffold established the Go module, directory structure, development tooling, and local dev environment. All subsequent work depends on this foundation.</p>
 <h2 id="specification">Specification<a class="headerlink" href="#specification" title="Permanent link">&para;</a></h2>
+<p>Everything under this heading records the state at the 2026-03-20 bootstrap and is not
+kept current. Pinned versions in particular have moved on (the repository tracks the
+latest stable Go; see <code>go.mod</code>).</p>
 <h4 id="go-module">Go Module<a class="headerlink" href="#go-module" title="Permanent link">&para;</a></h4>
 <ul>
 <li>Module path: <code>github.com/vibewarden/vibewarden</code></li>
@@ -1287,7 +1290,19 @@ The stub at that path remains stable; existing PR / commit references continue t
 <p>Note: golangci-lint (GPL-3.0) is used as a development tool only, not linked into the binary.
 This is standard practice and does not trigger copyleft requirements.</p>
 <h3 id="file-layout">File Layout<a class="headerlink" href="#file-layout" title="Permanent link">&para;</a></h3>
-<p>The dev agent must create exactly this structure (as of the initial bootstrap):</p>
+<blockquote>
+<p><strong>Historical snapshot, not a specification.</strong> The tree below is the layout the initial
+bootstrap created on 2026-03-20. It is kept as a record of what ADR-003 asked for; it
+does not describe the repository today and must not be used as a target.</p>
+<p>For the current layout, read the tree itself: <code>find internal -maxdepth 1 -type d</code> for
+the top-level packages, <code>find internal/adapters -maxdepth 1 -type d</code> for the adapters,
+and <code>ls -d */</code> at the repository root. <strong>CLAUDE.md § Directory layout</strong> states the
+architectural contract those directories have to satisfy (domain has no external
+dependencies, ports hold the interfaces, adapters implement them), but its tree is
+abbreviated and is not an inventory, so do not read either document as a directory
+listing.</p>
+</blockquote>
+<p>The bootstrap issue (#1) specified this structure:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>vibewarden/
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── .github/
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   └── workflows/
