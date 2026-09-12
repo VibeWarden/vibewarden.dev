@@ -24,7 +24,7 @@
     
     
       
-        <title>WebSockets - VibeWarden</title>
+        <title>WebSockets and streaming - VibeWarden</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#websocket-pass-through" class="md-skip">
+        <a href="#websocket-and-streaming-pass-through" class="md-skip">
           Skip to content
         </a>
       
@@ -115,7 +115,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              WebSockets
+              WebSockets and streaming
             
           </span>
         </div>
@@ -856,7 +856,7 @@
           
   
   <span class="md-ellipsis">
-    WebSockets
+    WebSockets and streaming
   </span>
   
 
@@ -867,7 +867,7 @@
         
   
   <span class="md-ellipsis">
-    WebSockets
+    WebSockets and streaming
   </span>
   
 
@@ -945,6 +945,30 @@
       Example config
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-sent-events-and-streaming-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Server-Sent Events and streaming responses
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Server-Sent Events and streaming responses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#settings-that-still-buffer-or-cut-a-stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      Settings that still buffer or cut a stream
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1332,6 +1356,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#server-sent-events-and-streaming-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Server-Sent Events and streaming responses
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Server-Sent Events and streaming responses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#settings-that-still-buffer-or-cut-a-stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      Settings that still buffer or cut a stream
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#structured-log-events" class="md-nav__link">
     <span class="md-ellipsis">
       Structured log events
@@ -1367,9 +1415,10 @@
   
 
 
-<h1 id="websocket-pass-through">WebSocket Pass-Through<a class="headerlink" href="#websocket-pass-through" title="Permanent link">&para;</a></h1>
-<p>VibeWarden proxies WebSocket connections transparently. No configuration is
-required — it just works.</p>
+<h1 id="websocket-and-streaming-pass-through">WebSocket and Streaming Pass-Through<a class="headerlink" href="#websocket-and-streaming-pass-through" title="Permanent link">&para;</a></h1>
+<p>VibeWarden proxies WebSocket connections and streaming HTTP responses
+(Server-Sent Events, chunked LLM token streams) transparently. No configuration
+is required — it just works.</p>
 <hr />
 <h2 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <p>Caddy, the embedded reverse proxy, handles the HTTP <code>Upgrade</code> mechanism
@@ -1439,6 +1488,47 @@ pings and close on missed pongs).</p>
 proxied to <code>http://localhost:3000</code>. The upgrade handshake is authenticated and
 rate-limited; individual frames are not.</p>
 <hr />
+<h2 id="server-sent-events-and-streaming-responses">Server-Sent Events and streaming responses<a class="headerlink" href="#server-sent-events-and-streaming-responses" title="Permanent link">&para;</a></h2>
+<p>Streaming HTTP responses are forwarded as they are produced. When your app
+writes a chunk and flushes, the bytes leave VibeWarden immediately; nothing
+waits for the response to complete. This covers <code>text/event-stream</code>, chunked
+LLM token streams, and any other incremental response.</p>
+<p>Internally every VibeWarden response wrapper (metrics, tracing, access log,
+circuit breaker, timeout) forwards <code>Flush()</code> and exposes the writer underneath
+through <code>Unwrap()</code>, so a flush survives the whole chain. Before this was fixed
+(#1526) the wrappers hid <code>http.Flusher</code> and clients received nothing until the
+connection closed.</p>
+<p>What your app must do:</p>
+<ul>
+<li>Set <code>Content-Type: text/event-stream</code> (SSE) and do not set <code>Content-Length</code>.</li>
+<li>Flush after each event. Most frameworks buffer until you ask them not to.</li>
+</ul>
+<h3 id="settings-that-still-buffer-or-cut-a-stream">Settings that still buffer or cut a stream<a class="headerlink" href="#settings-that-still-buffer-or-cut-a-stream" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Effect on a streaming response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resilience.timeout</code> (default <code>30s</code>)</td>
+<td>Counts the <strong>whole response</strong> as one request. A stream held open longer than the timeout is cut when the deadline fires. Raise it, or set <code>"0"</code> to disable, if you serve long-lived SSE.</td>
+</tr>
+<tr>
+<td><code>resilience.retry.enabled</code> (default <code>false</code>)</td>
+<td>Buffers the entire response in memory so a failed attempt can be discarded. A stream never "completes", so the client sees nothing and memory grows. Leave retry off when streaming.</td>
+</tr>
+<tr>
+<td>egress <code>response_validation.enabled</code> (default <code>false</code>)</td>
+<td>Buffers the upstream body to validate it against the JSON Schema. Applies to any egress route you enable it on, in both addressing modes: transparent (<code>HTTP_PROXY</code> + <code>X-Egress-URL</code>) and named (<code>/_egress/{route}</code>). See <a href="../egress/">Egress</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>Timeouts, auth, and rate limiting otherwise behave exactly as for a normal
+request: they are evaluated once, before the first byte is written.</p>
+<hr />
 <h2 id="structured-log-events">Structured log events<a class="headerlink" href="#structured-log-events" title="Permanent link">&para;</a></h2>
 <p>The upgrade request is logged like any other HTTP request
 (<code>event_type: request.proxied</code>). There is no separate event type for
@@ -1477,8 +1567,12 @@ A failed upgrade due to rate limiting is logged as
 <td>Not performed; Caddy bridges the raw TCP stream</td>
 </tr>
 <tr>
+<td>SSE / chunked streaming</td>
+<td>Flushed through unbuffered; <code>resilience.retry</code> and egress <code>response_validation</code> buffer by design</td>
+</tr>
+<tr>
 <td>Config changes needed</td>
-<td>None</td>
+<td>None (raise <code>resilience.timeout</code> for long-lived streams)</td>
 </tr>
 </tbody>
 </table>
