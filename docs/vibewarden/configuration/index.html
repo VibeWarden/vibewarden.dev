@@ -2939,6 +2939,18 @@ VibeWarden falls back to <code>host.docker.internal</code>.</p>
 <td><code>""</code></td>
 <td>Custom account recovery page URL</td>
 </tr>
+<tr>
+<td><code>auth.ui.show_registration</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Self-service registration: link, built-in page, and Kratos flow</td>
+</tr>
+<tr>
+<td><code>auth.ui.show_recovery</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Self-service account recovery: link, built-in page, and Kratos flow</td>
+</tr>
 </tbody>
 </table>
 <p>In <code>built-in</code> mode VibeWarden serves the auth pages itself at
@@ -2954,6 +2966,13 @@ each be an absolute <code>http(s)</code> URL or a root-relative path such as
 is rejected at config validation. Assets served from your own app need a
 <code>public_paths</code> entry, otherwise the login page cannot load them while the
 visitor is still unauthenticated.</p>
+<p>Set <code>show_registration: false</code> for a closed-registration deployment (users are
+created by an admin only) and <code>show_recovery: false</code> when you do not offer
+self-service password recovery. Each flag drives three things at once: the link
+on the built-in login page, the built-in page itself (which then returns 404),
+and <code>selfservice.flows.{registration,recovery}.enabled</code> in the generated
+<code>kratos/kratos.yml</code>. That keeps the page and Kratos from disagreeing, which used
+to leave dead links on the login page.</p>
 <p>In <code>custom</code> mode the generated flows point at your <code>auth.ui.*_url</code> values
 instead. Absolute URLs are used as-is; a path such as <code>/login</code> is resolved
 against your public base URL (<code>tls.domain</code>, else <code>localhost:&lt;server.port&gt;</code>).
