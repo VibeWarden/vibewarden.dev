@@ -1611,7 +1611,7 @@ without making any additional auth calls.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>X-User-ID</code></td>
+<td><code>X-User-Id</code></td>
 <td>Kratos identity UUID</td>
 </tr>
 <tr>
@@ -1626,12 +1626,11 @@ without making any additional auth calls.</p>
 <td><code>X-User-Role</code></td>
 <td>User role from the identity traits (<code>user</code>, <code>admin</code>, or <code>moderator</code>). Defaults to <code>user</code> when the trait is absent</td>
 </tr>
-<tr>
-<td><code>X-Session-ID</code></td>
-<td>Kratos session UUID</td>
-</tr>
 </tbody>
 </table>
+<p>These four headers are the complete <code>kratos</code>-mode contract; there is no session
+header. See <a href="../../identity-providers/#identity-headers-in-kratos-mode">Identity headers in <code>kratos</code> mode</a>
+for the full contract, including header stripping and behaviour on public paths.</p>
 <h3 id="app-router-nextjs-13">App Router (Next.js 13+)<a class="headerlink" href="#app-router-nextjs-13" title="Permanent link">&para;</a></h3>
 <p>In a Server Component or Route Handler, read headers via the <code>headers()</code> API:</p>
 <div class="language-typescript highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// app/dashboard/page.tsx</span>

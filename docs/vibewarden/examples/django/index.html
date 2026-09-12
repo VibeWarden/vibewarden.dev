@@ -1521,7 +1521,7 @@ transforms header names to uppercase with an <code>HTTP_</code> prefix.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>X-User-ID</code></td>
+<td><code>X-User-Id</code></td>
 <td><code>HTTP_X_USER_ID</code></td>
 <td>Kratos identity UUID</td>
 </tr>
@@ -1536,12 +1536,15 @@ transforms header names to uppercase with an <code>HTTP_</code> prefix.</p>
 <td><code>"true"</code> if email is verified</td>
 </tr>
 <tr>
-<td><code>X-Session-ID</code></td>
-<td><code>HTTP_X_SESSION_ID</code></td>
-<td>Kratos session UUID</td>
+<td><code>X-User-Role</code></td>
+<td><code>HTTP_X_USER_ROLE</code></td>
+<td><code>user</code>, <code>admin</code>, or <code>moderator</code>; defaults to <code>user</code></td>
 </tr>
 </tbody>
 </table>
+<p>These four headers are the complete <code>kratos</code>-mode contract; there is no session
+header. See <a href="../../identity-providers/#identity-headers-in-kratos-mode">Identity headers in <code>kratos</code> mode</a>
+for the full contract, including header stripping and behaviour on public paths.</p>
 <h3 id="middleware">Middleware<a class="headerlink" href="#middleware" title="Permanent link">&para;</a></h3>
 <p>Create a Django middleware that reads the VibeWarden headers and attaches a user
 object to <code>request.vw_user</code>:</p>
@@ -1556,7 +1559,7 @@ object to <code>request.vw_user</code>:</p>
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span>
 </span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="n">verified</span><span class="p">:</span> <span class="nb">bool</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    <span class="n">role</span><span class="p">:</span> <span class="nb">str</span>
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
 </span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
 </span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="k">class</span><span class="w"> </span><span class="nc">VibeWardenMiddleware</span><span class="p">:</span>
@@ -1575,14 +1578,14 @@ object to <code>request.vw_user</code>:</p>
 </span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>        <span class="n">user_id</span>    <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HTTP_X_USER_ID"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 </span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>        <span class="n">user_email</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HTTP_X_USER_EMAIL"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 </span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>        <span class="n">verified</span>   <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HTTP_X_USER_VERIFIED"</span><span class="p">,</span> <span class="s2">"false"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"true"</span>
-</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>        <span class="n">session_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HTTP_X_SESSION_ID"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>        <span class="n">role</span>       <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HTTP_X_USER_ROLE"</span><span class="p">,</span> <span class="s2">"user"</span><span class="p">)</span>
 </span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
 </span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>        <span class="k">if</span> <span class="n">user_id</span><span class="p">:</span>
 </span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>            <span class="n">request</span><span class="o">.</span><span class="n">vw_user</span> <span class="o">=</span> <span class="n">VibeWardenUser</span><span class="p">(</span>
 </span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>                <span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
 </span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>                <span class="n">email</span><span class="o">=</span><span class="n">user_email</span><span class="p">,</span>
 </span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>                <span class="n">verified</span><span class="o">=</span><span class="n">verified</span><span class="p">,</span>
-</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>                <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
+</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>                <span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span>
 </span><span id="__span-3-39"><a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>            <span class="p">)</span>
 </span><span id="__span-3-40"><a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>        <span class="k">else</span><span class="p">:</span>
 </span><span id="__span-3-41"><a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>            <span class="n">request</span><span class="o">.</span><span class="n">vw_user</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1668,7 +1671,7 @@ object to <code>request.vw_user</code>:</p>
 </span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="n">pk</span><span class="p">:</span> <span class="nb">str</span>      <span class="c1"># required by DRF's is_authenticated logic</span>
 </span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
 </span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="n">verified</span><span class="p">:</span> <span class="nb">bool</span>
-</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>    <span class="n">role</span><span class="p">:</span> <span class="nb">str</span>
 </span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
 </span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>    <span class="nd">@property</span>
 </span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">is_authenticated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1694,7 +1697,7 @@ object to <code>request.vw_user</code>:</p>
 </span><span id="__span-8-37"><a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a>            <span class="n">pk</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
 </span><span id="__span-8-38"><a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a>            <span class="n">email</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HTTP_X_USER_EMAIL"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
 </span><span id="__span-8-39"><a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a>            <span class="n">verified</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HTTP_X_USER_VERIFIED"</span><span class="p">,</span> <span class="s2">"false"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"true"</span><span class="p">,</span>
-</span><span id="__span-8-40"><a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>            <span class="n">session_id</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HTTP_X_SESSION_ID"</span><span class="p">,</span> <span class="s2">""</span><span class="p">),</span>
+</span><span id="__span-8-40"><a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a>            <span class="n">role</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">META</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"HTTP_X_USER_ROLE"</span><span class="p">,</span> <span class="s2">"user"</span><span class="p">),</span>
 </span><span id="__span-8-41"><a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>        <span class="p">)</span>
 </span><span id="__span-8-42"><a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a>        <span class="k">return</span> <span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 </span></code></pre></div>

@@ -797,6 +797,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#identity-headers-in-kratos-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identity headers in kratos mode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#when-to-choose-kratos" class="md-nav__link">
     <span class="md-ellipsis">
       When to choose Kratos
@@ -1726,6 +1735,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#identity-headers-in-kratos-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identity headers in kratos mode
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#when-to-choose-kratos" class="md-nav__link">
     <span class="md-ellipsis">
       When to choose Kratos
@@ -1983,6 +2001,8 @@ All <code>/self-service/</code> paths are automatically proxied to Kratos.</p>
 <p>Use this mode when you need a self-hosted identity layer with full UI flows.
 The Kratos plugin starts a Kratos instance for you when <code>kratos.external</code> is
 <code>false</code> (the default in the generated config).</p>
+<p>Unlike <code>jwt</code> mode, the upstream header set is fixed and not configurable — see
+<a href="#identity-headers-in-kratos-mode">Identity headers in <code>kratos</code> mode</a>.</p>
 <p>See the <a href="../social-login/">social login guide</a> for configuring OAuth 2.0
 providers inside Kratos.</p>
 <h3 id="api-key-api-key-header"><code>api-key</code> — API key header<a class="headerlink" href="#api-key-api-key-header" title="Permanent link">&para;</a></h3>
@@ -2216,6 +2236,64 @@ verification, social login, and WebAuthn.</p>
 <p>The Kratos plugin is <strong>opt-in</strong> — you activate it by setting <code>auth.mode:
 kratos</code>. VibeWarden then starts and manages a Kratos instance for you in the
 generated Docker Compose stack.</p>
+<h3 id="identity-headers-in-kratos-mode">Identity headers in <code>kratos</code> mode<a class="headerlink" href="#identity-headers-in-kratos-mode" title="Permanent link">&para;</a></h3>
+<p><code>kratos</code> mode has no <code>claims_to_headers</code> equivalent — the header set is fixed.
+After a session cookie is validated against Kratos <code>GET /sessions/whoami</code>,
+VibeWarden injects these headers into the upstream request:</p>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Source</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>X-User-Id</code></td>
+<td><code>identity.id</code></td>
+<td>Kratos identity UUID. Omitted if empty.</td>
+</tr>
+<tr>
+<td><code>X-User-Email</code></td>
+<td><code>identity.verifiable_addresses</code>, else <code>identity.traits.email</code></td>
+<td>Value of the first <code>email</code> verifiable address, verified or not; falls back to the trait only when there is no such address. Omitted when neither exists.</td>
+</tr>
+<tr>
+<td><code>X-User-Verified</code></td>
+<td><code>identity.verifiable_addresses</code></td>
+<td><code>"true"</code> or <code>"false"</code> for the <code>email</code> address. Always set.</td>
+</tr>
+<tr>
+<td><code>X-User-Role</code></td>
+<td><code>identity.traits.role</code></td>
+<td><code>user</code>, <code>admin</code>, or <code>moderator</code>. Always set; defaults to <code>user</code> when the trait is absent, empty, or unrecognised (an unrecognised value is logged as a warning).</td>
+</tr>
+</tbody>
+</table>
+<p>There is no session header. VibeWarden does <strong>not</strong> inject the Kratos session
+ID, and no <code>X-Session-ID</code> header exists in any mode. If your app needs session
+details, call Kratos <code>whoami</code> yourself with the forwarded cookie.</p>
+<p>Header names are case-insensitive on the wire, so <code>x-user-id</code> reads the same
+value as <code>X-User-Id</code>.</p>
+<p>Two behaviours to design your app around:</p>
+<ul>
+<li><strong>Incoming <code>X-User-*</code> headers are always stripped</strong> from the client request
+  before validation, at both the Caddy and the Go layer. A client cannot
+  impersonate a user by setting them, and your app must not do its own
+  stripping.</li>
+<li><strong>On a public path (<code>auth.public_paths</code>), the headers may be absent.</strong> Public
+  paths use optional auth: a valid session cookie still produces the full
+  header set, but a request without one (or with an invalid one) is forwarded
+  with no identity headers at all rather than being redirected. Treat a missing
+  <code>X-User-Id</code> as "anonymous", not as an error.</li>
+</ul>
+<p>On protected paths, a request that reaches your app has always been validated:
+an unauthenticated request is redirected to the login URL and never forwarded.</p>
+<p><code>auth.role_paths</code> enforcement happens in the sidecar — a role mismatch returns
+403 before the request reaches your app. <code>X-User-Role</code> is set regardless of
+whether <code>role_paths</code> is configured, so per-route checks in your app work with
+an empty <code>role_paths</code>.</p>
 <h3 id="when-to-choose-kratos">When to choose Kratos<a class="headerlink" href="#when-to-choose-kratos" title="Permanent link">&para;</a></h3>
 <ul>
 <li>You want a complete login/registration UI without writing any auth code.</li>
@@ -2519,15 +2597,23 @@ deployment-time concern.</p>
 </span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="w">    </span><span class="nt">"email_verified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"X-User-Verified"</span>
 </span><span id="__span-28-12"><a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="w">  </span><span class="p">},</span>
 </span><span id="__span-28-13"><a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="w">  </span><span class="nt">"provider_examples"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"auth0"</span><span class="p">,</span><span class="w"> </span><span class="s2">"keycloak"</span><span class="p">,</span><span class="w"> </span><span class="s2">"firebase"</span><span class="p">,</span><span class="w"> </span><span class="s2">"cognito"</span><span class="p">,</span><span class="w"> </span><span class="s2">"okta"</span><span class="p">,</span><span class="w"> </span><span class="s2">"supabase"</span><span class="p">],</span>
-</span><span id="__span-28-14"><a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="w">  </span><span class="nt">"kratos_use_cases"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"browser_flows"</span><span class="p">,</span><span class="w"> </span><span class="s2">"mfa"</span><span class="p">,</span><span class="w"> </span><span class="s2">"social_login"</span><span class="p">,</span><span class="w"> </span><span class="s2">"self_hosted_accounts"</span><span class="p">],</span>
-</span><span id="__span-28-15"><a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a><span class="w">  </span><span class="nt">"api_key_use_cases"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"machine_to_machine"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ci_cd"</span><span class="p">,</span><span class="w"> </span><span class="s2">"service_accounts"</span><span class="p">],</span>
-</span><span id="__span-28-16"><a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="w">  </span><span class="nt">"dev_prod_split"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-28-17"><a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a><span class="w">    </span><span class="nt">"dev_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kratos"</span><span class="p">,</span>
-</span><span id="__span-28-18"><a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a><span class="w">    </span><span class="nt">"prod_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jwt"</span><span class="p">,</span>
-</span><span id="__span-28-19"><a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a><span class="w">    </span><span class="nt">"switching_mechanisms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--config flag"</span><span class="p">,</span><span class="w"> </span><span class="s2">"env var interpolation"</span><span class="p">],</span>
-</span><span id="__span-28-20"><a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a><span class="w">    </span><span class="nt">"upstream_headers_unchanged"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
-</span><span id="__span-28-21"><a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a><span class="w">  </span><span class="p">}</span>
-</span><span id="__span-28-22"><a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a><span class="p">}</span>
+</span><span id="__span-28-14"><a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="w">  </span><span class="nt">"kratos_headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-28-15"><a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a><span class="w">    </span><span class="nt">"X-User-Id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"identity.id"</span><span class="p">,</span>
+</span><span id="__span-28-16"><a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="w">    </span><span class="nt">"X-User-Email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"identity.verifiable_addresses[via=email].value, else identity.traits.email"</span><span class="p">,</span>
+</span><span id="__span-28-17"><a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a><span class="w">    </span><span class="nt">"X-User-Verified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"identity.verifiable_addresses (true/false)"</span><span class="p">,</span>
+</span><span id="__span-28-18"><a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a><span class="w">    </span><span class="nt">"X-User-Role"</span><span class="p">:</span><span class="w"> </span><span class="s2">"identity.traits.role (user|admin|moderator, default user)"</span>
+</span><span id="__span-28-19"><a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-28-20"><a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a><span class="w">  </span><span class="nt">"kratos_headers_configurable"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-28-21"><a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a><span class="w">  </span><span class="nt">"session_header_exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-28-22"><a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a><span class="w">  </span><span class="nt">"kratos_use_cases"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"browser_flows"</span><span class="p">,</span><span class="w"> </span><span class="s2">"mfa"</span><span class="p">,</span><span class="w"> </span><span class="s2">"social_login"</span><span class="p">,</span><span class="w"> </span><span class="s2">"self_hosted_accounts"</span><span class="p">],</span>
+</span><span id="__span-28-23"><a id="__codelineno-28-23" name="__codelineno-28-23" href="#__codelineno-28-23"></a><span class="w">  </span><span class="nt">"api_key_use_cases"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"machine_to_machine"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ci_cd"</span><span class="p">,</span><span class="w"> </span><span class="s2">"service_accounts"</span><span class="p">],</span>
+</span><span id="__span-28-24"><a id="__codelineno-28-24" name="__codelineno-28-24" href="#__codelineno-28-24"></a><span class="w">  </span><span class="nt">"dev_prod_split"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-28-25"><a id="__codelineno-28-25" name="__codelineno-28-25" href="#__codelineno-28-25"></a><span class="w">    </span><span class="nt">"dev_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"kratos"</span><span class="p">,</span>
+</span><span id="__span-28-26"><a id="__codelineno-28-26" name="__codelineno-28-26" href="#__codelineno-28-26"></a><span class="w">    </span><span class="nt">"prod_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"jwt"</span><span class="p">,</span>
+</span><span id="__span-28-27"><a id="__codelineno-28-27" name="__codelineno-28-27" href="#__codelineno-28-27"></a><span class="w">    </span><span class="nt">"switching_mechanisms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--config flag"</span><span class="p">,</span><span class="w"> </span><span class="s2">"env var interpolation"</span><span class="p">],</span>
+</span><span id="__span-28-28"><a id="__codelineno-28-28" name="__codelineno-28-28" href="#__codelineno-28-28"></a><span class="w">    </span><span class="nt">"upstream_headers_unchanged"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-28-29"><a id="__codelineno-28-29" name="__codelineno-28-29" href="#__codelineno-28-29"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-28-30"><a id="__codelineno-28-30" name="__codelineno-28-30" href="#__codelineno-28-30"></a><span class="p">}</span>
 </span></code></pre></div>
 
 
