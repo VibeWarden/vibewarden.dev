@@ -1982,7 +1982,11 @@ service name and image.</p>
 </span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="w">  </span><span class="p">}</span>
 </span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Create <code>config/kratos/kratos.yml</code>:</p>
+<p>Create <code>config/kratos/kratos.yml</code>. The <code>ui_url</code> values below assume <strong>your app</strong>
+serves the auth pages; set <code>auth.ui.mode: custom</code> with the matching
+<code>auth.ui.*_url</code> keys in <code>vibewarden.yaml</code> so the rest of the sidecar agrees. If
+you use the built-in auth UI instead, let <code>vibew generate</code> write this file: it
+emits the <code>/_vibewarden/*</code> paths the sidecar actually serves.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v26.2.0</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">dsn</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">memory</span><span class="w">   </span><span class="c1"># overridden by DSN env var</span>

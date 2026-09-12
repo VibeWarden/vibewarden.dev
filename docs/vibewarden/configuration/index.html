@@ -2929,6 +2929,15 @@ VibeWarden falls back to <code>host.docker.internal</code>.</p>
 </tr>
 </tbody>
 </table>
+<p>In <code>built-in</code> mode VibeWarden serves the auth pages itself at
+<code>/_vibewarden/login</code>, <code>/_vibewarden/registration</code>, <code>/_vibewarden/recovery</code>,
+<code>/_vibewarden/verification</code> and <code>/_vibewarden/settings</code>, and points the
+generated <code>kratos/kratos.yml</code> flows at them.</p>
+<p>In <code>custom</code> mode the generated flows point at your <code>auth.ui.*_url</code> values
+instead. Absolute URLs are used as-is; a path such as <code>/login</code> is resolved
+against your public base URL (<code>tls.domain</code>, else <code>localhost:&lt;server.port&gt;</code>).
+The verification and error flows have no key of their own and fall back to
+<code>auth.ui.login_url</code>, as does any <code>*_url</code> you leave empty.</p>
 <hr />
 <h2 id="kratos"><code>kratos</code><a class="headerlink" href="#kratos" title="Permanent link">&para;</a></h2>
 <p>Used when <code>auth.mode</code> is <code>kratos</code>.</p>
