@@ -3255,6 +3255,14 @@ The verification and error flows have no key of their own and fall back to
 </tr>
 </tbody>
 </table>
+<p>The headers are applied to every response the sidecar serves, not just proxied
+app responses: the built-in login UI (<code>/_vibewarden/login</code>), the admin API
+(<code>/_vibewarden/admin/*</code>, including its <code>401</code> responses), and the Kratos
+self-service surface (<code>/self-service/*</code>) all carry the same set.</p>
+<p>Operator rules under <code>response_headers</code> still win on conflict, but only on the
+app-proxied route: <code>response_headers</code> is not applied to VibeWarden's own routes,
+so it cannot override or strip a security header on the login UI, the admin API
+or the Kratos proxy.</p>
 <hr />
 <h2 id="cors"><code>cors</code><a class="headerlink" href="#cors" title="Permanent link">&para;</a></h2>
 <table>
