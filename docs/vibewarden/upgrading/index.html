@@ -1186,6 +1186,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#jwt-mode-jwks-rsa-keys-larger-than-4096-bits-are-rejected-v0221" class="md-nav__link">
+    <span class="md-ellipsis">
+      JWT mode: JWKS RSA keys larger than 4096 bits are rejected (v0.22.1)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#metrics-telemetry-deprecated" class="md-nav__link">
     <span class="md-ellipsis">
       metrics: → telemetry: (deprecated)
@@ -1594,6 +1603,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#jwt-mode-jwks-rsa-keys-larger-than-4096-bits-are-rejected-v0221" class="md-nav__link">
+    <span class="md-ellipsis">
+      JWT mode: JWKS RSA keys larger than 4096 bits are rejected (v0.22.1)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#metrics-telemetry-deprecated" class="md-nav__link">
     <span class="md-ellipsis">
       metrics: → telemetry: (deprecated)
@@ -1960,6 +1978,13 @@ No config change is required — this takes effect on upgrade, without a
   you were using an operator override to loosen a header on the admin API or
   login page specifically, that override was never effective and remains so.</li>
 </ul>
+<hr />
+<h3 id="jwt-mode-jwks-rsa-keys-larger-than-4096-bits-are-rejected-v0221">JWT mode: JWKS RSA keys larger than 4096 bits are rejected (v0.22.1)<a class="headerlink" href="#jwt-mode-jwks-rsa-keys-larger-than-4096-bits-are-rejected-v0221" title="Permanent link">&para;</a></h3>
+<p>v0.22.1 moves to <code>go-jose</code> 4.1.6, which fixes GHSA-mgcc-cww5-fp2q by
+refusing to parse JWK RSA keys with a modulus above 4096 bits. If your
+identity provider's JWKS endpoint serves such a key, tokens signed with it now
+fail verification. No config change is required for 2048-, 3072- or 4096-bit
+keys, which is what mainstream providers issue.</p>
 <hr />
 <h3 id="metrics-telemetry-deprecated"><code>metrics:</code> → <code>telemetry:</code> (deprecated)<a class="headerlink" href="#metrics-telemetry-deprecated" title="Permanent link">&para;</a></h3>
 <p>The <code>metrics:</code> block was replaced by <code>telemetry:</code> to reflect VibeWarden's move to

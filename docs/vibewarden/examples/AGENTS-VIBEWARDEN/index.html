@@ -1347,9 +1347,9 @@ rate-limiting, WAF, or security headers in app code.</strong></p>
 - <code>X-User-Email</code> — user email
 - <code>X-User-Verified</code> — email verification status ("true"/"false")
 - <code>X-User-Role</code> — user role from Kratos identity traits ("user", "admin", or "moderator"; defaults to "user")</p>
-<p>The sidecar strips ALL incoming X-User-<em> headers from the client request
+<p>The sidecar strips ALL incoming X-User-* headers from the client request
 before validation and re-injects only the verified headers listed above after
-a successful auth check. App code must not perform its own X-User-</em> stripping.</p>
+a successful auth check. App code must not perform its own X-User-* stripping.</p>
 <p>Role-based path restrictions can be configured in vibewarden.yaml via
 <code>auth.role_paths</code> (only when <code>auth.mode: kratos</code>). Requests to restricted
 paths by users without the required role receive HTTP 403.</p>
