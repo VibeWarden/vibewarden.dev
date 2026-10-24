@@ -1186,6 +1186,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#request-headers-are-capped-at-16-kib-in-total-v0222" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request headers are capped at 16 KiB in total (v0.22.2)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#jwt-mode-jwks-rsa-keys-larger-than-4096-bits-are-rejected-v0221" class="md-nav__link">
     <span class="md-ellipsis">
       JWT mode: JWKS RSA keys larger than 4096 bits are rejected (v0.22.1)
@@ -1603,6 +1612,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#request-headers-are-capped-at-16-kib-in-total-v0222" class="md-nav__link">
+    <span class="md-ellipsis">
+      Request headers are capped at 16 KiB in total (v0.22.2)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#jwt-mode-jwks-rsa-keys-larger-than-4096-bits-are-rejected-v0221" class="md-nav__link">
     <span class="md-ellipsis">
       JWT mode: JWKS RSA keys larger than 4096 bits are rejected (v0.22.1)
@@ -1978,6 +1996,15 @@ No config change is required — this takes effect on upgrade, without a
   you were using an operator override to loosen a header on the admin API or
   login page specifically, that override was never effective and remains so.</li>
 </ul>
+<hr />
+<h3 id="request-headers-are-capped-at-16-kib-in-total-v0222">Request headers are capped at 16 KiB in total (v0.22.2)<a class="headerlink" href="#request-headers-are-capped-at-16-kib-in-total-v0222" title="Permanent link">&para;</a></h3>
+<p>v0.22.2 moves the embedded Caddy to 2.11.7, which caps the whole request
+header block at 16 KiB (it was Go's 1 MB default). A request whose headers
+exceed that, for example from oversized cookies or a very large bearer token,
+now gets <code>431 Request Header Fields Too Large</code> before any VibeWarden
+middleware runs. This also bounds <code>input_validation.max_header_size</code> and
+<code>max_header_count</code>: raising them past 16 KiB has no effect. No config change
+is required for typical session cookies and JWTs.</p>
 <hr />
 <h3 id="jwt-mode-jwks-rsa-keys-larger-than-4096-bits-are-rejected-v0221">JWT mode: JWKS RSA keys larger than 4096 bits are rejected (v0.22.1)<a class="headerlink" href="#jwt-mode-jwks-rsa-keys-larger-than-4096-bits-are-rejected-v0221" title="Permanent link">&para;</a></h3>
 <p>v0.22.1 moves to <code>go-jose</code> 4.1.6, which fixes GHSA-mgcc-cww5-fp2q by
