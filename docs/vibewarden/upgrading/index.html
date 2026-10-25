@@ -1186,6 +1186,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#observability-stack-grafana-image-is-now-grafanagrafana-v0223" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observability stack: Grafana image is now grafana/grafana (v0.22.3)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#request-headers-are-capped-at-16-kib-in-total-v0222" class="md-nav__link">
     <span class="md-ellipsis">
       Request headers are capped at 16 KiB in total (v0.22.2)
@@ -1612,6 +1621,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#observability-stack-grafana-image-is-now-grafanagrafana-v0223" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observability stack: Grafana image is now grafana/grafana (v0.22.3)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#request-headers-are-capped-at-16-kib-in-total-v0222" class="md-nav__link">
     <span class="md-ellipsis">
       Request headers are capped at 16 KiB in total (v0.22.2)
@@ -1996,6 +2014,14 @@ No config change is required — this takes effect on upgrade, without a
   you were using an operator override to loosen a header on the admin API or
   login page specifically, that override was never effective and remains so.</li>
 </ul>
+<hr />
+<h3 id="observability-stack-grafana-image-is-now-grafanagrafana-v0223">Observability stack: Grafana image is now <code>grafana/grafana</code> (v0.22.3)<a class="headerlink" href="#observability-stack-grafana-image-is-now-grafanagrafana-v0223" title="Permanent link">&para;</a></h3>
+<p>Grafana Labs stopped publishing <code>grafana/grafana-oss</code> after 13.0.2, so the
+generated compose file now pins <code>grafana/grafana:13.0.11</code>, the same Open Source
+edition with nine patch releases of security fixes. This only affects projects
+running the <code>observability</code> profile. Regenerate to pick it up; the existing
+<code>grafana-data</code> volume is reused as is. The old image can then be removed with
+<code>docker image rm grafana/grafana-oss:13.0.2</code>.</p>
 <hr />
 <h3 id="request-headers-are-capped-at-16-kib-in-total-v0222">Request headers are capped at 16 KiB in total (v0.22.2)<a class="headerlink" href="#request-headers-are-capped-at-16-kib-in-total-v0222" title="Permanent link">&para;</a></h3>
 <p>v0.22.2 moves the embedded Caddy to 2.11.7, which caps the whole request
