@@ -1204,9 +1204,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#request-headers-are-capped-at-16-kib-in-total-v0222" class="md-nav__link">
+  <a href="#request-headers-capped-at-16-kib-stalled-transfers-cut-after-1-minute-v0222" class="md-nav__link">
     <span class="md-ellipsis">
-      Request headers are capped at 16 KiB in total (v0.22.2)
+      Request headers capped at 16 KiB, stalled transfers cut after 1 minute (v0.22.2)
     </span>
   </a>
   
@@ -1648,9 +1648,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#request-headers-are-capped-at-16-kib-in-total-v0222" class="md-nav__link">
+  <a href="#request-headers-capped-at-16-kib-stalled-transfers-cut-after-1-minute-v0222" class="md-nav__link">
     <span class="md-ellipsis">
-      Request headers are capped at 16 KiB in total (v0.22.2)
+      Request headers capped at 16 KiB, stalled transfers cut after 1 minute (v0.22.2)
     </span>
   </a>
   
@@ -2048,14 +2048,34 @@ running the <code>observability</code> profile. Regenerate to pick it up; the ex
 <code>grafana-data</code> volume is reused as is. The old image can then be removed with
 <code>docker image rm grafana/grafana-oss:13.0.2</code>.</p>
 <hr />
-<h3 id="request-headers-are-capped-at-16-kib-in-total-v0222">Request headers are capped at 16 KiB in total (v0.22.2)<a class="headerlink" href="#request-headers-are-capped-at-16-kib-in-total-v0222" title="Permanent link">&para;</a></h3>
-<p>v0.22.2 moves the embedded Caddy to 2.11.7, which caps the whole request
-header block at 16 KiB (it was Go's 1 MB default). A request whose headers
-exceed that, for example from oversized cookies or a very large bearer token,
-now gets <code>431 Request Header Fields Too Large</code> before any VibeWarden
-middleware runs. This also bounds <code>input_validation.max_header_size</code> and
-<code>max_header_count</code>: raising them past 16 KiB has no effect. No config change
-is required for typical session cookies and JWTs.</p>
+<h3 id="request-headers-capped-at-16-kib-stalled-transfers-cut-after-1-minute-v0222">Request headers capped at 16 KiB, stalled transfers cut after 1 minute (v0.22.2)<a class="headerlink" href="#request-headers-capped-at-16-kib-stalled-transfers-cut-after-1-minute-v0222" title="Permanent link">&para;</a></h3>
+<p>v0.22.2 moves the embedded Caddy to 2.11.7, which brings three limits that
+were not there before:</p>
+<ul>
+<li><strong>Request header block capped at 16 KiB</strong> (it was Go's 1 MB default). Over
+  HTTP/1.1 a larger request, for example from oversized cookies or a very
+  large bearer token, gets <code>431 Request Header Fields Too Large</code> before any
+  VibeWarden middleware runs. Over HTTP/2 the client sees a protocol error with
+  no status code, so a browser reports a network error rather than a 431.
+  <code>input_validation.max_header_size</code> and <code>max_header_count</code> have no effect
+  above this cap.</li>
+<li><strong>Stalled uploads are cut after 1 minute.</strong> A request whose body stops
+  arriving for a minute is aborted. A slow but steady upload is not affected,
+  only one that makes no progress at all. v0.22.2 itself failed open here: the
+  WAF logged the timeout at error level and passed the request through to the
+  upstream with an already-broken body. A later fix makes VibeWarden answer
+  <code>408 Request Timeout</code> instead.</li>
+<li><strong>Clients that stop reading are cut after 1 minute.</strong> A response write that
+  makes no progress for a minute is aborted. A quiet SSE stream is not
+  affected; only a client that has stopped draining its socket is.</li>
+</ul>
+<p>No config change is required for typical session cookies, JWTs and clients.
+Each limit has a key under <code>server:</code> (<code>max_header_bytes</code>, <code>read_idle_timeout</code>,
+<code>write_idle_timeout</code>, and <code>read_header_timeout</code> for the header phase), with
+<code>"0"</code> disabling a timeout; see <a href="../configuration/#server">Configuration</a>. The
+keys are not available on v0.22.2 itself, where the limits are fixed. The
+same change makes <code>server.idle_timeout: "0"</code> actually disable the keep-alive
+timeout; before, the key was dropped and Caddy's 5-minute default applied.</p>
 <hr />
 <h3 id="jwt-mode-jwks-rsa-keys-larger-than-4096-bits-are-rejected-v0221">JWT mode: JWKS RSA keys larger than 4096 bits are rejected (v0.22.1)<a class="headerlink" href="#jwt-mode-jwks-rsa-keys-larger-than-4096-bits-are-rejected-v0221" title="Permanent link">&para;</a></h3>
 <p>v0.22.1 moves to <code>go-jose</code> 4.1.6, which fixes GHSA-mgcc-cww5-fp2q by

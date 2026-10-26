@@ -1517,6 +1517,14 @@ connection closed.</p>
 <td>Counts the <strong>whole response</strong> as one request. A stream held open longer than the timeout is cut when the deadline fires. Raise it, or set <code>"0"</code> to disable, if you serve long-lived SSE.</td>
 </tr>
 <tr>
+<td><code>server.write_timeout</code> (default <code>60s</code>)</td>
+<td>The listener's own ceiling on one response, so it cuts a stream after 60 s even with <code>resilience.timeout</code> disabled. Raise it, or set <code>"0"</code>, together with the setting above.</td>
+</tr>
+<tr>
+<td><code>server.write_idle_timeout</code> (default <code>1m</code>)</td>
+<td>Fires only when a write to the client makes <strong>no progress</strong>, for example because the client stopped reading. A quiet stream is safe: the deadline covers a write in flight, not the pause between events. Leave it on.</td>
+</tr>
+<tr>
 <td><code>resilience.retry.enabled</code> (default <code>false</code>)</td>
 <td>Buffers the entire response in memory so a failed attempt can be discarded. A stream never "completes", so the client sees nothing and memory grows. Leave retry off when streaming.</td>
 </tr>
@@ -1572,7 +1580,7 @@ A failed upgrade due to rate limiting is logged as
 </tr>
 <tr>
 <td>Config changes needed</td>
-<td>None (raise <code>resilience.timeout</code> for long-lived streams)</td>
+<td>None (raise or disable <code>resilience.timeout</code> and <code>server.write_timeout</code> for long-lived streams)</td>
 </tr>
 </tbody>
 </table>

@@ -2309,6 +2309,48 @@ strictness, and which generated files are produced.</p>
 <td>Port to listen on</td>
 </tr>
 <tr>
+<td><code>server.read_timeout</code></td>
+<td>string</td>
+<td><code>30s</code></td>
+<td>Hard ceiling on reading one request, headers and body. <code>"0"</code> disables.</td>
+</tr>
+<tr>
+<td><code>server.write_timeout</code></td>
+<td>string</td>
+<td><code>60s</code></td>
+<td>Hard ceiling on writing one response. Cuts a stream that runs longer than this; <code>"0"</code> disables. See <a href="../websockets/#server-sent-events-and-streaming-responses">streaming</a>.</td>
+</tr>
+<tr>
+<td><code>server.idle_timeout</code></td>
+<td>string</td>
+<td><code>120s</code></td>
+<td>How long a keep-alive connection may sit idle between requests. <code>"0"</code> disables.</td>
+</tr>
+<tr>
+<td><code>server.read_header_timeout</code></td>
+<td>string</td>
+<td><code>1m</code></td>
+<td>Time a client may take to send the request headers. <code>"0"</code> disables.</td>
+</tr>
+<tr>
+<td><code>server.read_idle_timeout</code></td>
+<td>string</td>
+<td><code>1m</code></td>
+<td>Aborts a request whose body stops arriving for this long. A slow but steady upload is unaffected. <code>"0"</code> disables.</td>
+</tr>
+<tr>
+<td><code>server.write_idle_timeout</code></td>
+<td>string</td>
+<td><code>1m</code></td>
+<td>Aborts a response when a write makes no progress for this long (the client stopped reading). A quiet stream is unaffected. <code>"0"</code> disables.</td>
+</tr>
+<tr>
+<td><code>server.max_header_bytes</code></td>
+<td>int</td>
+<td><code>16384</code></td>
+<td>Cap on the request header block. Above it: <code>431</code> over HTTP/1.1, a protocol error over HTTP/2. <code>0</code> uses the default. Negative values are rejected by <code>vibew validate</code>.</td>
+</tr>
+<tr>
 <td><code>server.max_connections</code></td>
 <td>int</td>
 <td><code>1000</code></td>
@@ -2337,10 +2379,17 @@ strictness, and which generated files are produced.</p>
 <div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">server</span><span class="p">:</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0.0.0</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8443</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">max_connections</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">mem_limit</span><span class="p">:</span><span class="w"> </span><span class="s">"512MB"</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">cpu_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">pids_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">read_timeout</span><span class="p">:</span><span class="w"> </span><span class="s">"30s"</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="nt">write_timeout</span><span class="p">:</span><span class="w"> </span><span class="s">"60s"</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">idle_timeout</span><span class="p">:</span><span class="w"> </span><span class="s">"120s"</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">read_header_timeout</span><span class="p">:</span><span class="w"> </span><span class="s">"1m"</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">read_idle_timeout</span><span class="p">:</span><span class="w"> </span><span class="s">"1m"</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="nt">write_idle_timeout</span><span class="p">:</span><span class="w"> </span><span class="s">"1m"</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">max_header_bytes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16384</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nt">max_connections</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="nt">mem_limit</span><span class="p">:</span><span class="w"> </span><span class="s">"512MB"</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="nt">cpu_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="nt">pids_limit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">200</span>
 </span></code></pre></div>
 <h3 id="servermax_connections"><code>server.max_connections</code><a class="headerlink" href="#servermax_connections" title="Permanent link">&para;</a></h3>
 <p>Once the cap is reached, new connections are refused (accepted and immediately
@@ -3344,7 +3393,7 @@ for common attack patterns in-process, with no external dependencies.</p>
 <td><code>waf.mode</code></td>
 <td>string</td>
 <td><code>detect</code></td>
-<td>Detection mode: <code>block</code> (reject with 400) or <code>detect</code> (pass through and log)</td>
+<td>Detection mode: <code>block</code> (reject with 403) or <code>detect</code> (pass through and log)</td>
 </tr>
 </tbody>
 </table>
