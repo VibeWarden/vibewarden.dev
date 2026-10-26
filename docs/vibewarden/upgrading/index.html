@@ -1186,6 +1186,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#observability-stack-grafana-132-unreleased" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observability stack: Grafana 13.2 (Unreleased)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#observability-stack-grafana-image-is-now-grafanagrafana-v0223" class="md-nav__link">
     <span class="md-ellipsis">
       Observability stack: Grafana image is now grafana/grafana (v0.22.3)
@@ -1621,6 +1630,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#observability-stack-grafana-132-unreleased" class="md-nav__link">
+    <span class="md-ellipsis">
+      Observability stack: Grafana 13.2 (Unreleased)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#observability-stack-grafana-image-is-now-grafanagrafana-v0223" class="md-nav__link">
     <span class="md-ellipsis">
       Observability stack: Grafana image is now grafana/grafana (v0.22.3)
@@ -2014,6 +2032,13 @@ No config change is required — this takes effect on upgrade, without a
   you were using an operator override to loosen a header on the admin API or
   login page specifically, that override was never effective and remains so.</li>
 </ul>
+<hr />
+<h3 id="observability-stack-grafana-132-unreleased">Observability stack: Grafana 13.2 (Unreleased)<a class="headerlink" href="#observability-stack-grafana-132-unreleased" title="Permanent link">&para;</a></h3>
+<p>The generated compose file now pins <code>grafana/grafana:13.2.4</code>. This only affects
+projects running the <code>observability</code> profile. Regenerate to pick it up. Grafana
+migrates the <code>grafana-data</code> volume forward on first start, so returning to 13.0
+afterwards needs a fresh volume (<code>docker volume rm &lt;project&gt;_grafana-data</code>); the
+provisioned datasources and dashboard are recreated from the generated files.</p>
 <hr />
 <h3 id="observability-stack-grafana-image-is-now-grafanagrafana-v0223">Observability stack: Grafana image is now <code>grafana/grafana</code> (v0.22.3)<a class="headerlink" href="#observability-stack-grafana-image-is-now-grafanagrafana-v0223" title="Permanent link">&para;</a></h3>
 <p>Grafana Labs stopped publishing <code>grafana/grafana-oss</code> after 13.0.2, so the
